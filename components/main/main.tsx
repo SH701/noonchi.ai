@@ -107,7 +107,7 @@ export default function MainPage() {
         </div>
 
         <Link
-          href="/custom"
+          href="/main/custom"
           className={`flex justify-center mt-3 ${CONTENT_WIDTH_CLASS}`}
         >
           <button className="w-full h-13 bg-blue-600 hover:bg-blue-700 text-blue-50 font-medium py-4 rounded-lg ">
