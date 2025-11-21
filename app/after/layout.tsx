@@ -1,5 +1,3 @@
-import { AuthProvider } from "@/lib/UserContext";
-
 export const metadata = { title: "Setting" };
 
 export default function SignupLayout({
@@ -7,9 +5,5 @@ export default function SignupLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <AuthProvider>
-      <div className="min-h-screen">{children}</div>
-    </AuthProvider>
-  );
+  return <div className="min-h-screen">{children}</div>;
 }
