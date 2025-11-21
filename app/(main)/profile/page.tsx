@@ -14,21 +14,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
-type Profile = {
-  id: number;
-  email: string;
-  nickname: string;
-  gender: string;
-  birthDate: string;
-  role: string;
-  provider: string;
-  klevel: number;
-  sentenceCount: number;
-  profileImageUrl: string;
-  interests: string[];
-};
 const FACES = [
   { Component: Face0, id: "face0" },
   { Component: Face1, id: "face1" },
@@ -38,42 +25,15 @@ const FACES = [
 
 function normalizeSrc(src?: string) {
   if (!src) return null;
-  if (src.startsWith("http") || src.startsWith("/")) return src; 
-  return null; 
+  if (src.startsWith("http") || src.startsWith("/")) return src;
+  return null;
 }
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { accessToken } = useAuth();
 
-  useEffect(() => {
-    if (!accessToken) {
-      setError("로그인이 필요합니다");
-      setLoading(false);
-      return;
-    }
-    fetch("/api/users/me", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || `Error ${res.status}`);
-        setProfile(data);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-      })
-      .finally(() => setLoading(false));
-  }, [accessToken]);
+  const { data: profile, isLoading, error } = useUserProfile(accessToken);
 
   const handleLogout = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -91,26 +51,23 @@ export default function ProfilePage() {
     router.push("/login");
   };
 
-  if (loading) return <p className="text-center mt-10">Loading…</p>;
+  if (isLoading) return <p className="text-center mt-10">Loading…</p>;
   if (error)
-    return <p className="text-red-500 text-center mt-10">Error: {error}</p>;
+    return (
+      <p className="text-red-500 text-center mt-10">로그인이 필요합니다.</p>
+    );
   if (!profile) return <p className="text-center mt-10">No profile data</p>;
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* 헤더 */}
       <div className="px-4 pt-4 pb-3 border-b border-gray-200 bg-white">
-        <div className="flex items-center justify-between">
-          <h1 className="text-gray-900 text-xl font-semibold font-pretendard">
-            Profile
-          </h1>
-        </div>
+        <h1 className="text-gray-900 text-xl font-semibold font-pretendard">
+          Profile
+        </h1>
       </div>
 
-      {/* 메인 콘텐츠 */}
       <div className="flex-1 flex flex-col items-center">
         <div className="flex-1 relative h-full w-[375px]">
-          {/* 프로필 섹션 */}
           <div className="px-4 pt-6">
             <div className="flex flex-col items-center">
               <div className="relative mb-4">
@@ -132,9 +89,8 @@ export default function ProfilePage() {
                   const Face = FACES.find(
                     (f) => f.id === profile.profileImageUrl
                   )?.Component;
-                  if (Face) {
-                    return <Face className="w-[120px] h-[120px]" />;
-                  }
+
+                  if (Face) return <Face className="w-[120px] h-[120px]" />;
 
                   return (
                     <div className="w-[120px] h-[120px] bg-gray-200 rounded-full" />
@@ -157,27 +113,26 @@ export default function ProfilePage() {
             <div className="bg-[#EFF6FF] rounded-2xl border border-blue-200 p-6">
               <div className="flex justify-around">
                 <div className="flex flex-col items-center flex-1">
-                  <span className="text-blue-600 text-sm font-medium font-pretendard leading-[130%] mb-2">
+                  <span className="text-blue-600 text-sm font-medium mb-2">
                     Studied Sentence
                   </span>
-                  <span className="text-gray-900 text-2xl font-bold font-pretendard leading-[130%]">
+                  <span className="text-gray-900 text-2xl font-bold">
                     {profile.sentenceCount}
                   </span>
                 </div>
                 <div className="w-px bg-blue-200 mx-4" />
                 <div className="flex flex-col items-center flex-1">
-                  <span className="text-blue-600 text-sm font-medium font-pretendard leading-[130%] mb-2">
+                  <span className="text-blue-600 text-sm font-medium mb-2">
                     K-Level
                   </span>
-                  <span className="text-gray-900 text-2xl font-bold font-pretendard leading-[130%]">
-                    {profile.klevel}
+                  <span className="text-gray-900 text-2xl font-bold">
+                    {profile.koreanLevel}
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* 메뉴 섹션 */}
           <div className="px-4 pt-6">
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
               {[
@@ -196,19 +151,19 @@ export default function ProfilePage() {
                   icon: <DocumentTextIcon className="w-6 h-6 text-gray-600" />,
                   label: "Terms of Service / Licenses",
                 },
-              ].map(({ href, icon, label }, index) => (
+              ].map(({ href, icon, label }, i) => (
                 <Link
                   key={label}
                   href={href}
                   className={`flex items-center justify-between px-4 py-4 hover:bg-gray-50 transition-colors ${
-                    index !== 2 ? "border-b border-gray-200" : ""
+                    i !== 2 ? "border-b border-gray-200" : ""
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
                       {icon}
                     </div>
-                    <span className="text-gray-900 text-base font-medium font-pretendard leading-[130%]">
+                    <span className="text-gray-900 text-base font-medium">
                       {label}
                     </span>
                   </div>
@@ -218,11 +173,10 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* 로그아웃 버튼 */}
           <div className="px-4 pt-6 pb-6">
             <button
               onClick={handleLogout}
-              className="w-full py-4 text-gray-600 text-base font-medium font-pretendard leading-[130%] underline hover:text-gray-800 transition-colors cursor-pointer"
+              className="w-full py-4 text-gray-600 text-base font-medium underline hover:text-gray-800"
             >
               Log out
             </button>
