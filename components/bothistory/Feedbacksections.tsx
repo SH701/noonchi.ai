@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/UserContext";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/store/auth";
 
 type Feedback = {
   overallEvaluation: string;
@@ -10,7 +10,7 @@ type Feedback = {
 };
 
 export default function FeedbackSection({ id }: { id: number | string }) {
-  const { accessToken } = useAuth();
+  const accessToken = useAuthStore((s) => s.accessToken);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const router = useRouter();
 

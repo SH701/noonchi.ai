@@ -1,15 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useAuth, Level, Interest } from "@/lib/UserContext";
+
+import { useAuthStore } from "@/app/store/auth";
+import { Level, Interest } from "@/app/store/auth";
 import ProfileChange from "@/components/afterlogin/profilechange";
 import Image from "next/image";
 import Loading from "./loading";
-import { slides } from "@/lib/setting";
 
 const levelImg: Record<Level, string> = {
   BEGINNER: "/circle/circle1.png",
@@ -17,24 +18,42 @@ const levelImg: Record<Level, string> = {
   ADVANCED: "/circle/circle3.png",
 };
 
+const INTEREST_OPTIONS: Interest[] = [
+  "💬 Daily",
+  "💼 Business",
+  "✈️ Travel",
+  "🎬 K-Drama",
+  "🎵 K-Pop",
+  "🙇‍♂️ Etiquette",
+  "🔥 Internet Slang",
+  "🥘 Food",
+  "🍜 Ordering",
+  "💄 Beauty",
+  "👁️‍🗨️ Gathering",
+] as const;
 export default function AfterPage() {
   const router = useRouter();
-  const {
-    koreanLevel,
-    setKoreanLevel,
-    profileImageUrl,
-    interests,
-    setInterests,
-  } = useAuth();
-  const { accessToken } = useAuth();
+
+  // Zustand selectors
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const koreanLevel = useAuthStore((s) => s.koreanLevel);
+  const profileImageUrl = useAuthStore((s) => s.profileImageUrl);
+  const interests = useAuthStore((s) => s.interests);
+
+  const setKoreanLevel = useAuthStore((s) => s.setKoreanLevel);
+  const setInterests = useAuthStore((s) => s.setInterests);
+
   const sliderRef = useRef<Slider>(null);
+
   const [current, setCurrent] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
   const canSubmit =
     current < 2 || (koreanLevel && profileImageUrl && interests.length > 0);
 
+  // 초기 로딩 애니메이션
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
@@ -48,37 +67,39 @@ export default function AfterPage() {
     arrows: false,
     draggable: false,
     swipe: false,
-    afterChange: (i: number) => setCurrent(i),
-    customPaging: (i: number) => (
-      <button
-        className={`w-3 h-3 rounded-full ${
-          i === current ? "bg-blue-600" : "bg-gray-300"
-        }`}
-      />
-    ),
+    afterChange: (i) => setCurrent(i),
   };
 
   const onNext = () => {
     if (current < 2) {
       sliderRef.current?.slickNext();
     } else {
-      goMain();
+      submitProfile();
     }
   };
 
-  const goMain = async () => {
+  // ------------------------------------
+  // 🔥 프로필 저장 API
+  // ------------------------------------
+  const submitProfile = async () => {
     setError(null);
     setSubmitting(true);
+
     try {
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };
       if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+
       const res = await fetch("/api/users/me/profile", {
         method: "PUT",
-        headers,
         credentials: "include",
-        body: JSON.stringify({ koreanLevel, profileImageUrl, interests }),
+        headers,
+        body: JSON.stringify({
+          koreanLevel,
+          profileImageUrl,
+          interests,
+        }),
       });
 
       const ct = res.headers.get("content-type") || "";
@@ -96,60 +117,45 @@ export default function AfterPage() {
       }
 
       router.replace("/main");
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
       setError("알 수 없는 오류가 발생했습니다.");
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  if (loading || submitting) {
-    return <Loading />;
-  }
+  // ------------------------------------
+  // UI 상태
+  // ------------------------------------
+  if (loading || submitting) return <Loading />;
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* 헤더 */}
-      <div className="px-4 pt-4 pb-3  bg-white">
+      {/* Header */}
+      <div className="px-4 pt-4 pb-3 bg-white">
         <div className="flex items-center justify-between">
-          <h1 className="text-gray-900 text-xl font-semibold font-pretendard">
-            Profile Setup
-          </h1>
+          <h1 className="text-gray-900 text-xl font-semibold">Profile Setup</h1>
           <button
             onClick={() => router.push("/main")}
-            className="text-gray-500 hover:text-gray-700 font-medium text-sm font-pretendard transition-colors duration-200"
+            className="text-gray-500 hover:text-gray-700 text-sm transition-colors"
           >
             Skip
           </button>
         </div>
       </div>
 
-      {/* 메인 콘텐츠 */}
+      {/* Content */}
       <div className="flex-1 flex flex-col items-center">
-        <div className="flex-1 relative h-full w-[375px] ">
+        <div className="flex-1 relative h-full w-[375px] overflow-x-hidden">
           <Slider ref={sliderRef} {...settings} className="h-full">
-            {/* 1. Korean Level Selection */}
+            {/* Step 1 - Korean Level */}
             <div className="px-4 pt-4 h-full flex flex-col">
-              <div className="flex-1 flex flex-col ">
-                <h1
-                  className="text-2xl font-semibold text-gray-900 mb-2 font-pretendard leading-normal mt-4"
-                  style={{
-                    fontSize: "24px",
-                    fontWeight: 600,
-                    color: "#111827",
-                  }}
-                >
+              <div className="flex-1 flex flex-col">
+                <h1 className="text-2xl font-semibold text-gray-900 mb-2">
                   Please select your <br /> Korean level
                 </h1>
-                <p
-                  className="text-gray-400 mb-8 font-pretendard leading-[140%]"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: "#9CA3AF",
-                  }}
-                >
+                <p className="text-gray-400 mb-8">
                   Tell us how comfortable you are <br /> chatting in Korean!
                 </p>
 
@@ -159,13 +165,10 @@ export default function AfterPage() {
                       <div
                         key={lvl}
                         onClick={() => setKoreanLevel(lvl)}
-                        className={`flex items-center p-4 cursor-pointer transition-all duration-200 border`}
+                        className="flex items-center p-4 cursor-pointer transition-all border rounded-xl"
                         style={{
-                          borderRadius: koreanLevel === lvl ? "12px" : "16px",
-                          border:
-                            koreanLevel === lvl
-                              ? "1px solid #316CEC"
-                              : "1px solid #E5E7EB",
+                          borderColor:
+                            koreanLevel === lvl ? "#316CEC" : "#E5E7EB",
                           background:
                             koreanLevel === lvl ? "#EFF6FF" : "#F9FAFB",
                         }}
@@ -173,24 +176,17 @@ export default function AfterPage() {
                         <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden mr-4">
                           <Image
                             src={levelImg[lvl]}
-                            alt={`circle-${lvl}`}
+                            alt={lvl}
                             width={48}
                             height={48}
                             className={koreanLevel === lvl ? "" : "opacity-60"}
                           />
                         </div>
+
                         <div className="flex-1">
-                          <h2 className="font-semibold text-lg text-gray-900 font-pretendard">
+                          <h2 className="font-semibold text-lg text-gray-900">
                             {lvl.charAt(0) + lvl.slice(1).toLowerCase()}
                           </h2>
-                          <p className="text-sm text-gray-600 mt-1 font-pretendard">
-                            {lvl === "BEGINNER" &&
-                              "I know basic polite words, but I'm not sure when or how to use honorifics."}
-                            {lvl === "INTERMEDIATE" &&
-                              "I can use endings, but I'm not confident in formal or respectful language correctly."}
-                            {lvl === "ADVANCED" &&
-                              "I understand and use honorifics naturally depending on context or relationship."}
-                          </p>
                         </div>
                       </div>
                     )
@@ -199,73 +195,31 @@ export default function AfterPage() {
               </div>
             </div>
 
-            {/* 2. Profile Picker */}
+            {/* Step 2 - Profile Picker */}
             <div className="px-4 h-full flex flex-col">
               <div className="flex-1 flex flex-col items-start">
-                <h1
-                  className="text-2xl font-semibold text-gray-900 mb-2 font-pretendard leading-normal mt-4"
-                  style={{
-                    fontSize: "24px",
-                    fontWeight: 600,
-                    color: "#111827",
-                  }}
-                >
+                <h1 className="text-2xl font-semibold text-gray-900 mb-2">
                   Choose your profile
                 </h1>
-                <p
-                  className="text-gray-400 mb-8 font-pretendard leading-[140%]"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: "#9CA3AF",
-                  }}
-                >
+                <p className="text-gray-400 mb-8">
                   Select an avatar that represents you!
                 </p>
                 <ProfileChange />
               </div>
             </div>
 
-            {/* 3. Interests */}
+            {/* Step 3 - Interests */}
             <div className="px-4 pt-4 h-full flex flex-col">
               <div className="flex-1 flex flex-col items-start">
-                <h1
-                  className="text-2xl font-semibold text-gray-900 mb-2 font-pretendard leading-normal mt-4"
-                  style={{
-                    fontSize: "24px",
-                    fontWeight: 600,
-                    color: "#111827",
-                  }}
-                >
+                <h1 className="text-2xl font-semibold text-gray-900 mb-2">
                   Please select your <br /> interests
                 </h1>
-                <p
-                  className="text-gray-400 mb-8 font-pretendard leading-[140%]"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: "#9CA3AF",
-                  }}
-                >
+                <p className="text-gray-400 mb-8">
                   Choose topics you`d like to chat about!
                 </p>
 
                 <div className="flex flex-wrap gap-3">
-                  {(
-                    [
-                      "💬 Daily",
-                      "💼 Business",
-                      "✈️ Travel",
-                      "🎬 K-Drama",
-                      "🎵 K-Pop",
-                      "🙇‍♂️ Etiquette",
-                      "🔥 Internet Slang",
-                      "🥘 Food",
-                      "🍜 Ordering",
-                      "💄 Beauty",
-                      "👁️‍🗨️ Gathering",
-                    ] as string[]
-                  ).map((opt) => (
+                  {INTEREST_OPTIONS.map((opt) => (
                     <button
                       key={opt}
                       onClick={() => {
@@ -274,21 +228,14 @@ export default function AfterPage() {
                           : [...interests, opt];
                         setInterests(next);
                       }}
-                      className={`flex justify-center items-center text-sm font-medium transition-all duration-200 border whitespace-nowrap cursor-pointer`}
+                      className="flex items-center text-sm font-medium border px-4 py-2 rounded-full"
                       style={{
-                        borderRadius: interests.includes(opt as Interest)
-                          ? "99px"
-                          : "99px",
-                        border: interests.includes(opt as Interest)
-                          ? "1px solid #316CEC"
-                          : "1px solid #E5E7EB",
+                        borderColor: interests.includes(opt as Interest)
+                          ? "#316CEC"
+                          : "#E5E7EB",
                         background: interests.includes(opt as Interest)
                           ? "#EFF6FF"
                           : "#FFFFFF",
-                        color: interests.includes(opt as Interest)
-                          ? "#000000"
-                          : "#000000",
-                        padding: "12px",
                       }}
                     >
                       {opt}
@@ -306,7 +253,7 @@ export default function AfterPage() {
         <button
           disabled={!canSubmit}
           onClick={onNext}
-          className={`w-full h-[92px] py-4 font-semibold text-lg rounded-none font-pretendard ${
+          className={`w-full h-[92px] text-lg font-semibold transition-colors ${
             canSubmit
               ? "bg-blue-600 text-white hover:bg-blue-700"
               : "bg-[#BFDBFE] text-[#EFF6FF] cursor-not-allowed"
@@ -315,7 +262,7 @@ export default function AfterPage() {
             paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)",
           }}
         >
-          {current === slides.length - 3 ? "Start" : "Next"}
+          {current === 2 ? "Start" : "Next"}
         </button>
       </div>
     </div>

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/UserContext";
 import Link from "next/link";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import { useAuthStore } from "@/app/store/auth";
 
 const LEVELS = [
   {
@@ -36,9 +36,11 @@ const images = [
 ];
 export default function LevelSelectPage() {
   const router = useRouter();
-  const { accessToken, koreanLevel, setKoreanLevel } = useAuth();
-  const [selected, setSelected] = useState<Level>(koreanLevel);
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const koreanLevel = useAuthStore((s) => s.koreanLevel);
+  const setKoreanLevel = useAuthStore((s) => s.setKoreanLevel);
   const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState<Level>(koreanLevel);
 
   const save = async () => {
     if (selected === koreanLevel) {

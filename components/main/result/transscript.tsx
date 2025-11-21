@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useAuth } from "@/lib/UserContext";
 import { useState } from "react";
 import Image from "next/image";
 import HonorificBox from "./honorificbox";
+import { useAuthStore } from "@/app/store/auth";
 
 type ChatMsg = {
   messageId: number;
@@ -22,7 +22,7 @@ export default function Transcript({
   messages: ChatMsg[];
   aiName: string;
 }) {
-  const { accessToken } = useAuth();
+  const accessToken = useAuthStore((s) => s.accessToken);
   const [sliderValue, setSliderValue] = useState<Record<string, number>>({});
   const [translated, setTranslated] = useState<string | null>(null);
   const [feedbacks, setFeedbacks] = useState<

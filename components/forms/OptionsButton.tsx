@@ -6,7 +6,7 @@ interface Props {
 
 export default function OptionButtons({ options, selected, onSelect }: Props) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-6">
       {options.map((option) => (
         <button
           key={option.value}

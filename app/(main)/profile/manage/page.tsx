@@ -4,13 +4,14 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/UserContext";
+
 import Link from "next/link";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { useAuthStore } from "@/app/store/auth";
 
 export default function AccountManage() {
   const router = useRouter();
-  const { accessToken } = useAuth();
+  const accessToken = useAuthStore((s) => s.accessToken);
   const [userInfo, setUserInfo] = useState<{
     nickname: string;
     birthDate: string;

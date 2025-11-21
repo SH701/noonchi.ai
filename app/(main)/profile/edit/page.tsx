@@ -5,17 +5,20 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
+
 import Face0 from "@/components/character/face0";
 import Face1 from "@/components/character/face1";
 import Face2 from "@/components/character/face2";
 import Face3 from "@/components/character/face3";
-import { useAuth } from "@/lib/UserContext";
+
+import { useAuthStore } from "@/app/store/auth";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 type Profile = {
   email: string;
   nickname: string;
   koreanLevel: string;
-  profileImageUrl: string; // either avatar id like 'face0' or a full URL
+  profileImageUrl: string;
   interests: string[];
 };
 
@@ -28,43 +31,40 @@ const FACES = [
 
 export default function ProfileEditPage() {
   const router = useRouter();
-  const {
-    accessToken,
-    selectedFace,
-    setSelectedFace,
-    profileImageUrl,
-    setProfileImageUrl,
-  } = useAuth();
+
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const selectedFace = useAuthStore((s) => s.selectedFace);
+  const setSelectedFace = useAuthStore((s) => s.setSelectedFace);
+  const profileImageUrl = useAuthStore((s) => s.profileImageUrl);
+  const setProfileImageUrl = useAuthStore((s) => s.setProfileImageUrl);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const {
+    data: profile,
+    isLoading,
+    error: rqError,
+  } = useUserProfile(accessToken);
 
   const [originalProfile, setOriginalProfile] = useState<Profile | null>(null);
   const [nickname, setNickname] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Load original profile on mount
   useEffect(() => {
-    if (!accessToken) return;
-    fetch("/api/users/me", {
-      method: "GET",
-      credentials: "include",
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || `Error ${res.status}`);
-        return data as Profile;
-      })
-      .then((profile) => {
-        setOriginalProfile(profile);
-        setNickname(profile.nickname);
-        setProfileImageUrl(profile.profileImageUrl);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-      });
-  }, [accessToken, setProfileImageUrl, setSelectedFace]);
+    if (!profile) return;
+
+    setOriginalProfile(profile);
+    setNickname(profile.nickname);
+    setProfileImageUrl(profile.profileImageUrl);
+
+    const faceIndex = FACES.findIndex((f) => f.id === profile.profileImageUrl);
+    if (faceIndex >= 0) {
+      setSelectedFace(faceIndex);
+    } else {
+      setSelectedFace(null);
+    }
+  }, [profile, setProfileImageUrl, setSelectedFace]);
 
   const openFileDialog = () => fileInputRef.current?.click();
 
@@ -72,7 +72,6 @@ export default function ProfileEditPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 1) 로컬 미리보기
     const reader = new FileReader();
     reader.onload = () => {
       if (typeof reader.result === "string") {
@@ -81,8 +80,8 @@ export default function ProfileEditPage() {
     };
     reader.readAsDataURL(file);
 
-    // 2) presign URL 요청
     const ext = file.name.split(".").pop()!;
+
     const presignRes = await fetch("/api/files/presigned-url", {
       method: "POST",
       headers: {
@@ -97,19 +96,22 @@ export default function ProfileEditPage() {
     });
     const { url: uploadUrl } = await presignRes.json();
 
-    // 3) S3에 파일 PUT
     const uploadRes = await fetch(uploadUrl, {
       method: "PUT",
       headers: { "Content-Type": file.type },
       body: file,
     });
-    console.log(uploadRes);
-    if (!uploadRes.ok) throw new Error("S3 업로드 실패");
+
+    if (!uploadRes.ok) {
+      setLocalError("Image upload failed");
+      return;
+    }
 
     const publicUrl = uploadUrl.split("?")[0];
     setProfileImageUrl(publicUrl);
+    setSelectedFace(null);
 
-    const apiRes = await fetch("/api/users/me/profile", {
+    await fetch("/api/users/me/profile", {
       method: "PUT",
       credentials: "include",
       headers: {
@@ -118,26 +120,21 @@ export default function ProfileEditPage() {
       },
       body: JSON.stringify({ profileImageUrl: publicUrl }),
     });
-    if (!apiRes.ok) {
-      const err = await apiRes.json().catch(() => ({}));
-      console.error("Update Failed:", err.message || apiRes.status);
-    } else {
-      console.log("Update Success.");
-    }
   };
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!originalProfile) return;
+
     setSubmitting(true);
-    setError(null);
+    setLocalError(null);
 
     const body: Partial<{ nickname: string; profileImageUrl: string }> = {};
 
-    if (nickname && nickname !== originalProfile.nickname) {
+    if (nickname !== originalProfile.nickname) {
       body.nickname = nickname;
     }
-    // if user selected an SVG face
+
     if (selectedFace !== null) {
       const faceId = FACES[selectedFace].id;
       if (faceId !== originalProfile.profileImageUrl) {
@@ -149,10 +146,12 @@ export default function ProfileEditPage() {
     ) {
       body.profileImageUrl = profileImageUrl;
     }
+
     if (!Object.keys(body).length) {
       setSubmitting(false);
-      return; // nothing changed
+      return;
     }
+
     const res = await fetch("/api/users/me/profile", {
       method: "PUT",
       credentials: "include",
@@ -164,22 +163,26 @@ export default function ProfileEditPage() {
     });
 
     const data = await res.json();
+
     if (!res.ok) {
-      console.error("업데이트 실패:", data.message);
-      setError(data.message || "Update failed");
+      setLocalError(data.message ?? "Update failed");
       setSubmitting(false);
       return;
     }
+
     router.push("/profile");
   };
 
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (isLoading) return <p className="text-center mt-10">Loading…</p>;
+  if (rqError)
+    return (
+      <p className="text-center text-red-500 mt-10">Failed to load profile.</p>
+    );
   if (!originalProfile)
-    return <p className="text-center mt-10">Loading profile...</p>;
+    return <p className="text-center mt-10">Loading profile…</p>;
 
   return (
     <form onSubmit={onSubmit} className="max-w-md mx-auto p-4 space-y-6 mt-15">
-      {/* Back & Title */}
       <div className="relative py-4">
         <Link
           href="/profile"
@@ -190,16 +193,14 @@ export default function ProfileEditPage() {
         <h2 className="text-lg font-semibold text-center">Edit Profile</h2>
       </div>
 
-      {/* Avatar */}
       <div className="flex justify-center">
         <div
           onClick={openFileDialog}
-          className="w-30 h-30 rounded-full  bg-blue-100 flex items-center justify-center overflow-hidden cursor-pointer"
+          className="w-30 h-30 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden cursor-pointer"
         >
           {profileImageUrl ? (
             profileImageUrl.startsWith("http") ||
             profileImageUrl.startsWith("/") ? (
-              // 실제 이미지 경로 (S3 업로드 or public 폴더 경로)
               <Image
                 src={profileImageUrl}
                 alt="avatar"
@@ -209,22 +210,18 @@ export default function ProfileEditPage() {
                 unoptimized
               />
             ) : (
-              // Face 컴포넌트 (face0 ~ face3)
               (() => {
                 const C = FACES.find(
                   (f) => f.id === profileImageUrl
                 )?.Component;
-                return C ? (
-                  <C className="w-full h-full" />
-                ) : (
-                  <div className="w-full h-full bg-blue-100" />
-                );
+                return C ? <C className="w-full h-full" /> : null;
               })()
             )
           ) : (
             <div className="w-full h-full bg-blue-100" />
           )}
         </div>
+
         <input
           type="file"
           accept="image/*"
@@ -234,7 +231,6 @@ export default function ProfileEditPage() {
         />
       </div>
 
-      {/* Nickname */}
       <div className="space-y-1">
         <div className="relative">
           <input
@@ -245,29 +241,33 @@ export default function ProfileEditPage() {
             onChange={(e) => setNickname(e.target.value)}
             className="w-full p-3 pr-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+
           {nickname && (
             <button
               type="button"
               onClick={() => setNickname("")}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400"
             >
               <XMarkIcon className="w-5 h-5" />
             </button>
           )}
         </div>
+
         <p className="text-xs text-gray-400 mb-10">
           Nickname should be 15 characters or less
         </p>
       </div>
+
       <p className="text-center text-gray-600">Pick your favorite one!</p>
+
       <div className="flex justify-center space-x-4">
-        {FACES.map(({ Component }, idx) => (
+        {FACES.map(({ Component, id }, idx) => (
           <button
-            key={idx}
+            key={id}
             type="button"
             onClick={() => {
               setSelectedFace(idx);
-              setProfileImageUrl(FACES[idx].id);
+              setProfileImageUrl(id);
             }}
             className={`w-12 h-12 rounded-full border-2 flex items-center justify-center ${
               selectedFace === idx ? "border-blue-500" : "border-gray-200"
@@ -278,7 +278,8 @@ export default function ProfileEditPage() {
         ))}
       </div>
 
-      {/* Submit */}
+      {localError && <p className="text-red-500 text-center">{localError}</p>}
+
       <button
         type="submit"
         disabled={submitting}

@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { MyAI } from "@/lib/types";
 import HonorificSlider, { HonorificResults } from "./HonorificSlider";
-import { useAuth } from "@/lib/UserContext";
+import { useAuthStore } from "@/app/store/auth";
 
 type MessageItemProps = {
   m: any;
@@ -47,7 +47,7 @@ export default function MessageItem({
     Record<string, boolean>
   >({});
   const [loadingTTs, setLoadingTTS] = useState<Record<string, boolean>>({});
-  const { accessToken } = useAuth();
+  const accessToken = useAuthStore((s) => s.accessToken);
   const showFeedbackButton =
     isMine &&
     (m.politenessScore ?? -1) >= 0 &&

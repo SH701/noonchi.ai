@@ -3,23 +3,31 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export type Level = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
-
-interface AuthState {
-  // Token
+export type Interest =
+  | "💬 Daily"
+  | "💼 Business"
+  | "✈️ Travel"
+  | "🎬 K-Drama"
+  | "🎵 K-Pop"
+  | "🙇‍♂️ Etiquette"
+  | "🔥 Internet Slang"
+  | "🥘 Food"
+  | "🍜 Ordering"
+  | "💄 Beauty"
+  | "👁️‍🗨️ Gathering";
+export interface AuthState {
   accessToken: string | null;
 
-  // User local settings
   koreanLevel: Level;
   selectedFace: number | null;
   profileImageUrl: string;
-  interests: string[];
+  interests: Interest[];
 
-  // Actions
   setAccessToken: (token: string | null) => void;
   setKoreanLevel: (level: Level) => void;
   setSelectedFace: (face: number | null) => void;
   setProfileImageUrl: (url: string) => void;
-  setInterests: (list: string[]) => void;
+  setInterests: (list: Interest[]) => void;
 
   logout: () => void;
 }

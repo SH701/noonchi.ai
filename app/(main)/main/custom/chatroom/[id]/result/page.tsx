@@ -5,11 +5,11 @@
 import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/UserContext";
 import Score from "@/components/main/result/score";
 import Transcript from "@/components/main/result/transscript";
 import Section from "@/components/main/result/section";
 import { Feedback } from "@/lib/types";
+import { useAuthStore } from "@/app/store/auth";
 
 type ChatMsg = {
   messageId: number;
@@ -32,7 +32,7 @@ export default function Result() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { accessToken } = useAuth();
+  const accessToken = useAuthStore((s) => s.accessToken);
   const router = useRouter();
   const params = useParams();
   const conversationId = params?.id as string | undefined;

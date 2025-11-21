@@ -2,14 +2,16 @@
 export const dynamic = "force-dynamic";
 
 import Loading from "@/app/after/loading";
-import { useAuth } from "@/lib/Token";
+import { useAuthStore } from "@/app/store/auth";
+
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function SignupStep2() {
   const router = useRouter();
 
-  const { setAccessToken } = useAuth();
+  const setAccessToken = useAuthStore((s) => s.setAccessToken);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -35,6 +37,7 @@ export default function SignupStep2() {
   const handleSignup = async () => {
     if (!canSubmit) return;
     setError(null);
+
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
@@ -49,6 +52,7 @@ export default function SignupStep2() {
       });
 
       const data = await parseJsonSafe(res);
+
       if (!res.ok) {
         setError(data?.message || "Signup failed");
         return;
@@ -63,7 +67,6 @@ export default function SignupStep2() {
       setAccessToken(token);
       localStorage.setItem("accessToken", token);
 
-      // ✅ 로딩 표시 후 1.5초 뒤 이동
       setLoading(true);
       setTimeout(() => {
         router.push("/after");
@@ -73,34 +76,30 @@ export default function SignupStep2() {
     }
   };
 
-  // ✅ 로딩 중일 때 화면
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
 
   return (
     <div className="flex flex-col min-h-screen bg-white max-w-[375px] mx-auto">
       {/* Header */}
       <div className="px-6 py-4 bg-white mt-8">
-        <h2 className="text-xl font-semibold font-pretendard text-gray-800 text-left">
+        <h2 className="text-xl font-semibold text-gray-800">
           Enter your details
         </h2>
-        <p className="text-sm font-normal font-pretendard text-gray-500 text-left mt-2 leading-[140%]">
+        <p className="text-sm text-gray-500 mt-2 leading-[140%]">
           Enter it exactly as shown on your ID
         </p>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 px-6 py-8 space-y-6">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium font-pretendard text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Name
           </label>
           <input
             type="text"
             placeholder="Enter your name"
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+            className="w-full px-4 py-3 border rounded-xl bg-gray-50"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -108,17 +107,17 @@ export default function SignupStep2() {
 
         {/* Birth date */}
         <div>
-          <label className="block text-sm font-medium font-pretendard text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Birth date
           </label>
           <input
             type="text"
             placeholder="YYYY-MM-DD"
             pattern="\d{4}-\d{2}-\d{2}"
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+            className="w-full px-4 py-3 border rounded-xl bg-gray-50"
             value={birthDate}
             onChange={(e) => {
-              let v = e.target.value.replace(/\D/g, ""); // 숫자만 추출
+              let v = e.target.value.replace(/\D/g, "");
               if (v.length > 4) v = v.slice(0, 4) + "-" + v.slice(4);
               if (v.length > 7) v = v.slice(0, 7) + "-" + v.slice(7);
               setBirthDate(v);
@@ -126,9 +125,9 @@ export default function SignupStep2() {
           />
         </div>
 
-        {/* Gender toggle */}
+        {/* Gender */}
         <div>
-          <label className="block text-sm font-medium font-pretendard text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Gender
           </label>
           <div className="flex space-x-4">
@@ -137,10 +136,10 @@ export default function SignupStep2() {
                 key={g}
                 type="button"
                 onClick={() => setGender(g)}
-                className={`flex-1 py-3 rounded-xl border font-medium transition-colors ${
+                className={`flex-1 py-3 rounded-xl border ${
                   gender === g
                     ? "bg-blue-50 text-blue-600 border-blue-600"
-                    : "bg-white text-gray-700 border-gray-200 hover:border-gray-300"
+                    : "bg-white text-gray-700 border-gray-200"
                 }`}
               >
                 {g === "MALE" ? "Male" : "Female"}
@@ -149,19 +148,16 @@ export default function SignupStep2() {
           </div>
         </div>
       </div>
-      {/* Footer Button */}
+
       <div className="fixed bottom-0 left-0 right-0 bg-white">
         <button
           disabled={!canSubmit}
           onClick={handleSignup}
-          className={`w-full h-[92px] py-4 font-semibold text-lg rounded-none font-pretendard ${
+          className={`w-full h-[92px] text-lg font-semibold ${
             canSubmit
               ? "bg-blue-600 text-white hover:bg-blue-700"
               : "bg-[#BFDBFE] text-[#EFF6FF] cursor-not-allowed"
           }`}
-          style={{
-            paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)", // iOS 홈바 피하기
-          }}
         >
           Next
         </button>
