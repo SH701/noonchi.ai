@@ -19,20 +19,10 @@ export default function TabBar() {
     setOpen((prev) => !prev);
   };
   return (
-    <div className="fixed left-4 bottom-0 inset-x-0 flex justify-center bg-transparent ">
+    <div className="fixed  bottom-0 inset-x-0 flex justify-center bg-transparent ">
       <div className="w-[375px] bg-white rounded-t-2xl shadow-[0_-4px_10px_0_rgba(0,0,0,0.08)] border border-gray-100">
         {pathname === "/main" && (
           <div className=" px-4 relative">
-            {open && (
-              <Image
-                src="/etc/honorific.png"
-                alt="honorific"
-                width={124}
-                height={33}
-                className="absolute -top-3.5 left-6.5"
-                onClick={onClick}
-              />
-            )}
             <ChatTextInput />
           </div>
         )}

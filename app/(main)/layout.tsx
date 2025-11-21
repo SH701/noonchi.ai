@@ -18,7 +18,7 @@ export default function MainsLayout({
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
-      <div className="min-h-screen flex flex-col w-[375px] overflow-x-hidden overflow-y-auto">
+      <div className="min-h-screen flex flex-col max-w-[375px]  overflow-y-auto">
         {children}
       </div>
       {!hideTabbar && (

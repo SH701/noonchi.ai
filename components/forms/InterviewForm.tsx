@@ -27,7 +27,7 @@ export default function InterviewForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex-1 px-4 space-y-4">
+    <form onSubmit={handleSubmit} className="flex flex-col  space-y-4">
       <FormInput
         label="Company"
         required

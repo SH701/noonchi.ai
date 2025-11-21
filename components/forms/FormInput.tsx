@@ -24,7 +24,7 @@ export default function FormInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full p-2.5 rounded-lg border border-gray-200 bg-white text-black placeholder-gray-400 placeholder:text-sm"
+        className="w-[335px] p-2.5 rounded-lg border border-gray-200 bg-white text-black placeholder-gray-400 placeholder:text-sm"
         placeholder={placeholder}
       />
     </div>

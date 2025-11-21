@@ -137,9 +137,9 @@ export default function PersonaAndRoom() {
     return <Loading />;
   }
   return (
-    <div className="w-full max-w-md mx-5 flex flex-col relative overflow-y-auto bg-white">
+    <div className="flex flex-col pt-14 relative bg-white  w-full overflow-x-hidden">
       {/* Header */}
-      <div className="flex items-center mt-6">
+      <div className="flex items-center w-full px-4">
         <button
           onClick={() => router.back()}
           className="text-black cursor-pointer"
@@ -150,7 +150,7 @@ export default function PersonaAndRoom() {
           Create
         </h1>
       </div>
-      <h2 className=" text-left text-xl font-bold mb-12 px-5 mt-6">
+      <h2 className=" text-left text-xl font-bold mb-12 pl-5 mt-6">
         Interview Preparation
       </h2>
 
@@ -237,11 +237,14 @@ export default function PersonaAndRoom() {
           </div>
         </div>
       )} */}
-
-      <InterviewForm
-        situationOptions={situationOptions}
-        relationship={relationship}
-      />
+      <div className="w-full flex justify-center">
+        <div className="w-full max-w-[375px] px-5">
+          <InterviewForm
+            situationOptions={situationOptions}
+            relationship={relationship}
+          />
+        </div>
+      </div>
     </div>
   );
 }

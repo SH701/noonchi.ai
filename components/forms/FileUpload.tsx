@@ -24,7 +24,8 @@ export default function FileUpload() {
       >
         <Upload className="text-gray-500 w-5 h-5" />
         <span className="text-gray-500 text-sm">
-          Upload up to 2 files (.pdf, .docx) — Max 10MB each
+          Upload up to 2 files (.pdf, .docx) <br />
+          (Max 10MB each)
         </span>
       </div>
 
