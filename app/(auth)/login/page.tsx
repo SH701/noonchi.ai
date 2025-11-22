@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Loading from "@/app/after/loading";
 import Image from "next/image";
-import { useAuthStore } from "@/app/store/auth";
+import { useAuthStore, type Level } from "@/app/store/auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,52 +20,63 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     setError("");
+    setLoading(true);
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
       const data = await res.json();
+
       if (!res.ok) {
         setError(data.message || "Login failed");
+        setLoading(false);
         return;
       }
+
       setAccessToken(data.accessToken);
+
       const meRes = await fetch("/api/users/me", {
         headers: { Authorization: `Bearer ${data.accessToken}` },
       });
+
       const me = await meRes.json();
-      if (me.koreanLevel) {
-        setKoreanLevel(me.koreanLevel);
-      }
-      if (!me.koreanLevel || me.koreanLevel === "null") {
-        router.replace("/after");
+
+      const hasKoreanLevel =
+        me.koreanLevel &&
+        ["BEGINNER", "INTERMEDIATE", "ADVANCED"].includes(me.koreanLevel);
+
+      if (hasKoreanLevel) {
+        setKoreanLevel(me.koreanLevel as Level);
+        router.replace("/main");
       } else {
-        setLoading(true);
-        setTimeout(() => router.replace("/main"), 1500);
+        router.replace("/after");
       }
     } catch (err) {
       console.error("Login error:", err);
       setError("Something went wrong");
+      setLoading(false);
     }
   };
 
   if (loading) return <Loading />;
 
   return (
-    <div className="min-h-screen flex flex-col bg-white px-4 overflow-y-hidden">
-      <div
-        className="flex justify-center items-center"
-        style={{ marginTop: "128px" }}
-      >
-        <Image src="/etc/logo_login.svg" alt="Logo" width={200} height={42} />
+    <div className="min-h-screen flex flex-col bg-white px-4">
+      <div className="flex justify-center items-center mt-32">
+        <Image
+          src="/etc/logo_login.svg"
+          alt="Logo"
+          width={200}
+          height={42}
+          priority
+        />
       </div>
 
-      <div
-        className="flex-1 flex items-start justify-center"
-        style={{ marginTop: "42px" }}
-      >
+      <div className="flex-1 flex items-start justify-center mt-10">
         <div className="w-full max-w-sm space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -77,6 +88,7 @@ export default function LoginPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
             />
           </div>
 
@@ -90,6 +102,7 @@ export default function LoginPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
             />
           </div>
 
@@ -97,7 +110,8 @@ export default function LoginPage() {
 
           <button
             onClick={handleLogin}
-            className="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-gray-900 transition"
+            disabled={loading || !email || !password}
+            className="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Sign in
           </button>

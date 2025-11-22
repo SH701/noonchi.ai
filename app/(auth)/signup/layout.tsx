@@ -6,6 +6,8 @@ export default function SignupLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-white overflow-hidden">{children}</div>
+    <div className="h-[812px] w-[375px] mx-auto bg-white overflow-y-hidden">
+      {children}
+    </div>
   );
 }

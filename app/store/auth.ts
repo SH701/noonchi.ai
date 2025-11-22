@@ -41,39 +41,20 @@ export const useAuthStore = create<AuthState>()(
       profileImageUrl: "",
       interests: [],
 
-      setAccessToken: (token) =>
-        set(() => ({
-          accessToken: token,
-        })),
-
-      setKoreanLevel: (level) =>
-        set(() => ({
-          koreanLevel: level,
-        })),
-
-      setSelectedFace: (face) =>
-        set(() => ({
-          selectedFace: face,
-        })),
-
-      setProfileImageUrl: (url) =>
-        set(() => ({
-          profileImageUrl: url,
-        })),
-
-      setInterests: (list) =>
-        set(() => ({
-          interests: list,
-        })),
+      setAccessToken: (token) => set({ accessToken: token }),
+      setKoreanLevel: (level) => set({ koreanLevel: level }),
+      setSelectedFace: (face) => set({ selectedFace: face }),
+      setProfileImageUrl: (url) => set({ profileImageUrl: url }),
+      setInterests: (list) => set({ interests: list }),
 
       logout: () =>
-        set(() => ({
+        set({
           accessToken: null,
           koreanLevel: "BEGINNER",
           selectedFace: null,
           profileImageUrl: "",
           interests: [],
-        })),
+        }),
     }),
     {
       name: "auth-storage",

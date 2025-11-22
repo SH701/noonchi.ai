@@ -12,16 +12,17 @@ export default function SignupStep1() {
   const [agree, setAgree] = useState(false);
 
   const canNext = email.includes("@") && pw.length >= 8 && pw === pw2 && agree;
+
   const goNext = () => {
     if (!canNext) return;
     sessionStorage.setItem("signupEmail", email);
     sessionStorage.setItem("signupPassword", pw);
     router.push("/signup/detail");
   };
+
   return (
-    <div className="flex flex-col min-h-screen bg-white max-w-[375px] mx-auto">
-      {/* Header */}
-      <div className="px-6 pt-4 pb-10  bg-white flex items-center justify-between relative mt-10">
+    <div className="flex flex-col min-h-screen bg-white">
+      <div className="px-6 pt-4 pb-10 bg-white flex items-center justify-between relative mt-10">
         <button
           onClick={() => router.back()}
           className="text-gray-600 hover:text-gray-800 transition-colors"
@@ -29,15 +30,14 @@ export default function SignupStep1() {
           <ChevronLeftIcon className="w-6 h-6" />
         </button>
 
-        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-semibold font-pretendard text-gray-800">
+        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-semibold text-gray-800">
           Create account
         </h1>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 px-6 py-8 space-y-8">
+      <div className="flex-1 px-6 py-8 space-y-8 pb-32">
         <div>
-          <label className="block text-sm font-medium font-pretendard text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Email
           </label>
           <input
@@ -50,7 +50,7 @@ export default function SignupStep1() {
         </div>
 
         <div className="space-y-4">
-          <label className="block text-sm font-medium font-pretendard text-gray-700">
+          <label className="block text-sm font-medium text-gray-700">
             Password
           </label>
           <input
@@ -67,7 +67,7 @@ export default function SignupStep1() {
             value={pw2}
             onChange={(e) => setPw2(e.target.value)}
           />
-          <p className="text-sm text-[#316CEC] font-pretendard">
+          <p className="text-sm text-blue-600">
             8–16 characters, include letters & numbers
           </p>
         </div>
@@ -79,7 +79,7 @@ export default function SignupStep1() {
             onChange={(e) => setAgree(e.target.checked)}
             className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
           />
-          <span className="sm:text-sm text-gray-700 font-pretendard leading-relaxed text-[13.5px]">
+          <span className="text-sm text-gray-700 leading-relaxed">
             Agree with{" "}
             <a href="#" className="text-black underline">
               Terms of use
@@ -92,15 +92,14 @@ export default function SignupStep1() {
         </label>
       </div>
 
-      {/* Footer Button */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white">
+      <div className="fixed bottom-0 left-0 w-full bg-white">
         <button
           disabled={!canNext}
           onClick={goNext}
-          className={`w-full h-[92px] py-4 font-semibold text-lg rounded-none font-pretendard ${
+          className={`w-full h-[92px] py-4 font-semibold text-lg ${
             canNext
               ? "bg-blue-600 text-white hover:bg-blue-700"
-              : "bg-[#BFDBFE] text-[#EFF6FF] cursor-not-allowed"
+              : "bg-blue-200 text-blue-50 cursor-not-allowed"
           }`}
           style={{
             paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)",
