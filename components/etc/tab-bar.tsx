@@ -8,16 +8,11 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import Image from "next/image";
-import { useState } from "react";
 import ChatTextInput from "../chat/chattextinput";
 
 export default function TabBar() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(true);
-  const onClick = () => {
-    setOpen((prev) => !prev);
-  };
+
   return (
     <div className="fixed  bottom-0 inset-x-0 flex justify-center bg-transparent ">
       <div className="w-[375px] bg-white rounded-t-2xl shadow-[0_-4px_10px_0_rgba(0,0,0,0.08)] border border-gray-100">

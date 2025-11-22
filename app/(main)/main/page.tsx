@@ -19,8 +19,8 @@ export default function Main() {
 
   if (!profile)
     return (
-      <div className="flex flex-col overflow-x-hidden overflow-y-auto">
-        <div className="w-full py-6 px-7 text-white">
+      <>
+        <div className="w-full py-6 px-7  ">
           <Image
             src="/etc/mainLogo.png"
             width={112}
@@ -29,12 +29,12 @@ export default function Main() {
           />
         </div>
         <MainPage />
-      </div>
+      </>
     );
 
   return (
-    <div className="flex flex-col overflow-x-hidden overflow-y-auto">
-      <div className="w-full py-6 px-7 text-white">
+    <>
+      <div className="w-full py-6 px-7 ">
         <Image
           src="/etc/mainLogo.png"
           width={112}
@@ -43,6 +43,6 @@ export default function Main() {
         />
       </div>
       <MainPage />
-    </div>
+    </>
   );
 }

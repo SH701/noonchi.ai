@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import ComingSoon from "@/components/modal/Comingsoon";
-
+import Image from "next/image";
 const CONTENT_WIDTH_CLASS = "w-full";
 
 export default function MainPage() {
@@ -51,9 +51,9 @@ export default function MainPage() {
   const handleClick = () => {
     setOpen(true);
   };
-  
+
   return (
-    <div className=" bg-[#F2F7FF]">
+    <div className=" bg-[#F2F7FF] min-h-screen pb-[140px]">
       <div className={`flex flex-col items-center  pt-6 pb-4`}>
         <h2
           className={`text-2xl font-bold text-gray-900 mb-4 w-full text-left px-5`}
@@ -78,7 +78,14 @@ export default function MainPage() {
               ${isActive ? "scale-100 opacity-100" : "scale-95 opacity-40"}
             `}
                 >
-                  <img src={s.img} className="w-full h-full object-cover" />
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={s.img}
+                      alt="사진"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
 
                   <div className="absolute top-4 left-4 bg-black/30 px-2 py-1 rounded-md text-xs text-white">
                     Career

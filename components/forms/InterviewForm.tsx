@@ -50,7 +50,6 @@ export default function InterviewForm({
         onChange={setJobPosting}
         placeholder="Paste the job posting from the company"
       />
-
       <FileUpload />
 
       <div>
