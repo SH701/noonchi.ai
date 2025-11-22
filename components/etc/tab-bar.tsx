@@ -14,7 +14,7 @@ export default function TabBar() {
 
   return (
     <div className="fixed bottom-0 left-0 w-full bg-transparent z-50">
-      <div className="w-full max-w-[430px] mx-auto bg-white rounded-t-2xl shadow-[0_-4px_10px_0_rgba(0,0,0,0.08)] border border-gray-100">
+      <div className="w-full max-w-[375px] mx-auto bg-white rounded-t-2xl shadow-[0_-4px_10px_0_rgba(0,0,0,0.08)] border border-gray-100">
         {pathname === "/main" && (
           <div className="px-4 relative">
             <ChatTextInput />

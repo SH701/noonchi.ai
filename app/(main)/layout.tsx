@@ -18,13 +18,16 @@ export default function MainsLayout({
   );
 
   return (
-    <div className="w-full min-h-screen  flex flex-col">
-      <div className="w-full max-w-[375px] mx-auto min-h-screen">
-        {children}
+    <div className="w-full min-h-screen flex flex-col bg-gray-100">
+      {/* 데스크톱에서는 중앙 정렬, 모바일에서는 전체 화면 */}
+      <div className="w-full min-h-screen md:flex md:justify-center">
+        <div className="w-full md:max-w-[375px] md:shadow-xl bg-white">
+          {children}
+        </div>
       </div>
       {!hideTabbar && (
-        <div className="fixed bottom-0 left-0 w-full flex justify-center z-50">
-          <div className="w-full max-w-[375px]">
+        <div className="fixed bottom-0 left-0 w-full md:flex md:justify-center z-50">
+          <div className="w-full md:max-w-[375px] md:shadow-xl">
             <TabBar />
           </div>
         </div>

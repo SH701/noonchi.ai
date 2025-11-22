@@ -6,7 +6,6 @@ import Slider, { Settings } from "react-slick";
 import { slides } from "@/lib/setting";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 
 export const settings: Settings = {
@@ -66,7 +65,7 @@ export default function Onboard() {
                     <Image
                       src={slide.img}
                       alt="image"
-                      width={300}
+                      width={340}
                       height={295}
                     />
                   )}

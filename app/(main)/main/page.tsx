@@ -20,7 +20,7 @@ export default function Main() {
   if (!profile)
     return (
       <>
-        <div className="w-full py-6 px-7  bg-white">
+        <div className="w-full py-6 px-7 bg-white">
           <Image
             src="/etc/mainLogo.png"
             width={112}
