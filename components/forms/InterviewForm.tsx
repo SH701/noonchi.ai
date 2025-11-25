@@ -4,27 +4,41 @@ import { useState } from "react";
 import FormInput from "../atoms/form/FormInput";
 import OptionButtons from "./OptionsButton";
 import FileUpload from "./FileUpload";
-import Button from "../atoms/button/Button";
+import ActionButton from "../atoms/button/ActionButton";
 
 interface InterviewFormProps {
-  situationOptions: Record<string, readonly { value: string; label: string }[]>;
-  relationship: string;
+  interviewStyles: readonly { value: string; label: string }[];
+  onSubmit: (data: {
+    company: string;
+    position: string;
+    jobPosting: string;
+    style: string;
+  }) => void;
 }
 
 export default function InterviewForm({
-  situationOptions,
-  relationship,
+  interviewStyles,
+  onSubmit,
 }: InterviewFormProps) {
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
   const [jobPosting, setJobPosting] = useState("");
   const [style, setStyle] = useState("standard");
-  console.log("relationship:", relationship);
-  console.log("options:", situationOptions[relationship]);
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("submit!");
+
+    if (!company.trim() || !position.trim()) {
+      alert("회사명과 지원 직무를 입력해주세요.");
+      return;
+    }
+
+    onSubmit({
+      company,
+      position,
+      jobPosting,
+      style,
+    });
   };
 
   return (
@@ -49,23 +63,24 @@ export default function InterviewForm({
         label="Job Posting"
         value={jobPosting}
         onChange={setJobPosting}
-        placeholder="Paste the job posting from the company"
+        placeholder="Paste the job posting from the company (optional)"
       />
+
       <FileUpload />
 
       <div>
         <label className="text-sm font-semibold text-black mb-2 flex gap-2">
           Interview Style
         </label>
-
         <OptionButtons
-          options={situationOptions[relationship]}
+          options={interviewStyles}
           selected={style}
           onSelect={setStyle}
         />
       </div>
-      <div className="lg:mt-20 flex items-center justify-center">
-        <Button label="Start Chatting" onClick={() => ""} />
+
+      <div className=" fixed bottom-8 flex items-center justify-center">
+        <ActionButton type="submit">Start Chatting</ActionButton>
       </div>
     </form>
   );

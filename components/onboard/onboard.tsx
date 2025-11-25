@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
+import ActionButton from "../atoms/button/ActionButton";
 
 export const settings: Settings = {
   dots: true,
@@ -110,13 +111,7 @@ export default function Onboard() {
         </div>
 
         <div className="px-4 pb-6">
-          <button
-            onClick={handleNext}
-            className="w-[334px] max-h-[52px] py-3 mx-auto bg-blue-600 rounded-lg text-white font-medium  hover:bg-blue-700 transition"
-          >
-            Get Started
-          </button>
-
+          <ActionButton label="Get Started" onClick={handleNext} />
           <p className="text-center text-sm text-gray-500 mt-6">
             Already have an account?{" "}
             <Link

@@ -6,6 +6,7 @@ import { useState } from "react";
 import Loading from "@/app/after/loading";
 import Image from "next/image";
 import { useAuthStore, type Level } from "@/store/auth";
+import ActionButton from "@/components/atoms/button/ActionButton";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -113,14 +114,14 @@ export default function LoginPage() {
           </div>
 
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-
-          <button
-            onClick={handleLogin}
-            disabled={loading || !email || !password}
-            className="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Sign in
-          </button>
+          <div className="flex items-center justify-center">
+            <ActionButton
+              onClick={handleLogin}
+              disabled={loading || !email || !password}
+            >
+              Sign in
+            </ActionButton>
+          </div>
 
           <p className="text-center text-sm text-gray-500">
             First time here?{" "}

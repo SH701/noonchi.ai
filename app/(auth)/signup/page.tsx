@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import ActionButton from "@/components/atoms/button/ActionButton";
+import TextInput from "@/components/atoms/form/TextInput";
 
 export default function SignupStep1() {
   const router = useRouter();
@@ -35,43 +37,34 @@ export default function SignupStep1() {
         </h1>
       </div>
 
-      <div className="flex-1 px-6 py-8 space-y-8 pb-32">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Email
-          </label>
-          <input
-            type="email"
-            placeholder="example@gmail.com"
-            className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+      <div className="flex-1 px-6 py-8 space-y-4 pb-32">
+        <TextInput
+          label="Email"
+          type="email"
+          placeholder="example@gmail.com"
+          value={email}
+          onChange={setEmail}
+        />
 
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            type="password"
-            placeholder="••••••••"
-            className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-            value={pw}
-            onChange={(e) => setPw(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Re-enter your password"
-            className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-            value={pw2}
-            onChange={(e) => setPw2(e.target.value)}
-          />
-          <p className="text-sm text-blue-600">
-            8–16 characters, include letters & numbers
-          </p>
-        </div>
+        <TextInput
+          label="Password"
+          type="password"
+          placeholder="••••••••"
+          value={pw}
+          onChange={setPw}
+        />
 
+        <TextInput
+          label="Re-enter password"
+          type="password"
+          placeholder="••••••••"
+          value={pw2}
+          onChange={setPw2}
+        />
+
+        <p className="text-sm text-blue-600">
+          8–16 characters, include letters & numbers
+        </p>
         <label className="flex items-start space-x-3">
           <input
             type="checkbox"
@@ -90,23 +83,11 @@ export default function SignupStep1() {
             </a>
           </span>
         </label>
-      </div>
-
-      <div className="fixed bottom-0 left-0 w-full bg-white">
-        <button
-          disabled={!canNext}
-          onClick={goNext}
-          className={`w-full h-[92px] py-4 font-semibold text-lg ${
-            canNext
-              ? "bg-blue-600 text-white hover:bg-blue-700"
-              : "bg-blue-200 text-blue-50 cursor-not-allowed"
-          }`}
-          style={{
-            paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)",
-          }}
-        >
-          Next
-        </button>
+        <div className="flex justify-center items-center fixed bottom-24">
+          <ActionButton disabled={!canNext} onClick={goNext}>
+            Next
+          </ActionButton>
+        </div>
       </div>
     </div>
   );

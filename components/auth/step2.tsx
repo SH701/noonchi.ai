@@ -6,6 +6,8 @@ import { useAuthStore } from "@/store/auth";
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import ActionButton from "../atoms/button/ActionButton";
+import TextInput from "../atoms/form/TextInput";
 
 export default function SignupStep2() {
   const router = useRouter();
@@ -76,7 +78,6 @@ export default function SignupStep2() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white max-w-[375px] mx-auto">
-      {/* Header */}
       <div className="px-6 py-4 bg-white mt-8">
         <h2 className="text-xl font-semibold text-gray-800">
           Enter your details
@@ -86,47 +87,34 @@ export default function SignupStep2() {
         </p>
       </div>
 
-      <div className="flex-1 px-6 py-8 space-y-6">
+      <div className="flex-1 px-6 py-8 space-y-4">
         {/* Name */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Name
-          </label>
-          <input
-            type="text"
-            placeholder="Enter your name"
-            className="w-full px-4 py-3 border rounded-xl bg-gray-50"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
+        <TextInput
+          label="Name"
+          required
+          placeholder="Enter your name"
+          value={name}
+          onChange={setName}
+        />
 
-        {/* Birth date */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Birth date
-          </label>
-          <input
-            type="text"
-            placeholder="YYYY-MM-DD"
-            pattern="\d{4}-\d{2}-\d{2}"
-            className="w-full px-4 py-3 border rounded-xl bg-gray-50"
-            value={birthDate}
-            onChange={(e) => {
-              let v = e.target.value.replace(/\D/g, "");
-              if (v.length > 4) v = v.slice(0, 4) + "-" + v.slice(4);
-              if (v.length > 7) v = v.slice(0, 7) + "-" + v.slice(7);
-              setBirthDate(v);
-            }}
-          />
-        </div>
+        <TextInput
+          label="Birth date"
+          placeholder="YYYY-MM-DD"
+          value={birthDate}
+          onChange={(v) => {
+            let val = v.replace(/\D/g, "");
+            if (val.length > 4) val = val.slice(0, 4) + "-" + val.slice(4);
+            if (val.length > 7) val = val.slice(0, 7) + "-" + val.slice(7);
+            setBirthDate(val);
+          }}
+        />
 
         {/* Gender */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Gender
           </label>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 ">
             {(["MALE", "FEMALE"] as const).map((g) => (
               <button
                 key={g}
@@ -143,20 +131,11 @@ export default function SignupStep2() {
             ))}
           </div>
         </div>
-      </div>
-
-      <div className="fixed bottom-0 left-0 right-0 bg-white">
-        <button
-          disabled={!canSubmit}
-          onClick={handleSignup}
-          className={`w-full h-[92px] text-lg font-semibold ${
-            canSubmit
-              ? "bg-blue-600 text-white hover:bg-blue-700"
-              : "bg-[#BFDBFE] text-[#EFF6FF] cursor-not-allowed"
-          }`}
-        >
-          Next
-        </button>
+        <div className="flex justify-center items-center fixed bottom-24">
+          <ActionButton disabled={!canSubmit} onClick={handleSignup}>
+            Next
+          </ActionButton>
+        </div>
       </div>
     </div>
   );

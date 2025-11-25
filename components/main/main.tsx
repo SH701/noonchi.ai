@@ -3,7 +3,6 @@
 import { useState } from "react";
 import ComingSoon from "@/components/modal/Comingsoon";
 import Image from "next/image";
-import Button from "../atoms/button/Button";
 import { useRouter } from "next/navigation";
 const CONTENT_WIDTH_CLASS = "w-full";
 
@@ -107,10 +106,12 @@ export default function MainPage() {
           </div>
         </div>
 
-        <Button
-          label="Start Chatting"
+        <button
+          className="w-[286px] h-13 flex items-center justify-center rounded-lg bg-blue-600 hover:bg-blue-700 cursor-pointer text-white font-medium "
           onClick={() => router.push("/main/custom")}
-        />
+        >
+          Start Chatting
+        </button>
       </div>
 
       <div className={`flex flex-col px-5  py-4`}>

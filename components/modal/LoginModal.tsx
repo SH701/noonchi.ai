@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "../atoms/button/Button";
+import Button from "../atoms/button/ModalButton";
 import Modal from "../atoms/modal/Modal";
 import { useRouter } from "next/navigation";
 interface ComingSoonModalProps {
