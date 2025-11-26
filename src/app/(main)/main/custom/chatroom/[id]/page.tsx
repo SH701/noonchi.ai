@@ -7,14 +7,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { useRecorder } from "@/src/hooks/useRecorder";
-import { useAuthStore } from "@/src/store/auth";
+import { useRecorder } from "@/hooks/useRecorder";
+import { useAuthStore } from "@/store/auth";
 
-import { ChatMsg, useMessages } from "@/src/hooks/chat/useMessage";
-import { useConversationDetail } from "@/src/hooks/chat/useConversationDetail";
-import { HonorificResults } from "@/src/components/chats/HonorificSlider";
-import MessageList from "@/src/components/chats/MessageList";
-import LoadingModal from "@/src/components/chats/LoadingModal";
+import { ChatMsg, useMessages } from "@/hooks/chat/useMessage";
+import { useConversationDetail } from "@/hooks/chat/useConversationDetail";
+import { HonorificResults } from "@/components/chats/HonorificSlider";
+import MessageList from "@/components/chats/MessageList";
+import LoadingModal from "@/components/chats/LoadingModal";
 
 type MicState = "idle" | "recording" | "recorded";
 

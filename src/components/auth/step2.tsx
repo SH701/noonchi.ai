@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import Loading from "@/app/after/loading";
-import { useAuthStore } from "@/src/store/auth";
+import { useAuthStore } from "@/store/auth";
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";

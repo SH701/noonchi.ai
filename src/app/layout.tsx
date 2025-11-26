@@ -2,7 +2,7 @@ import "./globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Metadata } from "next";
-import QueryProvider from "@/src/providers/QueryProvider";
+import QueryProvider from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {
   title: "Noonchi.ai",

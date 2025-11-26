@@ -3,12 +3,12 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider, { Settings } from "react-slick";
-import { slides } from "@/src/data/onboarding";
+import { slides } from "@/data/onboarding";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuthStore } from "@/src/store/auth";
+import { useAuthStore } from "@/store/auth";
 import ActionButton from "../atoms/button/ActionButton";
 
 export const settings: Settings = {

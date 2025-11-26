@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Modal from "@/components/persona/modal";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/src/store/auth";
+import { useAuthStore } from "@/store/auth";
 
 type PersonaDetail = {
   id: number | string;

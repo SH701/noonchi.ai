@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import HonorificBox from "./honorificbox";
-import { useAuthStore } from "@/src/store/auth";
+import { useAuthStore } from "@/store/auth";
 
 type ChatMsg = {
   messageId: number;

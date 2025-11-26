@@ -10,7 +10,7 @@ export default function Loading() {
         <span className="text-gray-400 text-lg">Please wait a moment.</span>
       </div>
 
-      <div className="flex justify-center gap-8 h-[80px] relative">
+      <div className="flex justify-center gap-8 h-20 relative">
         {[{ delay: "0s" }, { delay: ".2s" }, { delay: ".3s" }].map(
           (item, idx) => (
             <div key={idx} className="relative w-[50px]">
@@ -28,7 +28,7 @@ export default function Loading() {
               </div>
 
               <div
-                className="absolute top-[80px] left-1/2 -translate-x-1/2 w-7 h-1 bg-black/50 rounded-full blur-[1px] animate-shadow"
+                className="absolute top-20 left-1/2 -translate-x-1/2 w-7 h-1 bg-black/50 rounded-full blur-[1px] animate-shadow"
                 style={{ animationDelay: item.delay }}
               ></div>
             </div>

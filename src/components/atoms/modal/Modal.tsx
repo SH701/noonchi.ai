@@ -1,6 +1,6 @@
 "use client";
 
-import { ModalProps } from "@/src/types/modal";
+import { ModalProps } from "@/types/modal";
 
 export default function Modal({
   isOpen,

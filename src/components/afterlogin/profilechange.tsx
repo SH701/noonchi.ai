@@ -4,7 +4,7 @@
 
 import React, { useRef, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
-import { useAuthStore } from "@/src/store/auth";
+import { useAuthStore } from "@/store/auth";
 
 const FACES: string[] = [
   "/characters/character1.png",

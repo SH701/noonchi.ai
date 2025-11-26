@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import Link from "next/link";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
-import { useAuthStore } from "@/src/store/auth";
+import { useAuthStore } from "@/store/auth";
 
 export default function AccountManage() {
   const router = useRouter();

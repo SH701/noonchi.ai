@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Profile } from "@/src/types/user";
+import { Profile } from "@/types/user";
 
 export const useUserProfile = (accessToken?: string | null) => {
   return useQuery<Profile>({

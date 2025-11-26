@@ -3,9 +3,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { MyAI } from "@/lib/types";
+
 import HonorificSlider, { HonorificResults } from "./HonorificSlider";
-import { useAuthStore } from "@/src/store/auth";
+import { useAuthStore } from "@/store/auth";
+import { MyAI } from "@/types/persona";
 
 type MessageItemProps = {
   m: any;

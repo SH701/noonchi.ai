@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useUserProfile } from "@/src/hooks/useUserProfile";
-import { useAuthStore } from "@/src/store/auth";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { useAuthStore } from "@/store/auth";
 
 import ProfileHeader from "@/components/organisms/profile/ProfileHeader";
 import ProfileImage from "@/components/atoms/image/ProfileImage";

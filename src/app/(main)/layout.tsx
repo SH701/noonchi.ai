@@ -1,7 +1,7 @@
 "use client";
 
 
-import TabBar from "@/src/components/etc/tab-bar";
+import TabBar from "@/components/etc/tab-bar";
 import { usePathname } from "next/navigation";
 
 export const dynamic = "force-dynamic";

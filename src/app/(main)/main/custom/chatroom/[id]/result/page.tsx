@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import Score from "@/components/main/result/score";
 import Transcript from "@/components/main/result/transscript";
 import Section from "@/components/main/result/section";
-import { Feedback } from "@/lib/types";
-import { useAuthStore } from "@/src/store/auth";
+
+import { useAuthStore } from "@/store/auth";
+import { Feedback } from "@/types/feedback";
 
 type ChatMsg = {
   messageId: number;

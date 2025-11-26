@@ -1,6 +1,6 @@
 import Modal from "@/components/atoms/modal/Modal";
 import Button from "@/components/atoms/button/ModalButton";
-import { ModalProps } from "@/src/types/modal";
+import { ModalProps } from "@/types/modal";
 
 export default function ComingSoonModal({ isOpen, onClose }: ModalProps) {
   return (

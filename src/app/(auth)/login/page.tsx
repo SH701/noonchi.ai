@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Loading from "@/app/after/loading";
 import Image from "next/image";
-import { useAuthStore, type Level } from "@/src/store/auth";
+import { useAuthStore, type Level } from "@/store/auth";
 import ActionButton from "@/components/atoms/button/ActionButton";
 
 export default function LoginPage() {

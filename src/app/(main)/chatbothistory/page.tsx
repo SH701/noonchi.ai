@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PersonaSlider from "@/components/bothistory/PersonaSlider";
 import PersonaDetailModal from "@/components/persona/PersonaDetailModal";
-import type { Conversation } from "@/lib/types";
+
 import Link from "next/link";
 import {
   ChevronDownIcon,
@@ -22,11 +22,12 @@ import FeedbackSection from "@/components/bothistory/Feedbacksections";
 import {
   useConversations,
   useDeleteConversation,
-} from "@/src/hooks/useConversations";
-import { Filter, useChatHistoryStore } from "@/src/store/useChatHistorystore";
-import { useAuthStore } from "@/src/store/auth";
-import Error from "@/src/error/page";
+} from "@/hooks/useConversations";
+import { Filter, useChatHistoryStore } from "@/store/useChatHistorystore";
+import { useAuthStore } from "@/store/auth";
+import Error from "@/error/page";
 import LoginModal from "@/components/modal/LoginModal";
+import { Conversation } from "@/types/conversation";
 
 const situationOptions = {
   BOSS: [

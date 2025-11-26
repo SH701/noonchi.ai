@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 
-import type { Persona } from "@/lib/types";
 import Loading from "./chatroom/[id]/loading";
 import InterviewForm from "@/components/forms/InterviewForm";
-import { useAuthStore } from "@/src/store/auth";
+import { useAuthStore } from "@/store/auth";
+import { Persona } from "@/types/persona";
 
 const INTERVIEW_STYLES = [
   { value: "friendly", label: "Friendly" },
