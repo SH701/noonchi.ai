@@ -1,125 +1,59 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Score from "@/components/result/score";
-
 import Section from "@/components/result/section";
-
-import { useAuthStore } from "@/store/auth";
-import { Feedback } from "@/types/feedback";
 import Transcript from "@/components/result/transscript";
-
-type ChatMsg = {
-  messageId: number;
-  role: "USER" | "AI";
-  content: string;
-  createdAt: string;
-};
-
-function normalizeRole(role: string): "USER" | "AI" {
-  const upper = role.toUpperCase();
-  return upper === "USER" ? "USER" : "AI";
-}
+import { useMessages } from "@/hooks/chat/useMessage";
+import { useFeedback } from "@/hooks/chat/useFeedback";
 
 export default function Result() {
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
-  const [feedback, setFeedback] = useState<Feedback | null>(null);
-  const [messages, setMessages] = useState<ChatMsg[]>([]);
-  const [aiName, setAiName] = useState("AI");
+  const [aiName] = useState("AI");
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const accessToken = useAuthStore((s) => s.accessToken);
   const router = useRouter();
   const params = useParams();
   const conversationId = params?.id as string | undefined;
 
-  // 📌 대화 로그 불러오기
-  useEffect(() => {
-    if (!conversationId || !accessToken) return;
-    (async () => {
-      try {
-        const res = await fetch(
-          `/api/messages?conversationId=${conversationId}&page=1&size=1000`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-            cache: "no-store",
-          }
-        );
-        if (!res.ok) {
-          setError(`대화 정보를 불러올 수 없습니다: ${res.status}`);
-          return;
-        }
 
-        const data = await res.json();
-        const mapped: ChatMsg[] = data.content.map((m: any) => ({
-          messageId: m.messageId,
-          role: normalizeRole(m.type),
-          content: m.content,
-          createdAt: m.createdAt,
-          politenessScore: m.politenessScore,
-          naturalnessScore: m.naturalnessScore,
-        }));
-        setMessages(mapped);
-      } catch (err) {
-        setError("네트워크 오류");
-      }
-    })();
-  }, [conversationId, accessToken]);
+  const {
+    data: messages = [],
+    error: messagesError,
+    isLoading: messagesLoading,
+  } = useMessages(conversationId);
 
-  // 📌 aiPersona 정보 불러오기
-  useEffect(() => {
-    if (!conversationId || !accessToken) return;
-    (async () => {
-      try {
-        const res = await fetch(`/api/conversations/${conversationId}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          cache: "no-store",
-        });
-        if (!res.ok) return;
-        const data = await res.json();
-        setAiName(data.aiPersona?.name || "AI");
-      } catch (err) {
-        console.error("aiPersona fetch 실패:", err);
-      }
-    })();
-  }, [conversationId, accessToken]);
+  const {
+    data: feedback,
+    error: feedbackError,
+    isLoading: feedbackLoading,
+  } = useFeedback(conversationId);
 
-  // 📌 피드백 불러오기
-  useEffect(() => {
-    if (!conversationId || !accessToken) return;
-    const loadFeedback = async () => {
-      try {
-        const res = await fetch(
-          `/api/conversations/${conversationId}/feedback`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-            cache: "no-store",
-          }
-        );
-        if (!res.ok) {
-          setError(`Failed to fetch feedback: ${res.status}`);
-          return;
-        }
-        const data: Feedback = await res.json();
-        setFeedback(data);
-      } catch (err) {
-        setError("네트워크 오류");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadFeedback();
-  }, [conversationId, accessToken]);
 
-  if (loading) return <p className="p-6">Loading...</p>;
-  if (error) return <p className="p-6 text-red-500">{error}</p>;
-  if (!feedback) return <p className="p-6">No feedback available</p>;
+  if (messagesLoading || feedbackLoading) {
+    return <p className="p-6">Loading...</p>;
+  }
+
+
+  if (messagesError) {
+    return (
+      <p className="p-6 text-red-500">
+        메시지 로드 실패: {messagesError.message}
+      </p>
+    );
+  }
+  if (feedbackError) {
+    return (
+      <p className="p-6 text-red-500">
+        피드백 로드 실패: {feedbackError.message}
+      </p>
+    );
+  }
+
+  if (!feedback) {
+    return <p className="p-6">No feedback available</p>;
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col overflow-x-hidden">
@@ -135,7 +69,7 @@ export default function Result() {
       {/* 메인 콘텐츠 (스크롤 가능 영역) */}
       <div className="flex-1 flex justify-center overflow-y-auto">
         <div className="">
-          <div className="px-4 pt-6 pb-4 bg-[#EFF6FF]  w-full max-w-[500px]">
+          <div className="px-4 pt-6 pb-4 bg-[#EFF6FF] w-full max-w-[500px]">
             <div className="flex items-center gap-3 mb-3">
               <Image
                 src="/characters/Noonchicoach.svg"
@@ -223,7 +157,6 @@ export default function Result() {
                     </div>
                   </div>
                 </div>
-                -
               </div>
             )}
           </div>
@@ -233,7 +166,7 @@ export default function Result() {
       {/* Complete Button */}
       <div className="px-4 pb-6 sticky bottom-0 bg-white z-50">
         <button
-          className="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-gray-900 transition "
+          className="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-gray-900 transition"
           onClick={() => router.push("/main")}
         >
           Complete

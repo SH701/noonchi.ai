@@ -2,7 +2,7 @@
 "use client";
 
 type HonorificBoxProps = {
-  messageId: number;
+  messageId: string;
   honorificResults: Record<string, any>;
   sliderValue: Record<string, number>;
   setSliderValue: React.Dispatch<React.SetStateAction<Record<string, number>>>;

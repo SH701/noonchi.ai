@@ -3,12 +3,12 @@
 import { useRouter } from "next/navigation";
 import Modal from "../ui/modal/Modal";
 import Button from "../ui/button/ModalButton";
-interface ComingSoonModalProps {
+interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function LoginModal({ isOpen, onClose }: ComingSoonModalProps) {
+export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const router = useRouter();
   if (!isOpen) return null;
 

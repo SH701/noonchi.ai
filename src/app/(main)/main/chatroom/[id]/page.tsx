@@ -10,17 +10,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRecorder } from "@/hooks/useRecorder";
 import { useAuthStore } from "@/store/auth";
 
-import { ChatMsg, useMessages } from "@/hooks/chat/useMessage";
+import { useMessages } from "@/hooks/chat/useMessage";
 import { useConversationDetail } from "@/hooks/chat/useConversationDetail";
 import { HonorificResults } from "@/components/chats/HonorificSlider";
 import MessageList from "@/components/chats/MessageList";
 import LoadingModal from "@/components/chats/LoadingModal";
 
+import { ChatMsg } from "@/types/chatmessage";
+import EndModal from "@/components/etc/EndModal";
+
 type MicState = "idle" | "recording" | "recorded";
 
 export default function ChatroomPage() {
   const { id } = useParams<{ id: string }>();
-  const router = useRouter();
+
   const accessToken = useAuthStore((s) => s.accessToken);
   const canCall = Boolean(accessToken && id);
   const [message, setMessage] = useState("");
@@ -33,7 +36,6 @@ export default function ChatroomPage() {
   const [sliderValues, setSliderValues] = useState<Record<string, number>>({});
   const [hidden, setHidden] = useState(false);
   const [endModalOpen, setEndModalOpen] = useState(false);
-  const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [pendingAudioFile, setPendingAudioFile] = useState<Blob | null>(null);
   const [pendingAudioUrl, setPendingAudioUrl] = useState<string | null>(null);
@@ -201,29 +203,6 @@ export default function ChatroomPage() {
       );
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleEnd = async () => {
-    if (!conversationId) return;
-
-    setEndModalOpen(false);
-    setLoadingModalOpen(true);
-
-    try {
-      const res = await fetch(`/api/conversations/${id}/end`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-
-      if (!res.ok) {
-        setLoadingModalOpen(false);
-        return;
-      }
-
-      router.push(`/main/custom/chatroom/${id}/result`);
-    } catch {
-      setLoadingModalOpen(false);
     }
   };
 
@@ -538,10 +517,7 @@ export default function ChatroomPage() {
 
           {isTyping && (
             <div className="flex items-center w-full max-w-[334px] min-w-0 border border-blue-300 rounded-full bg-white mx-4">
-              <button
-                onClick={handleKeyboardClick}
-                className="p-2 shrink-0"
-              >
+              <button onClick={handleKeyboardClick} className="p-2 shrink-0">
                 <Image
                   src="/chatroom/mic.png"
                   alt="Mic"
@@ -573,44 +549,11 @@ export default function ChatroomPage() {
         </div>
       </div>
 
-      {endModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => setEndModalOpen(false)}
-          />
-          <div className="relative bg-white rounded-2xl p-6 w-[320px] shadow-lg z-50 flex flex-col items-center text-center">
-            <Image
-              src="/etc/exitchar.svg"
-              alt="exit"
-              width={118}
-              height={94}
-              className="my-5"
-            />
-
-            <p className="text-lg font-semibold mb-2">
-              Would you like to end the conversation
-            </p>
-            <p className="text-sm text-gray-600 mb-6">and receive feedback?</p>
-
-            <button
-              className="w-full bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors cursor-pointer"
-              onClick={handleEnd}
-            >
-              Get Feedback
-            </button>
-
-            <button
-              className="w-full mt-2 bg-gray-100 text-gray-600 py-3 rounded-xl font-semibold cursor-pointer"
-              onClick={() => setEndModalOpen(false)}
-            >
-              Keep Conversation
-            </button>
-          </div>
-        </div>
-      )}
-
-      {loadingModalOpen && <LoadingModal open={loadingModalOpen} />}
+      <EndModal
+        isOpen={endModalOpen}
+        onClose={() => setEndModalOpen(false)}
+        conversationId={id}
+      />
     </>
   );
 }

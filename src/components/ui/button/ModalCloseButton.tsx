@@ -5,7 +5,7 @@ interface ButtonProps {
   disabled: boolean;
 }
 
-export default function ModalButton({
+export default function FeedbackCloseButton({
   label,
   onClick,
   type = "button",
@@ -14,12 +14,12 @@ export default function ModalButton({
   return (
     <button
       type={type}
-      onClick={onClick}
       disabled={disabled}
+      onClick={onClick}
       className="
     w-[236px] h-12
-    bg-blue-600 hover:bg-blue-700
-    text-blue-50 font-semibold
+    bg-gray-200 hover:bg-gray-300
+     font-semibold
     rounded-lg leading-5 transition-all
     flex items-center justify-center
     cursor-pointer

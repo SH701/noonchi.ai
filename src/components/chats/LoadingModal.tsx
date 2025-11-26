@@ -14,7 +14,7 @@ export default function LoadingModal({ open }: LoadingModalProps) {
     if (!open) return
     const interval = setInterval(() => {
       setDots(prev => (prev.length >= 3 ? "" : prev + "."))
-    }, 500) // 0.5초마다
+    }, 500) 
     return () => clearInterval(interval)
   }, [open])
 

@@ -8,7 +8,7 @@ import { useAuthStore } from "@/store/auth";
 import HonorificBox from "@/components/result/honorificbox";
 
 type ChatMsg = {
-  messageId: number;
+  messageId: string;
   role: "USER" | "AI";
   content: string;
   feedback?: string;
@@ -26,11 +26,16 @@ export default function Transcript({
   const accessToken = useAuthStore((s) => s.accessToken);
   const [sliderValue, setSliderValue] = useState<Record<string, number>>({});
   const [translated, setTranslated] = useState<string | null>(null);
+
+  // ✅ number → string으로 변경
   const [feedbacks, setFeedbacks] = useState<
-    Record<number, { explain: string; appropriateExpression: string }>
+    Record<string, { explain: string; appropriateExpression: string }>
   >({});
-  const [open, setOpen] = useState<number | null>(null);
-  const [openHonoricif, setOpenHonorific] = useState<number | null>(null);
+
+  // ✅ number | null → string | null로 변경
+  const [open, setOpen] = useState<string | null>(null);
+  const [openHonoricif, setOpenHonorific] = useState<string | null>(null);
+
   const [honorificResults, setHonorificResults] = useState<Record<string, any>>(
     {}
   );
@@ -52,7 +57,8 @@ export default function Transcript({
 
       setFeedbacks((prev) => ({
         ...prev,
-        [Number(messageId)]: {
+        [messageId]: {
+          // ✅ Number() 제거
           explain: feedbackData.explain,
           appropriateExpression: feedbackData.appropriateExpression,
         },
@@ -142,6 +148,7 @@ export default function Transcript({
       console.error("handleTTS error:", err);
     }
   };
+
   const showFeedbackButton = (m: ChatMsg) => {
     if (m.role !== "USER") return false;
     if (
@@ -155,6 +162,7 @@ export default function Transcript({
     const avg = (m.politenessScore + m.naturalnessScore) / 2;
     return avg <= 80;
   };
+
   return (
     <div className="space-y-4">
       {messages.map((m) =>
@@ -172,7 +180,7 @@ export default function Transcript({
               <div className="flex justify-between">
                 <div className="flex items-center gap-1 mt-2">
                   <button
-                    onClick={() => handleTTS(String(m.messageId))}
+                    onClick={() => handleTTS(m.messageId)}
                     className="cursor-pointer"
                   >
                     <Image
@@ -183,7 +191,7 @@ export default function Transcript({
                     />
                   </button>
                   <button
-                    onClick={() => handleTranslate(String(m.messageId))}
+                    onClick={() => handleTranslate(m.messageId)}
                     className="cursor-pointer"
                   >
                     <Image
@@ -196,7 +204,7 @@ export default function Transcript({
                 </div>
                 <button
                   onClick={() => {
-                    handleHonorific(String(m.messageId));
+                    handleHonorific(m.messageId);
                     setOpenHonorific((prev) =>
                       prev === m.messageId ? null : m.messageId
                     );
@@ -235,7 +243,7 @@ export default function Transcript({
                   {showFeedbackButton(m) && (
                     <button
                       onClick={() => {
-                        handleFeedback(String(m.messageId));
+                        handleFeedback(m.messageId);
                         setOpen((prev) =>
                           prev === m.messageId ? null : m.messageId
                         );
@@ -264,7 +272,10 @@ export default function Transcript({
                     <div className="flex justify-end mt-2">
                       <button
                         onClick={() => {
-                          handleHonorific(String(m.messageId));
+                          handleHonorific(m.messageId);
+                          {
+                            /* ✅ String() 제거 */
+                          }
                           setOpenHonorific((prev) =>
                             prev === m.messageId ? null : m.messageId
                           );

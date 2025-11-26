@@ -1,18 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
-
-export type ChatMsg = {
-  messageId: string;
-  conversationId: number;
-  role: "USER" | "AI";
-  content: string;
-  createdAt: string;
-  feedback?: string;
-  isLoading?: boolean;
-  politenessScore?: number;
-  naturalnessScore?: number;
-};
+import { ChatMsg } from "@/types/chatmessage";
 
 export function useMessages(conversationId?: string) {
   const accessToken = useAuthStore((s) => s.accessToken);
@@ -40,7 +29,7 @@ export function useMessages(conversationId?: string) {
       const list = (data?.content ?? data ?? []) as any[];
 
       return list.map((m) => ({
-        messageId: String(m.messageId),
+        messageId: m.messageId,
         conversationId: m.conversationId,
         role: (m.role ?? m.type) as "USER" | "AI",
         content: m.content ?? "",
