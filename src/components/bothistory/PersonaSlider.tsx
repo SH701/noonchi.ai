@@ -16,8 +16,8 @@ export type PersonaSlide =
     };
 
 type Props = {
-  onAdd?: () => void; // '+' 클릭
-  onItemClick?: (idx: number, it: PersonaSlide) => void; // 아이템 클릭(모달 오픈용)
+  onAdd?: () => void;
+  onItemClick?: (idx: number, it: PersonaSlide) => void;
   itemSize?: number;
   gap?: number;
   visibleCount?: number;
@@ -35,11 +35,9 @@ export default function PersonaSlider({
   gap = 12,
   visibleCount = 5,
   viewportWidth,
-  className,
 }: Props) {
   const [items, setItems] = useState<PersonaSlide[]>([]);
 
-  // ✅ API 호출
   useEffect(() => {
     const fetchPersonas = async () => {
       try {
@@ -52,7 +50,6 @@ export default function PersonaSlider({
         });
         const data = await res.json();
 
-        // data가 배열이면 직접 사용, 아니면 data.content 사용
         const personas = Array.isArray(data) ? data : data?.content || [];
 
         const mapped: PersonaSlide[] = personas.map((p: any) => ({
@@ -61,7 +58,6 @@ export default function PersonaSlider({
           profileImageUrl: p.profileImageUrl || p.imageUrl,
         }));
 
-        // 마지막에 '+' 버튼 추가
         setItems([{ isAdd: true }, ...mapped]);
       } catch (err) {
         console.error("Persona fetch error", err);
@@ -84,7 +80,6 @@ export default function PersonaSlider({
   );
 
   if (!items || items.length === 0) {
-    // 로딩 또는 데이터 없음 → '+'만
     return (
       <div className="overflow-hidden" style={{ width: viewW }}>
         <button
@@ -146,7 +141,6 @@ export default function PersonaSlider({
                 </div>
               )}
 
-              {/* ✅ 이미지 밑에 이름 표시 */}
               <span
                 className="text-xs text-center truncate mt-1"
                 style={{ maxWidth: itemSize }}

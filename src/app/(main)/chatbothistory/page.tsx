@@ -6,17 +6,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PersonaSlider from "@/components/bothistory/PersonaSlider";
 
-import Link from "next/link";
-import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronUpIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/solid";
-import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
+
 import InProgressIcon from "@/components/etc/Inprogress";
 import DoneIcon from "@/components/etc/Done";
-import FeedbackSection from "@/components/bothistory/Feedbacksections";
 
 import {
   useConversations,
@@ -30,6 +23,9 @@ import LoginModal from "@/components/etc/LoginModal";
 import PersonaDetailModal from "@/components/persona/PersonaDetail";
 import Filter from "@/components/bothistory/Filter";
 import Sort from "@/components/bothistory/Sort";
+import SearchBar from "@/components/bothistory/SearchBar";
+import EmptyState from "@/components/bothistory/EmptyState";
+import HistorySection from "@/components/bothistory/HistorySection";
 
 const situationOptions = {
   BOSS: [
@@ -67,17 +63,8 @@ export default function ChatBothistoryPage() {
   const router = useRouter();
   const accessToken = useAuthStore((s) => s.accessToken);
 
-  const {
-    keyword,
-    isSearchOpen,
-    sort,
-    selectedFilter,
-    expanded,
-    setKeyword,
-    toggleSearch,
-    setSort,
-    toggleExpand,
-  } = useChatHistoryStore();
+  const { keyword, sort, selectedFilter, expanded, toggleExpand } =
+    useChatHistoryStore();
 
   const [openDetail, setOpenDetail] = useState(false);
   const [selectedPersonaId, setSelectedPersonaId] = useState<
@@ -118,46 +105,15 @@ export default function ChatBothistoryPage() {
     deleteMutation.mutate(conversationId);
   };
 
-  const handleSearchToggle = () => {
-    if (isSearchOpen) {
-      setKeyword("");
-    }
-    toggleSearch();
-  };
-  if (!accessToken) {
-    return <LoginModal isOpen={true} onClose={() => router.push("/login")} />;
-  }
+  // if (!accessToken) {
+  //   return <LoginModal isOpen={true} onClose={() => router.push("/login")} />;
+  // }
   return (
     <div className="bg-gray-100 w-full flex flex-col pt-10">
       <div className="flex justify-between items-center space-x-2 relative z-10 px-4">
         <h1 className="text-xl font-bold z-10">Chatbot History</h1>
-
-        <AnimatePresence>
-          {isSearchOpen && (
-            <motion.input
-              key="search-input"
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 120, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                }
-              }}
-              className="border p-1 rounded overflow-hidden placeholder:pl-1 my-1"
-              placeholder="Search..."
-              style={{ minWidth: 0 }}
-            />
-          )}
-        </AnimatePresence>
-
-        <button onClick={handleSearchToggle} className="cursor-pointer my-2">
-          <MagnifyingGlassIcon className="w-6 h-6 text-gray-700" />
-        </button>
+        <SearchBar />
       </div>
-
       <div className="mb-4 p-6">
         <PersonaSlider
           onAdd={() => router.push("/main/custom")}
@@ -203,24 +159,7 @@ export default function ChatBothistoryPage() {
               )}
 
               {conversations.length === 0 && !isLoading && !error && (
-                <div className="flex flex-col items-center justify-center mt-20">
-                  <Image
-                    src="/circle/circle4.png"
-                    alt="loading"
-                    width={81}
-                    height={81}
-                  />
-                  <p className="text-gray-400 text-center mt-10">
-                    No chat history.
-                  </p>
-                  <Link
-                    href="/main/custom"
-                    className="flex items-center text-blue-500 hover:underline text-sm"
-                  >
-                    Start a conversation with a custom chatbot
-                    <ChevronRightIcon className="size-4 pt-1" />
-                  </Link>
-                </div>
+                <EmptyState type="no-history" />
               )}
 
               {conversations.length > 0 &&
@@ -324,50 +263,13 @@ export default function ChatBothistoryPage() {
                       </div>
                     </div>
 
-                    <AnimatePresence initial={false}>
-                      {isOpen && chat.status === "ACTIVE" && (
-                        <motion.div
-                          key="active"
-                          initial={{ opacity: 0, scaleY: 0 }}
-                          animate={{ opacity: 1, scaleY: 1 }}
-                          exit={{ opacity: 0, scaleY: 0 }}
-                          transition={{ duration: 0.25, ease: "easeInOut" }}
-                          className="overflow-hidden origin-top"
-                        >
-                          <div className="px-3 flex gap-2 items-center justify-center bg-[#F3F4F6] h-[83px]">
-                            <button
-                              onClick={() =>
-                                handleOpenChat(chat.conversationId)
-                              }
-                              className="w-25 h-9 py-2 bg-blue-600 text-white rounded-xl cursor-pointer"
-                            >
-                              <p className="text-xs">Open Chat</p>
-                            </button>
-                            <button
-                              onClick={() =>
-                                handleDeleteChat(chat.conversationId)
-                              }
-                              className="w-25 h-9 py-2 bg-gray-300 text-gray-700 rounded-xl cursor-pointer"
-                            >
-                              <p className="text-xs">Delete</p>
-                            </button>
-                          </div>
-                        </motion.div>
-                      )}
-
-                      {isOpen && chat.status === "ENDED" && (
-                        <motion.div
-                          key="ended"
-                          initial={{ maxHeight: 0, opacity: 0 }}
-                          animate={{ maxHeight: 400, opacity: 1 }}
-                          exit={{ maxHeight: 0, opacity: 0 }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          className="overflow-hidden"
-                        >
-                          <FeedbackSection id={chat.conversationId} />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    <HistorySection
+                      isOpen={isOpen}
+                      status={chat.status as "ACTIVE" | "ENDED"}
+                      conversationId={chat.conversationId}
+                      onOpenChat={() => handleOpenChat}
+                      onDelete={() => handleDeleteChat}
+                    />
                   </div>
                 );
               })}

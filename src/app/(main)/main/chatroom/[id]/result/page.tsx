@@ -8,15 +8,15 @@ import Section from "@/components/result/section";
 import Transcript from "@/components/result/transscript";
 import { useMessages } from "@/hooks/chat/useMessage";
 import { useFeedback } from "@/hooks/chat/useFeedback";
+import ActionButton from "@/components/ui/button/ActionButton";
 
 export default function Result() {
-  const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
+  const [tab] = useState<"transcript" | "mistakes">("transcript");
   const [aiName] = useState("AI");
 
   const router = useRouter();
   const params = useParams();
   const conversationId = params?.id as string | undefined;
-
 
   const {
     data: messages = [],
@@ -30,11 +30,9 @@ export default function Result() {
     isLoading: feedbackLoading,
   } = useFeedback(conversationId);
 
-
   if (messagesLoading || feedbackLoading) {
     return <p className="p-6">Loading...</p>;
   }
-
 
   if (messagesError) {
     return (
@@ -99,32 +97,6 @@ export default function Result() {
             </div>
           </div>
 
-          {/* Tab Bar */}
-          <div className="px-4 pt-6">
-            <div className="flex border-b border-gray-200">
-              <button
-                onClick={() => setTab("transcript")}
-                className={`flex-1 py-3 text-sm font-medium transition-all duration-200 border-b-2 text-center ${
-                  tab === "transcript"
-                    ? "text-blue-600 border-blue-600"
-                    : "text-gray-500 border-transparent hover:text-gray-700"
-                }`}
-              >
-                Transcript
-              </button>
-              <button
-                onClick={() => setTab("mistakes")}
-                className={`flex-1 py-3 text-sm font-medium transition-all duration-200 border-b-2 text-center ${
-                  tab === "mistakes"
-                    ? "text-blue-600 border-blue-600"
-                    : "text-gray-500 border-transparent hover:text-gray-700"
-                }`}
-              >
-                Common Mistakes
-              </button>
-            </div>
-          </div>
-
           {/* Content Section */}
           <div className="px-4 pt-6 pb-6">
             {tab === "transcript" ? (
@@ -163,14 +135,11 @@ export default function Result() {
         </div>
       </div>
 
-      {/* Complete Button */}
       <div className="px-4 pb-6 sticky bottom-0 bg-white z-50">
-        <button
-          className="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-gray-900 transition"
+        <ActionButton
+          children="Complete"
           onClick={() => router.push("/main")}
-        >
-          Complete
-        </button>
+        />
       </div>
     </div>
   );

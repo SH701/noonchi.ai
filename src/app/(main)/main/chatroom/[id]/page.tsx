@@ -17,7 +17,7 @@ import MessageList from "@/components/chats/MessageList";
 import LoadingModal from "@/components/chats/LoadingModal";
 
 import { ChatMsg } from "@/types/chatmessage";
-import EndModal from "@/components/etc/EndModal";
+import EndModal from "@/components/result/EndModal";
 
 type MicState = "idle" | "recording" | "recorded";
 

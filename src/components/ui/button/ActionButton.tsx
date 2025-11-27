@@ -18,7 +18,7 @@ export default function ActionButton({
       onClick={disabled ? undefined : onClick}
       className={`
         w-[334px]
-        h-[52px]
+        h-13
         px-[110px]
         py-4
         rounded-lg
