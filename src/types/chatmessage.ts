@@ -1,5 +1,5 @@
 export type ChatMsg = {
-  messageId: string | number;
+  messageId: string;
   conversationId: number;
   role: "USER" | "AI";
   content: string;

@@ -27,12 +27,10 @@ export default function Transcript({
   const [sliderValue, setSliderValue] = useState<Record<string, number>>({});
   const [translated, setTranslated] = useState<string | null>(null);
 
-  // ✅ number → string으로 변경
   const [feedbacks, setFeedbacks] = useState<
     Record<string, { explain: string; appropriateExpression: string }>
   >({});
 
-  // ✅ number | null → string | null로 변경
   const [open, setOpen] = useState<string | null>(null);
   const [openHonoricif, setOpenHonorific] = useState<string | null>(null);
 
