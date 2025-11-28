@@ -7,7 +7,7 @@ interface StatsCardProps {
 
 export default function StatsCard({
   sentenceCount = 0,
-  koreanLevel = 0,
+  koreanLevel = "",
 }: StatsCardProps) {
   return (
     <div className="bg-[#EFF6FF] rounded-2xl border border-blue-200 p-6">

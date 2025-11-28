@@ -1,11 +1,22 @@
 import { Upload } from "lucide-react";
 import { useRef } from "react";
 
-export default function FileUpload() {
+interface FileUploadProps {
+  onFilesChange: (files: File[]) => void;
+}
+
+export default function FileUpload({ onFilesChange }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
     inputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+
+    const files = Array.from(e.target.files);
+    onFilesChange(files);
   };
 
   return (
@@ -35,6 +46,7 @@ export default function FileUpload() {
         multiple
         accept=".pdf,.docx"
         className="hidden"
+        onChange={handleFileChange}
       />
     </div>
   );

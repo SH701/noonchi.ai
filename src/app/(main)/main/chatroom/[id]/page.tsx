@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
@@ -88,13 +88,16 @@ export default function ChatroomPage() {
     const displayContent = content ?? "";
 
     const optimistic: ChatMsg = {
-      messageId: `user_${Date.now()}`,
+      messageId: `temp_${Date.now()}`,
       conversationId,
       role: "USER",
       content: displayContent,
+      translatedContent: "",
+      audioUrl: null,
       createdAt: new Date().toISOString(),
       politenessScore: -1,
       naturalnessScore: -1,
+      pronunciationScore: -1,
     };
 
     setMessages((prev) => [...prev, optimistic]);
@@ -140,14 +143,18 @@ export default function ChatroomPage() {
             msg.messageId === optimistic.messageId
               ? {
                   ...msg,
-                  messageId: String(userMsgData.messageId),
+                  messageId: userMsgData.messageId,
+                  role: userMsgData.type ?? "USER",
                   content:
                     !userMsgData.content ||
                     (!userMsgData.content.trim() && audioUrl)
                       ? "[Voice message]"
-                      : userMsgData.content || displayContent,
+                      : userMsgData.content ?? displayContent,
+                  translatedContent: userMsgData.translatedContent ?? "",
+                  audioUrl: userMsgData.audioUrl ?? null,
                   politenessScore: userMsgData.politenessScore ?? -1,
                   naturalnessScore: userMsgData.naturalnessScore ?? -1,
+                  pronunciationScore: userMsgData.pronunciationScore ?? -1,
                 }
               : msg
           )
@@ -159,6 +166,8 @@ export default function ChatroomPage() {
         conversationId,
         role: "AI",
         content: "...",
+        translatedContent: "",
+        audioUrl: null,
         createdAt: new Date().toISOString(),
         isLoading: true,
       };
@@ -186,11 +195,16 @@ export default function ChatroomPage() {
           prev.map((msg) =>
             msg.messageId === aiLoadingMsg.messageId
               ? {
-                  messageId: String(aiData.messageId ?? `ai_${Date.now()}`),
+                  messageId: aiData.messageId ?? `ai_${Date.now()}`,
                   conversationId,
                   role: "AI",
                   content: aiData.content,
+                  translatedContent: aiData.translatedContent ?? "",
+                  audioUrl: aiData.audioUrl ?? null,
                   createdAt: aiData.createdAt ?? new Date().toISOString(),
+                  politenessScore: aiData.politenessScore ?? -1,
+                  naturalnessScore: aiData.naturalnessScore ?? -1,
+                  pronunciationScore: aiData.pronunciationScore ?? -1,
                   isLoading: false,
                 }
               : msg

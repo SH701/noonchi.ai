@@ -1,11 +1,14 @@
 export type ChatMsg = {
-  messageId: string;
+  messageId: string | number;
   conversationId: number;
   role: "USER" | "AI";
   content: string;
+  translatedContent?: string;
+  audioUrl?: string | null;
   createdAt: string;
-  feedback?: string;
-  isLoading?: boolean;
   politenessScore?: number;
   naturalnessScore?: number;
+  pronunciationScore?: number;
+  feedback?: string;
+  isLoading?: boolean;
 };

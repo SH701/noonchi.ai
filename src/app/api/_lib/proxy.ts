@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 
-const BASE = process.env.API_URL;
-const PUBLIC_URL = process.env.PUBLIC_URL ?? "https://noonchi.ai.kr/";
+const BASE = process.env.NEXT_PUBLIC_API_URL;
 
 const FORWARD_COOKIE_KEYS = [
   "accessToken",
@@ -116,7 +115,6 @@ export async function proxyJSON(
 
   const headers = new Headers({
     Accept: "application/json, */*;q=0.8",
-    Origin: PUBLIC_URL,
     ...(opts?.extraHeaders ?? {}),
   });
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import Loading from "../../chatroom/[id]/loading";
@@ -8,15 +7,9 @@ import { useAuthStore } from "@/store/auth";
 
 import RoleplayForm from "@/components/forms/RoleplayForm";
 
-export default function Interview() {
+export default function RolePlay() {
   const accessToken = useAuthStore((s) => s.accessToken);
   const router = useRouter();
-
-  const [showLoading, setShowLoading] = useState(false);
-
-  if (showLoading) {
-    return <Loading />;
-  }
 
   return (
     <div className="flex flex-col pt-14 relative bg-white w-full overflow-x-hidden">

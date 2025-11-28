@@ -6,13 +6,14 @@ import OptionButtons from "../ui/button/OptionsButton";
 import FileUpload from "../ui/form/FileUpload";
 import ActionButton from "../ui/button/ActionButton";
 
-interface InterviewFormProps {
+export interface InterviewFormProps {
   interviewStyles: readonly { value: string; label: string }[];
   onSubmit: (data: {
     company: string;
     position: string;
     jobPosting: string;
     style: string;
+    files: File[];
   }) => void;
 }
 
@@ -24,6 +25,7 @@ export default function InterviewForm({
   const [position, setPosition] = useState("");
   const [jobPosting, setJobPosting] = useState("");
   const [style, setStyle] = useState("standard");
+  const [files, setFiles] = useState<File[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +40,7 @@ export default function InterviewForm({
       position,
       jobPosting,
       style,
+      files,
     });
   };
 
@@ -66,7 +69,7 @@ export default function InterviewForm({
         placeholder="Paste the job posting from the company (optional)"
       />
 
-      <FileUpload />
+      <FileUpload onFilesChange={setFiles} />
 
       <div>
         <label className="text-sm font-semibold text-black mb-2 flex gap-2">

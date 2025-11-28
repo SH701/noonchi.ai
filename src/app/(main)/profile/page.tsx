@@ -8,7 +8,6 @@ import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileImage from "@/components/ui/image/ProfileImage";
 import StatsCard from "@/components/profile/StatsCard";
 import ProfileMenuList from "@/components/profile/ProfileMenuList";
-import LoginModal from "@/components/etc/LoginModal";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -39,21 +38,11 @@ export default function ProfilePage() {
     );
 
     useAuthStore.getState().logout();
-
     localStorage.removeItem("auth-storage");
-
     router.push("/login");
   };
 
-  if (!accessToken) {
-    return <LoginModal isOpen={true} onClose={() => router.push("/login")} />;
-  }
-
   if (isLoading) return <p className="text-center mt-10">Loading…</p>;
-
-  if (!profile) {
-    return <LoginModal isOpen={true} onClose={() => router.push("/login")} />;
-  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -61,20 +50,20 @@ export default function ProfilePage() {
 
       <div className="flex-1 flex flex-col items-center w-[375px] mx-auto">
         <div className="flex flex-col items-center pt-6">
-          <ProfileImage src={profile.profileImageUrl} />
+          <ProfileImage src={profile?.profileImageUrl} />
 
           <button
             onClick={() => router.push("/profile/edit")}
             className="text-xl font-semibold mt-4"
           >
-            {profile.nickname}
+            {profile?.nickname}
           </button>
         </div>
 
         <div className="px-4 pt-6 w-full">
           <StatsCard
-            sentenceCount={profile.sentenceCount}
-            koreanLevel={Number(profile.koreanLevel)}
+            sentenceCount={profile?.sentenceCount}
+            koreanLevel={Number(profile?.koreanLevel)}
           />
         </div>
 

@@ -19,13 +19,14 @@ import { useChatHistoryStore } from "@/store/useChatHistorystore";
 import { useAuthStore } from "@/store/auth";
 
 import { Conversation } from "@/types/conversation";
-import LoginModal from "@/components/etc/LoginModal";
+
 import PersonaDetailModal from "@/components/persona/PersonaDetail";
 import Filter from "@/components/bothistory/Filter";
 import Sort from "@/components/bothistory/Sort";
 import SearchBar from "@/components/bothistory/SearchBar";
 import EmptyState from "@/components/bothistory/EmptyState";
 import HistorySection from "@/components/bothistory/HistorySection";
+import LoginModal from "@/components/etc/LoginModal";
 
 const situationOptions = {
   BOSS: [
@@ -105,9 +106,9 @@ export default function ChatBothistoryPage() {
     deleteMutation.mutate(conversationId);
   };
 
-  // if (!accessToken) {
-  //   return <LoginModal isOpen={true} onClose={() => router.push("/login")} />;
-  // }
+  if (!accessToken) {
+    return <LoginModal isOpen={true} onClose={() => router.push("/login")} />;
+  }
   return (
     <div className="bg-gray-100 w-full flex flex-col pt-10">
       <div className="flex justify-between items-center space-x-2 relative z-10 px-4">

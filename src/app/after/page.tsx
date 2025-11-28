@@ -173,7 +173,7 @@ export default function AfterPage() {
                             koreanLevel === lvl ? "#EFF6FF" : "#F9FAFB",
                         }}
                       >
-                        <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden mr-4">
+                        <div className="shrink-0 w-12 h-12 rounded-full overflow-hidden mr-4">
                           <Image
                             src={levelImg[lvl]}
                             alt={lvl}

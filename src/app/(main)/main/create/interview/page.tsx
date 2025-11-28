@@ -7,74 +7,80 @@ import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import Loading from "../../chatroom/[id]/loading";
 import InterviewForm from "@/components/forms/InterviewForm";
 import { useAuthStore } from "@/store/auth";
-import { Persona } from "@/types/persona";
 
 const INTERVIEW_STYLES = [
   { value: "friendly", label: "Friendly" },
   { value: "standard", label: "Standard" },
   { value: "strict", label: "Strict" },
 ] as const;
-
-const DEFAULT_INTERVIEWER_IMAGE = "/characters/interviewer.png";
-
+export type UploadedFiles = File[];
 export default function Interview() {
   const accessToken = useAuthStore((s) => s.accessToken);
   const router = useRouter();
-
   const [showLoading, setShowLoading] = useState(false);
 
-  const handleSubmit = async (formData: {
-    company: string;
-    position: string;
-    jobPosting: string;
-    style: string;
-  }) => {
+  const handleSubmit = async (data: any) => {
     setShowLoading(true);
+
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-      if (accessToken) {
-        headers.Authorization = `Bearer ${accessToken}`;
+      const uploadedFiles = [];
+
+      for (const file of data.files) {
+        // 1) 프리사인 URL 요청
+        const presignRes = await fetch("/api/files/presigned-url", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            fileExtension: file.name.split(".").pop(),
+            fileType: file.type,
+          }),
+        });
+
+        const { url: presignedUrl, fileUrl } = await presignRes.json();
+
+        // 2) S3 업로드
+        await fetch(presignedUrl, {
+          method: "PUT",
+          headers: { "Content-Type": file.type },
+          body: file,
+        });
+
+        // 3) 백엔드에 넘길 파일 정보
+        uploadedFiles.push({
+          fileUrl, // S3 실제 URL
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+        });
       }
 
-      // 면접관 페르소나 생성
-      const personaRes = await fetch("/api/personas", {
+      // 4) 인터뷰 생성 API 호출
+      const res = await fetch("/api/conversations/interview", {
         method: "POST",
-        headers,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify({
-          name: `${formData.company} Interviewer`,
-          company: formData.company,
-          position: formData.position,
-          jobPosting: formData.jobPosting,
-          interviewStyle: formData.style,
-          role: "INTERVIEWER",
-          profileImageUrl: DEFAULT_INTERVIEWER_IMAGE,
+          companyName: data.company,
+          jobTitle: data.position,
+          jobPosting: data.jobPosting,
+          interviewStyle: data.style.toUpperCase(),
+          files: uploadedFiles,
         }),
       });
 
-      if (!personaRes.ok) throw new Error("면접관 생성 실패");
-      const persona: Persona = await personaRes.json();
+      if (!res.ok) throw new Error("인터뷰 생성 실패");
 
-      // 면접 대화방 생성
-      const convoRes = await fetch("/api/conversations", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          personaId: persona.personaId,
-          conversationType: "INTERVIEW",
-          interviewStyle: formData.style,
-        }),
-      });
-
-      if (!convoRes.ok) throw new Error("면접방 생성 실패");
-      const convo = await convoRes.json();
-
-      setTimeout(() => {
-        router.push(`/main/custom/chatroom/${convo.conversationId}`);
-      }, 1500);
-    } catch {
+      const convo = await res.json();
+      router.push(`/main/chatroom/${convo.conversationId}`);
+    } catch (e) {
+      console.error(e);
       alert("생성 실패");
+    } finally {
       setShowLoading(false);
     }
   };

@@ -37,6 +37,6 @@ export function useConversationDetail(id?: string) {
 
       return res.json();
     },
-    staleTime: 1000 * 60, // 1분 동안 캐시
+    staleTime: 1000 * 60, 
   });
 }
