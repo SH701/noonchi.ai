@@ -23,7 +23,7 @@ export const settings: Settings = {
   swipe: false,
   dotsClass: "slick-dots custom-dots",
   autoplay: true,
-  autoplaySpeed: 3500,
+  autoplaySpeed: 2000,
 };
 
 export default function Onboard() {

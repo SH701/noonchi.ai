@@ -28,19 +28,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const conversationId = crypto.randomUUID();
+    const conversationId = Math.floor(Math.random() * 1000000000);
+
     const personaId = Math.floor(Math.random() * 100000);
 
-    const responseData = {
-      conversationId,
-      personaId,
-      companyName,
-      jobTitle,
-      interviewStyle,
-      files,
-    };
-
-    return NextResponse.json(responseData, { status: 201 });
+    return NextResponse.json(
+      {
+        conversationId,
+        personaId,
+        companyName,
+        jobTitle,
+        interviewStyle,
+        files,
+      },
+      { status: 201 }
+    );
   } catch (e: any) {
     return NextResponse.json(
       { error: e?.message ?? "Internal Server Error" },
