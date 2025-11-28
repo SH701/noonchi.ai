@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type Level = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "";
+export type Level = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
 export type Interest =
   | "💬 Daily"
   | "💼 Business"
@@ -57,7 +57,7 @@ export const useAuthStore = create<AuthState>()(
         return set({
           accessToken: null,
           refreshToken: null,
-          koreanLevel: "",
+          koreanLevel: "BEGINNER",
           role: "",
           selectedFace: null,
           profileImageUrl: "",
