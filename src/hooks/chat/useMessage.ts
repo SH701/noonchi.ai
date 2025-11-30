@@ -31,11 +31,15 @@ export function useMessages(conversationId?: string) {
       return list.map((m) => ({
         messageId: m.messageId,
         conversationId: m.conversationId,
-        role: (m.role ?? m.type) as "USER" | "AI",
+        type: (m.type ?? m.role) as "USER" | "AI",
         content: m.content ?? "",
+        translatedContent: m.translatedContent,
+        audioUrl: m.audioUrl ?? null,
         createdAt: m.createdAt ?? new Date().toISOString(),
         politenessScore: m.politenessScore ?? -1,
         naturalnessScore: m.naturalnessScore ?? -1,
+        pronunciationScore: m.pronunciationScore ?? -1,
+        feedback: m.feedback,
       }));
     },
     staleTime: 0,

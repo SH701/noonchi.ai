@@ -34,7 +34,7 @@ export default function Interview() {
             fileType: file.type,
           }),
         });
-        console.log(file.type);
+
         const { url } = await presignRes.json();
 
         await fetch(url, {
