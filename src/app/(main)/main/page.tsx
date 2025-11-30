@@ -127,7 +127,6 @@ export default function Main() {
         justify-between"
                 onClick={() => router.push("/main/create/roleplay")}
               >
-                {/* 상단: 제목 + 아이콘 */}
                 <div className="flex items-start justify-between mb-3">
                   <h4 className="text-base font-semibold text-gray-900 leading-tight flex-1 pr-2">
                     {topic.title}
@@ -135,7 +134,6 @@ export default function Main() {
                   <div className="text-2xl shrink-0">{topic.icon}</div>
                 </div>
 
-                {/* 하단: AI 이름 + 설명 */}
                 <div>
                   <p className="text-sm text-gray-600 leading-snug">
                     {topic.description}
