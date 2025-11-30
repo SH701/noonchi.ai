@@ -12,8 +12,7 @@ import ProfileMenuList from "@/components/profile/ProfileMenuList";
 export default function ProfilePage() {
   const router = useRouter();
 
-  const accessToken = useAuthStore((s) => s.accessToken);
-  const { data: profile, isLoading } = useUserProfile(accessToken);
+  const { data: profile, isLoading } = useUserProfile();
 
   const handleLogout = async () => {
     const { refreshToken } = useAuthStore.getState();

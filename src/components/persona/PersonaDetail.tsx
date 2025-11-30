@@ -94,7 +94,6 @@ export default function PersonaDetailModal({
     run();
   }, [open, personaId, accessToken]);
 
-  // 새로운 채팅
   const handleStartChat = async () => {
     if (!accessToken || !data) return;
     try {
@@ -106,7 +105,7 @@ export default function PersonaDetailModal({
         },
         body: JSON.stringify({
           personaId: data.id,
-          situation: data.description, // sitdata에서 상황을 전달
+          situation: data.description,
         }),
       });
 

@@ -2,13 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
-import Loading from "../../chatroom/[id]/loading";
-import { useAuthStore } from "@/store/auth";
+
+
 
 import RoleplayForm from "@/components/forms/RoleplayForm";
 
 export default function RolePlay() {
-  const accessToken = useAuthStore((s) => s.accessToken);
   const router = useRouter();
 
   return (

@@ -40,11 +40,7 @@ export default function ProfileEditPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    data: profile,
-    isLoading,
-    error: rqError,
-  } = useUserProfile(accessToken);
+  const { data: profile, isLoading, error: rqError } = useUserProfile();
 
   const [originalProfile, setOriginalProfile] = useState<Profile | null>(null);
   const [nickname, setNickname] = useState("");

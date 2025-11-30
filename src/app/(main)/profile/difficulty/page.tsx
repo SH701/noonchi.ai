@@ -120,7 +120,7 @@ export default function LevelSelectPage() {
                     background: selected === value ? "#EFF6FF" : "#F9FAFB",
                   }}
                 >
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden mr-4">
+                  <div className="shrink-0 w-12 h-12 rounded-full overflow-hidden mr-4">
                     <Image
                       src={images[i]}
                       alt={`level-${value}`}

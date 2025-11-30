@@ -49,18 +49,3 @@ export default function MainsLayout({
     </div>
   );
 }
-// const accessToken = useAuthStore((s) => s.accessToken);
-// const role = useAuthStore((s) => s.role);
-// const hasHydrated = useAuthStore.persist.hasHydrated();
-// useEffect(() => {
-//   if (!hasHydrated) return; // localStorage 로드 전에는 판단하지 않음
-
-//   const invalid = !accessToken || role === "ROLE_GUEST";
-
-//   if (invalid) {
-//     router.replace("/login");
-//   }
-// }, [hasHydrated, accessToken, role]);
-
-// if (!hasHydrated) return null; // 초기 깜빡임 방지
-// if (!accessToken || role === "ROLE_GUEST") return null;
