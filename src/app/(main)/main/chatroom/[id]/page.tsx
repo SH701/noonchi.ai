@@ -19,6 +19,7 @@ import Loading from "./loading";
 import ChatroomHeader from "@/components/ui/header/ChatroomHeader";
 import ChatroomInput from "@/components/chats/ChatRoomInput.";
 import clsx from "clsx";
+import { useMessageFeedback } from "@/hooks/useMessageFeedback";
 
 type MicState = "idle" | "recording" | "recorded";
 
@@ -31,10 +32,7 @@ export default function ChatroomPage() {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [feedbackOpenId, setFeedbackOpenId] = useState<string | null>(null);
-
-  const [sliderValues, setSliderValues] = useState<Record<string, number>>({});
   const [hidden, setHidden] = useState(false);
-  const [endModalOpen, setEndModalOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [pendingAudioFile, setPendingAudioFile] = useState<Blob | null>(null);
   const [pendingAudioUrl, setPendingAudioUrl] = useState<string | null>(null);
@@ -42,7 +40,7 @@ export default function ChatroomPage() {
   const [micState, setMicState] = useState<MicState>("idle");
 
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { isRecording, startRecording, stopRecording } = useRecorder();
+  const { startRecording, stopRecording } = useRecorder();
 
   const {
     data: conversation,
@@ -50,9 +48,13 @@ export default function ChatroomPage() {
     error: conversationError,
   } = useConversationDetail(id);
 
-  const conversationId = conversation?.conversationId ?? null;
+  const conversationId = conversation?.conversationId ?? 0;
   const myAI = conversation?.aiPersona ?? null;
 
+  const { mutate: createFeedback } = useMessageFeedback(
+    conversationId,
+    accessToken
+  );
   const {
     data: initialMessages = "",
     isLoading: isMessagesLoading,
@@ -68,10 +70,6 @@ export default function ChatroomPage() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  const handleKeyboardClick = () => {
-    setIsTyping((prev) => !prev);
-  };
 
   const showVoiceErrorMessage = () => {
     setShowVoiceError(true);
@@ -237,32 +235,8 @@ export default function ChatroomPage() {
       setLoading(false);
     }
   };
-  const handleFeedbacks = async (messageId: string) => {
-    if (!accessToken) return;
-
-    if (feedbackOpenId === messageId) {
-      setFeedbackOpenId(null);
-      return;
-    }
-
-    try {
-      const res = await fetch(`/api/messages/${messageId}/feedback`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-
-      if (!res.ok) return;
-
-      const feedbackData = await res.json();
-
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.messageId === messageId ? { ...msg, feedback: feedbackData } : msg
-        )
-      );
-
-      setFeedbackOpenId(messageId);
-    } catch (err) {}
+  const handleFeedbacks = (messageId: string) => {
+    createFeedback(messageId);
   };
 
   const handleMicClick = async () => {
@@ -349,7 +323,6 @@ export default function ChatroomPage() {
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col max-w-[500px] w-full">
-        {/* Header */}
         <ChatroomHeader
           name={myAI?.name}
           hidden={hidden}

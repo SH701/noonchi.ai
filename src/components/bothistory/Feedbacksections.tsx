@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
-import { useFeedback } from "@/hooks/chat/useFeedback";
+import { useFeedback } from "@/hooks/useConversationFeedback";
 
 export default function FeedbackSection({ id }: { id: number | string }) {
   const router = useRouter();

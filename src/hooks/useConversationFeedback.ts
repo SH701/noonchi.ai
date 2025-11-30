@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
 import { Feedback } from "@/types/feedback";
 
-export function useFeedback(conversationId?: string) {
+export function useConversaitonFeedback(conversationId?: string) {
   const accessToken = useAuthStore((s) => s.accessToken);
 
   return useQuery<Feedback>({

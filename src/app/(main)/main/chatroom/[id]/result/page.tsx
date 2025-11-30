@@ -5,30 +5,52 @@ import { useRouter, useParams } from "next/navigation";
 import { useState } from "react";
 import Score from "@/components/result/score";
 import Section from "@/components/result/section";
-import Transcript from "@/components/result/transscript";
 import { useMessages } from "@/hooks/chat/useMessage";
-import { useFeedback } from "@/hooks/chat/useFeedback";
+import { useConversaitonFeedback } from "@/hooks/useConversationFeedback";
 import ActionButton from "@/components/ui/button/ActionButton";
+import MessageList from "@/components/chats/MessageList";
+import { useMessageFeedback } from "@/hooks/useMessageFeedback";
+import { useAuthStore } from "@/store/auth";
+import { useConversationDetail } from "@/hooks/chat/useConversationDetail";
 
 export default function Result() {
   const [tab] = useState<"transcript" | "mistakes">("transcript");
-  const [aiName] = useState("AI");
-
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const params = useParams();
-  const conversationId = params?.id as string | undefined;
+  const { data: conversation } = useConversationDetail(id);
+  const conversationId = conversation?.conversationId ?? 0;
+  const myAI = conversation?.aiPersona ?? null;
+
+  const accessToken = useAuthStore((s) => s.accessToken);
+
+  const [feedbackOpenId, setFeedbackOpenId] = useState<string | null>(null);
+
+  const { mutate: createFeedback } = useMessageFeedback(
+    conversationId,
+    accessToken
+  );
+
+  const handleFeedbacks = (messageId: string) => {
+    if (feedbackOpenId === messageId) {
+      setFeedbackOpenId(null);
+      return;
+    }
+
+    createFeedback(messageId);
+    setFeedbackOpenId(messageId);
+  };
 
   const {
     data: messages = [],
     error: messagesError,
     isLoading: messagesLoading,
-  } = useMessages(conversationId);
+  } = useMessages(id);
 
   const {
     data: feedback,
     error: feedbackError,
     isLoading: feedbackLoading,
-  } = useFeedback(conversationId);
+  } = useConversaitonFeedback(id);
 
   if (messagesLoading || feedbackLoading) {
     return <p className="p-6">Loading...</p>;
@@ -100,7 +122,12 @@ export default function Result() {
           {/* Content Section */}
           <div className="px-4 pt-6 pb-6">
             {tab === "transcript" ? (
-              <Transcript messages={messages} aiName={aiName} />
+              <MessageList
+                messages={messages}
+                myAI={myAI}
+                feedbackOpenId={feedbackOpenId}
+                handleFeedbacks={handleFeedbacks}
+              />
             ) : (
               <div className="space-y-4">
                 <Section
