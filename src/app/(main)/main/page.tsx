@@ -35,11 +35,6 @@ export default function Main() {
       </div>
       <div className=" bg-[#F2F7FF] min-h-screen pb-40">
         <div className={`flex flex-col items-center  pt-6 pb-4`}>
-          <h2
-            className={`text-2xl font-bold text-gray-900 mb-4 w-full text-left px-5`}
-          >
-            Recommended
-          </h2>
           <div
             className={`relative px-5 overflow-hidden flex items-center justify-center w-full`}
           >
