@@ -23,7 +23,7 @@ export const settings: Settings = {
   swipe: false,
   dotsClass: "slick-dots custom-dots",
   autoplay: true,
-  autoplaySpeed: 2000,
+  autoplaySpeed: 3000,
 };
 
 export default function Onboard() {
@@ -32,18 +32,10 @@ export default function Onboard() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { accessToken, setAccessToken } = useAuthStore();
 
-  const handleNext = async () => {
-    if (currentSlide === 4) {
-      await handleOnboardingToMain();
-    } else {
-      sliderRef.current?.slickNext();
-    }
-  };
   const handleSkip = () => {
     sliderRef.current?.slickGoTo(slides.length - 1);
   };
 
-  // 메인 페이지로 이동하기 전 인증 처리
   const handleOnboardingToMain = async () => {
     try {
       if (accessToken && !isTokenExpired(accessToken)) {
@@ -52,13 +44,10 @@ export default function Onboard() {
         return;
       }
 
-      // 3-1. device_id 생성 또는 가져오기
       const deviceId = getOrCreateDeviceId();
 
-      // 3-2. guest 로그인으로 access token 발급
       const NewToken = await guestLogin(deviceId);
 
-      // 3-3. access token 저장
       setAccessToken(NewToken);
 
       router.push("/main");
@@ -133,7 +122,9 @@ export default function Onboard() {
         </div>
 
         <div className="px-4 pb-6">
-          <ActionButton onClick={handleNext}>Get Started</ActionButton>
+          <ActionButton onClick={handleOnboardingToMain}>
+            Get Started
+          </ActionButton>
           <p className="text-center text-sm text-gray-500 mt-6">
             Already have an account?{" "}
             <Link
