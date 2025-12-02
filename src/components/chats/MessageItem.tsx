@@ -207,7 +207,7 @@ export default function MessageItem({
         )}
 
         {/* 피드백 박스 */}
-        {isMine && isFeedbackOpen && m.feedback && (
+        {isMine && isFeedbackOpen && (
           <div className="p-4 bg-gray-600 rounded-xl  -mt-5 pt-6 transform translate-x-[30px] mr-7.5">
             <div className="text-white text-sm pb-2 border-b border-gray-500">
               {m.feedback.appropriateExpression}

@@ -1,104 +1,150 @@
 export const CareerTopics = [
   {
     id: 1,
-    icon: "👨‍💼",
+
     title: "Job Interview",
     description: "Practice answering real Korean interview questions.",
   },
   {
     id: 2,
-    icon: "📊",
+
     title: "Performance Review",
     description: "Learn how to talk about strengths, weaknesses, and goals.",
   },
   {
     id: 3,
-    icon: "💼",
+
     title: "Team Meeting Interaction",
     description: "Practice sharing opinions professionally in team meetings.",
   },
   {
     id: 4,
-    icon: "🆘",
+
     title: "Asking for Help at Work",
     description: "Ask for clarification politely and naturally.",
   },
   {
     id: 5,
-    icon: "📈",
+
     title: "Talking to Your Manager",
     description: "Communicate updates and issues with proper tone.",
   },
 ];
 
-export const GreetingTopics = [
+export const FamilyTopics = [
   {
     id: 1,
-    icon: "👋",
-    title: "Basic Greetings",
-    description: "Hello, nice to meet you, good morning — practice politely.",
+    title: "Soft Shields with In-laws",
+    description: "Set gentle boundaries—polite but not a pushover.",
   },
   {
     id: 2,
-    icon: "😊",
-    title: "Polite Greetings",
-    description: "Learn how to greet respectfully depending on the situation.",
+    title: "The “Eat More~” Challenge",
+    description: "Respond naturally to over-caring Korean moms.",
   },
   {
     id: 3,
-    icon: "🙇",
-    title: "Apologizing Politely",
-    description: "Practice formal apology phrases used in Korean culture.",
+    title: "Saying No to Sweet Elders",
+    description: "Decline elder requests politely and guilt-free.",
   },
   {
     id: 4,
-    icon: "💬",
-    title: "Small Talk Starters",
-    description: "Learn natural ways to start conversations with strangers.",
+    title: "Heart-Talk Without Drama",
+    description: "Share real feelings calmly without emotional explosion.",
   },
   {
     id: 5,
-    icon: "🎉",
-    title: "Congratulatory Expressions",
-    description: "Say congratulations politely in various contexts.",
+    title: "Talking About Your Partner",
+    description: "Introduce your relationship to parents confidently.",
   },
 ];
 
-export const KPopTopics = [
+export const LoveTopics = [
   {
     id: 1,
-    icon: "🎤",
-    title: "Talking About Your Bias",
-    description: "Learn how to express excitement naturally and respectfully.",
+    title: "Could You Soften Your Tone…?",
+    description: "Ask someone to speak gently—without sounding accusatory.",
   },
   {
     id: 2,
-    icon: "🎶",
-    title: "Song Recommendations",
-    description: "Practice sharing songs you like and describing why.",
+    title: "Why Did You Reply So Late?",
+    description: "Explain late replies reassuringly, without defensiveness.",
   },
   {
     id: 3,
-    icon: "🕺",
-    title: "Dance Challenge Talk",
-    description: "Talk about dance practices, trends, and TikTok challenges.",
+    title: "I Miss You… But No Pressure",
+    description: "Express longing warmly—never clingy.",
   },
   {
     id: 4,
-    icon: "💜",
-    title: "Fan Community Slang",
-    description: "Understand and use light Korean fan expressions.",
+    title: "Clumsy Crush Signals",
+    description: "Recognize awkward affection and respond kindly.",
   },
   {
     id: 5,
-    icon: "📸",
-    title: "Concert Experiences",
-    description: "Explain your concert memories with natural expressions.",
+    title: "The “What Are We?” Talk",
+    description: "Define the relationship honestly but gently.",
+  },
+];
+export const BelongingTopics = [
+  {
+    id: 1,
+    title: "Midnight Mom Energy",
+    description: "Thank your friend’s mom warmly for late-night food.",
+  },
+  {
+    id: 2,
+    title: "Seaside Ajumma Vibes",
+    description: "Handle extra kindness + subtle pressure politely.",
+  },
+  {
+    id: 3,
+    title: "Banter Mode Unlocked",
+    description: "Shift from polite to playful without sounding rude.",
+  },
+  {
+    id: 4,
+    title: "First Round Tension",
+    description: "Mix casual + respectful tone at group drinks.",
+  },
+  {
+    id: 5,
+    title: "Soft-Heart Moment",
+    description: "Say 'that hurt' calmly—zero drama.",
+  },
+];
+export const KPopTopics = [
+  {
+    id: 1,
+    title: "Bias Talk IRL",
+    description: "Talk about your bias naturally—excited but respectful.",
+  },
+  {
+    id: 2,
+    title: "Playlist Recommendation Mode",
+    description: "Share songs naturally and explain why you like them.",
+  },
+  {
+    id: 3,
+    title: "Dance Challenge Talk",
+    description: "Discuss dance practice, trends, and TikTok challenges.",
+  },
+  {
+    id: 4,
+    title: "Fan Community Slang 101",
+    description: "Use light fan expressions without overdoing it.",
+  },
+  {
+    id: 5,
+    title: "Concert Memory Reload",
+    description: "Describe concerts vividly with natural Korean expressions.",
   },
 ];
 
 export const topicsByCategory = {
-  Popular: CareerTopics,
-  Greeting: GreetingTopics,
-  KPOP: KPopTopics,
+  Career: CareerTopics,
+  Family: FamilyTopics,
+  Romance: LoveTopics,
+  Belonging: BelongingTopics,
+  "K-POP": KPopTopics,
 } as const;

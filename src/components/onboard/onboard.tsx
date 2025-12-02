@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider, { Settings } from "react-slick";
 import { slides } from "@/data/onboarding";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ActionButton from "../ui/button/ActionButton";
@@ -22,8 +22,6 @@ export const settings: Settings = {
   draggable: false,
   swipe: false,
   dotsClass: "slick-dots custom-dots",
-  autoplay: true,
-  autoplaySpeed: 3000,
 };
 
 export default function Onboard() {
@@ -35,7 +33,6 @@ export default function Onboard() {
   const handleSkip = () => {
     sliderRef.current?.slickGoTo(slides.length - 1);
   };
-
   const handleOnboardingToMain = async () => {
     try {
       if (accessToken && !isTokenExpired(accessToken)) {
@@ -56,7 +53,22 @@ export default function Onboard() {
       alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
+  const handleNext = () => {
+    if (currentSlide === 4) {
+      router.push("/login");
+    } else {
+      sliderRef.current?.slickNext();
+    }
+  };
+  useEffect(() => {
+    if (currentSlide === 3) {
+      const timer = setTimeout(() => {
+        handleOnboardingToMain();
+      }, 1000);
 
+      return () => clearTimeout(timer);
+    }
+  }, [currentSlide]);
   return (
     <div className="h-screen w-full bg-white flex items-center justify-center overflow-hidden">
       <div className="w-full h-full flex flex-col mx-auto relative">
@@ -121,11 +133,17 @@ export default function Onboard() {
           </Slider>
         </div>
 
-        <div className="px-4 pb-6">
-          <ActionButton onClick={handleOnboardingToMain}>
-            Get Started
-          </ActionButton>
-          <p className="text-center text-sm text-gray-500 mt-6">
+        <div className="px-4">
+          {currentSlide !== 3 && (
+            <ActionButton onClick={handleNext}>Next</ActionButton>
+          )}
+        </div>
+        <div className="pb-6">
+          <p
+            className={`text-center text-sm text-gray-500 mt-6 ${
+              currentSlide === 0 ? "visible" : "invisible"
+            }`}
+          >
             Already have an account?{" "}
             <Link
               href="/login"

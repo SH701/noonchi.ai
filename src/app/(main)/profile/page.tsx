@@ -37,7 +37,7 @@ export default function ProfilePage() {
     );
 
     useAuthStore.getState().logout();
-    localStorage.removeItem("auth-storage");
+    localStorage.removeItem("auth-store");
     router.push("/login");
   };
 
