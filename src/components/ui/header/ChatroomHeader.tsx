@@ -10,6 +10,7 @@ type Props = {
   hidden: boolean;
   setHidden: (value: boolean) => void;
   conversationId: string; // 추가
+  onInfoOpen: () => void;
 };
 
 export default function ChatroomHeader({
@@ -17,6 +18,7 @@ export default function ChatroomHeader({
   hidden,
   setHidden,
   conversationId,
+  onInfoOpen,
 }: Props) {
   const { role } = useAuthStore();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -54,7 +56,10 @@ export default function ChatroomHeader({
             </svg>
           </Link>
 
-          <span className="text-lg font-semibold text-gray-900 font-pretendard">
+          <span
+            className="text-lg font-semibold text-gray-900 font-pretendard cursor-pointer"
+            onClick={onInfoOpen}
+          >
             {name ?? "..."}
           </span>
 
@@ -78,16 +83,12 @@ export default function ChatroomHeader({
           </button>
         )}
       </div>
-
-      {/* 게스트용 로그인 모달 */}
       {isLoginModalOpen && (
         <LoginModal
           onClose={() => setIsLoginModalOpen(false)}
           isOpen={isLoginModalOpen}
         />
       )}
-
-      {/* 일반 사용자용 종료 모달 */}
       {isEndModalOpen && (
         <EndModal
           isOpen={isEndModalOpen}

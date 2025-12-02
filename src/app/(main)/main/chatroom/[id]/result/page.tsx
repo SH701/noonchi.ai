@@ -10,7 +10,7 @@ import { useConversaitonFeedback } from "@/hooks/useConversationFeedback";
 import ActionButton from "@/components/ui/button/ActionButton";
 import MessageList from "@/components/chats/MessageList";
 import { useMessageFeedback } from "@/hooks/useMessageFeedback";
-import { useConversationDetail } from "@/hooks/chat/useConversationDetail";
+import { useConversationDetail } from "@/hooks/useConversationDetail";
 import ResultTab from "@/components/result/ResultTab";
 
 export default function Result() {

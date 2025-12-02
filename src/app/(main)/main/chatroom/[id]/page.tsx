@@ -10,7 +10,7 @@ import { useRecorder } from "@/hooks/useRecorder";
 import { useAuthStore } from "@/store/auth";
 
 import { useMessages } from "@/hooks/chat/useMessage";
-import { useConversationDetail } from "@/hooks/chat/useConversationDetail";
+import { useConversationDetail } from "@/hooks/useConversationDetail";
 
 import MessageList from "@/components/chats/MessageList";
 
@@ -22,6 +22,7 @@ import clsx from "clsx";
 import { useMessageFeedback } from "@/hooks/useMessageFeedback";
 import { useSendMessage } from "@/hooks/chat/useSendMessage";
 import { useAiReply } from "@/hooks/chat/useAiReply";
+import ChatRoomInfo from "@/components/chats/ChatRoomInfo";
 
 type MicState = "idle" | "recording" | "recorded";
 
@@ -29,6 +30,7 @@ export default function ChatroomPage() {
   const { id } = useParams<{ id: string }>();
 
   const accessToken = useAuthStore((s) => s.accessToken);
+  const [infoOpen, setInfoOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<ChatMsg[]>([]);
@@ -225,12 +227,13 @@ export default function ChatroomPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-white flex flex-col max-w-[500px] w-full">
+      <div className="min-h-screen bg-white flex flex-col  w-full">
         <ChatroomHeader
           name={myAI?.name}
           hidden={hidden}
           setHidden={setHidden}
           conversationId={id}
+          onInfoOpen={() => setInfoOpen(true)}
         />
 
         {/* Messages */}
@@ -244,7 +247,6 @@ export default function ChatroomPage() {
           <div ref={bottomRef} />
         </div>
 
-        {/* Voice Error Toast */}
         <AnimatePresence>
           {showVoiceError && (
             <motion.div
@@ -277,6 +279,13 @@ export default function ChatroomPage() {
           handleResetAudio={handleResetAudio}
           handleSendAudio={handleSendAudio}
           sendMessage={sendMessage}
+        />
+        <ChatRoomInfo
+          isOpen={infoOpen}
+          onClose={() => setInfoOpen(false)}
+          companyName={conversation?.companyName ?? ""}
+          jobTitle={conversation?.jobTitle ?? ""}
+          interviewStyle={conversation?.interviewStyle ?? ""}
         />
       </div>
     </>
