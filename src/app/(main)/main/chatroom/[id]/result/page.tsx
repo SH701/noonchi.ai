@@ -72,19 +72,10 @@ export default function Result() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col overflow-x-hidden">
-      {/* 헤더 */}
-      <div className="px-4 pt-4 pb-3 border-b border-gray-200 bg-white sticky top-0 z-10">
-        <div className="flex items-center justify-between">
-          <h1 className="text-gray-900 text-xl font-semibold font-pretendard">
-            Result
-          </h1>
-        </div>
-      </div>
-
       {/* 메인 콘텐츠 (스크롤 가능 영역) */}
       <div className="flex-1 flex justify-center overflow-y-auto">
         <div className="">
-          <div className="px-4 pt-6 pb-4 bg-[#EFF6FF] w-full max-w-[500px]">
+          <div className="px-4 pt-6 pb-4  w-full max-w-[500px]">
             <div className="flex items-center gap-3 mb-3">
               <Image
                 src="/characters/Noonchicoach.svg"
@@ -97,20 +88,15 @@ export default function Result() {
                 Noonchi coach
               </h2>
             </div>
-            <div className="bg-white rounded-2xl border border-gray-200 p-4">
+            <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-4">
               <p className="text-gray-900 text-base font-medium font-pretendard leading-[130%] mb-4">
                 {feedback.overallEvaluation ||
                   "You responded appropriately to the situation, but the tone could be more polite."}
               </p>
-              <div className="border-t border-gray-200 pt-4">
-                <div className="space-y-3">
-                  <Score label="Politeness" value={feedback.politenessScore} />
-                  <Score
-                    label="Naturalness"
-                    value={feedback.naturalnessScore}
-                  />
-                </div>
-              </div>
+            </div>
+            <div className="space-y-3">
+              <Score label="Politeness" value={feedback.politenessScore} />
+              <Score label="Naturalness" value={feedback.naturalnessScore} />
             </div>
           </div>
 

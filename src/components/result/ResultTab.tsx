@@ -4,13 +4,13 @@ interface ResultTabProps {
 }
 export default function ResultTab({ tab, setTab }: ResultTabProps) {
   return (
-    <div className="pb-2">
+    <div className="py-3.5 mb-4.5">
       <div className="flex border-b border-gray-200">
         <button
           onClick={() => setTab("transcript")}
-          className={`flex-1 py-1.5 text-sm font-medium transition-all duration-200 border-b-2 text-center ${
+          className={`flex-1 py-1.5 text-sm font-semibold transition-all duration-200 border-b-2 text-center ${
             tab === "transcript"
-              ? "text-blue-600 border-blue-600"
+              ? "text-gray-900 border-gray-900"
               : "text-gray-500 border-transparent hover:text-gray-700"
           }`}
         >

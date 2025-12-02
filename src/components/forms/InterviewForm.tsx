@@ -5,6 +5,7 @@ import FormInput from "../ui/form/FormInput";
 import OptionButtons from "../ui/button/OptionsButton";
 import FileUpload from "../ui/form/FileUpload";
 import ActionButton from "../ui/button/ActionButton";
+import Image from "next/image";
 
 export interface InterviewFormProps {
   interviewStyles: readonly { value: string; label: string }[];
@@ -81,9 +82,21 @@ export default function InterviewForm({
           onSelect={setStyle}
         />
       </div>
-
-      <div className="mt-20 flex items-center justify-center">
-        <ActionButton type="submit">Start Chatting</ActionButton>
+      <div className="flex items-center flex-col fixed bottom-8">
+        <div className="flex gap-2.5  px-4 py-2.5 bg-blue-100 mt-20  rounded-lg">
+          <Image
+            src="/credits/interviewcredit.png"
+            alt="크레딧 소모"
+            width={16}
+            height={16}
+          />
+          <p className="text-blue-600 text-xs">
+            It costs 60 credits to run this chat
+          </p>
+        </div>
+        <div className="mt-2">
+          <ActionButton type="submit">Start Chatting</ActionButton>
+        </div>
       </div>
     </form>
   );

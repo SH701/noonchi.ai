@@ -4,7 +4,6 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import PersonaSlider from "@/components/bothistory/PersonaSlider";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
@@ -20,7 +19,6 @@ import { useAuthStore } from "@/store/auth";
 
 import { Conversation } from "@/types/conversation";
 
-import PersonaDetailModal from "@/components/persona/PersonaDetail";
 import Filter from "@/components/bothistory/Filter";
 import Sort from "@/components/bothistory/Sort";
 import SearchBar from "@/components/bothistory/SearchBar";
@@ -67,11 +65,6 @@ export default function ChatBothistoryPage() {
   const { keyword, sort, selectedFilter, expanded, toggleExpand } =
     useChatHistoryStore();
 
-  const [openDetail, setOpenDetail] = useState(false);
-  const [selectedPersonaId, setSelectedPersonaId] = useState<
-    number | string | null
-  >(null);
-
   const {
     data: conversations = [],
     isLoading,
@@ -115,28 +108,6 @@ export default function ChatBothistoryPage() {
         <h1 className="text-xl font-bold z-10">Chatbot History</h1>
         <SearchBar />
       </div>
-      <div className="mb-4 p-6">
-        <PersonaSlider
-          onAdd={() => router.push("/main/custom")}
-          visibleCount={4}
-          itemSize={72}
-          className="object-cover"
-          onItemClick={(_, it) => {
-            if ("isAdd" in it) return;
-            setSelectedPersonaId(it.personaId);
-            setOpenDetail(true);
-          }}
-        />
-      </div>
-
-      <PersonaDetailModal
-        open={openDetail}
-        onClose={() => setOpenDetail(false)}
-        personaId={selectedPersonaId}
-        onDeleted={() => {
-          setOpenDetail(false);
-        }}
-      />
 
       <div className="mb-6 pl-6 pr-0">
         <div className="flex items-center justify-between">

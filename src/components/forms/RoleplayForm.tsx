@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FormInput from "../ui/form/FormInput";
 import ActionButton from "../ui/button/ActionButton";
-
+import Image from "next/image";
 export default function RoleplayForm({
   onSubmit,
 }: {
@@ -45,8 +45,21 @@ export default function RoleplayForm({
         onChange={setDetail}
         placeholder="Please the job posting from the company"
       />
-      <div className=" bottom-8 flex items-center justify-center">
-        <ActionButton type="submit">Start Chatting</ActionButton>
+      <div className="flex items-center flex-col fixed bottom-8">
+        <div className="flex gap-2.5  px-4 py-2.5 bg-blue-100 mt-20  rounded-lg">
+          <Image
+            src="/credits/interviewcredit.png"
+            alt="크레딧 소모"
+            width={16}
+            height={16}
+          />
+          <p className="text-blue-600 text-xs">
+            It costs 60 credits to run this chat
+          </p>
+        </div>
+        <div className="mt-2">
+          <ActionButton type="submit">Start Chatting</ActionButton>
+        </div>
       </div>
     </form>
   );
