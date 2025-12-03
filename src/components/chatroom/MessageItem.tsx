@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/useAuth";
 import { MyAI } from "@/types/persona";
 import { Info, User } from "lucide-react";
 import { BotMessageSquare } from "lucide-react";
@@ -49,7 +49,7 @@ export default function MessageItem({
     messageStatus === "error" ||
     (showFeedbackButton && m.feedback) ||
     showFeedbackButton;
-    
+
   const handleFeedbackClick = async () => {
     setLoadingFeedbacks((prev) => ({ ...prev, [m.messageId]: true }));
     await handleFeedbacks(m.messageId);

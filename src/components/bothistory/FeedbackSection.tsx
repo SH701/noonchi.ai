@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth";
-import { useConversaitonFeedback } from "@/hooks/useConversationFeedback";
+import { useAuthStore } from "@/store/useAuth";
+import { useConversaitonFeedback } from "@/hooks/conversation/useConversationFeedback";
 
 export default function FeedbackSection({ id }: { id: number | string }) {
   const router = useRouter();

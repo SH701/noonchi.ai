@@ -5,7 +5,7 @@ import { FeedbackCloseButton } from "@/components/ui/button";
 import Modal from "@/components/ui/modal/Modal";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/useAuth";
 import { useState } from "react";
 import LoadingModal from "../chatroom/LoadingModal";
 

@@ -8,6 +8,19 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+  swcMinify: true,
+
+  output: "standalone",
+
+  experimental: {
+    workerThreads: false,
+    cpus: 1,
+  },
+
+  generateBuildId: async () => {
+    return "build-" + Date.now();
+  },
 };
 
 export default nextConfig;

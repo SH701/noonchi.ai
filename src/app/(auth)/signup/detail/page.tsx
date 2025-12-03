@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { ActionButton } from "@/components/ui/button";
 import Loading from "@/app/after/loading";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/useAuth";
 import SignupFormStep2 from "@/components/signup/SignupForm2";
 import SignupTemplate from "@/components/signup/SignupTemplate";
 import SignupHeader from "@/components/signup/SignupHeader";

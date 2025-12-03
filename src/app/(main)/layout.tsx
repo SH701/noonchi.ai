@@ -1,10 +1,8 @@
 "use client";
 
 import TabBar from "@/components/ui/tab-bar/tab-bar";
-import { useUserProfile } from "@/hooks/useUserProfile";
+import { useUserProfile } from "@/hooks/user/useUserProfile";
 import { usePathname, useRouter } from "next/navigation";
-
-export const dynamic = "force-dynamic";
 
 export default function MainsLayout({
   children,

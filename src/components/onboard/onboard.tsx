@@ -9,9 +9,10 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { isTokenExpired, guestLogin, getOrCreateDeviceId } from "@/utils/auth";
-import { useAuthStore } from "@/store/auth";
+import { isTokenExpired, getOrCreateDeviceId } from "@/utils/auth";
+import { useAuthStore } from "@/store/useAuth";
 import { ActionButton } from "../ui/button";
+import { useGuestLogin } from "@/hooks/guest/useGuestLogin";
 
 export const settings: Settings = {
   dots: true,
@@ -30,7 +31,8 @@ export default function Onboard() {
   const sliderRef = useRef<Slider>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { accessToken, setAccessToken } = useAuthStore();
-
+  const { mutateAsync: guestLogin } = useGuestLogin();
+  const lastIndex = slides.length - 1;
   const handleSkip = () => {
     sliderRef.current?.slickGoTo(slides.length - 1);
   };
@@ -54,22 +56,22 @@ export default function Onboard() {
       alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
+  useEffect(() => {
+    if (currentSlide === lastIndex - 1) {
+      const timer = setTimeout(() => {
+        handleOnboardingToMain();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentSlide, lastIndex]);
+
   const handleNext = () => {
-    if (currentSlide === 4) {
+    if (currentSlide === lastIndex) {
       router.push("/login");
     } else {
       sliderRef.current?.slickNext();
     }
   };
-  useEffect(() => {
-    if (currentSlide === 3) {
-      const timer = setTimeout(() => {
-        handleOnboardingToMain();
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [currentSlide]);
   return (
     <div className="h-screen w-full bg-white flex items-center justify-center overflow-hidden">
       <div className="w-full h-full flex flex-col mx-auto relative">

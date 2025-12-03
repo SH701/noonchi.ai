@@ -1,18 +1,22 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useUserProfile } from "@/hooks/useUserProfile";
-import { useAuthStore } from "@/store/auth";
+
+import { useUserProfile } from "@/hooks/user/useUserProfile";
+import { useAuthStore } from "@/store/useAuth";
 import {
   ProfileHeader,
   ProfileImage,
   ProfileMenuList,
   StatsCard,
 } from "@/components/profile";
+import dynamic from "next/dynamic";
+const LoginModal = dynamic(import("@/components/modal/LoginModal"), {
+  ssr: false,
+});
 
 export default function ProfilePage() {
   const router = useRouter();
-
   const { data: profile, isLoading } = useUserProfile();
 
   const handleLogout = async () => {
@@ -38,8 +42,12 @@ export default function ProfilePage() {
     );
     useAuthStore.getState().logout();
     localStorage.removeItem("auth-store");
+    localStorage.removeItem("device_id");
     router.push("/login");
   };
+  if (profile?.role === "ROLE_GUEST") {
+    return <LoginModal isOpen={true} onClose={() => router.push("/login")} />;
+  }
 
   if (isLoading) return <p className="text-center mt-10">Loading…</p>;
 
@@ -62,7 +70,7 @@ export default function ProfilePage() {
         <div className="px-4 pt-6 w-full">
           <StatsCard
             sentenceCount={profile?.sentenceCount}
-            koreanLevel={Number(profile?.koreanLevel)}
+            koreanLevel={profile?.koreanLevel}
           />
         </div>
 

@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/useAuth";
 
 export async function apiFetch(url: string, options: RequestInit = {}) {
   const token = useAuthStore.getState().accessToken;

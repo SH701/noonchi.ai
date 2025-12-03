@@ -1,6 +1,6 @@
 import LoginModal from "@/components/modal/LoginModal";
 import EndModal from "@/components/result/EndModal";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/useAuth";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";

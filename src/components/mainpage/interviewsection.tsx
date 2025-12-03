@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ActionButton from "@/components/ui/button/ActionButton";
 import { useUIStore } from "@/store/uiStore";
 
-export default function Interviewsection() {
+export default function InterviewSection() {
   const sliders = [
     { id: 1, img: "/etc/interview.png" },
     { id: 2, img: "/etc/interview.png" },
@@ -108,7 +108,7 @@ export default function Interviewsection() {
       <AnimatePresence>
         {isBottomSheetOpen && (
           <motion.div
-            className="fixed inset-0 z-30 bg-white flex flex-col items-center "
+            className="fixed inset-0 z-30 bg-white flex flex-col items-center will-change-transform will-change-opacity"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

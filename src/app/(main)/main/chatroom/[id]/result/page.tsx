@@ -3,12 +3,12 @@
 import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import { useState } from "react";
-import { useMessages } from "@/hooks/chat/useMessage";
-import { useConversaitonFeedback } from "@/hooks/useConversationFeedback";
+import { useMessages } from "@/hooks/chatroom/useMessage";
+import { useConversaitonFeedback } from "@/hooks/conversation/useConversationFeedback";
 import { ActionButton } from "@/components/ui/button";
 import MessageList from "@/components/chatroom/MessageList";
-import { useMessageFeedback } from "@/hooks/useMessageFeedback";
-import { useConversationDetail } from "@/hooks/useConversationDetail";
+import { useMessageFeedback } from "@/hooks/chatroom/useMessageFeedback";
+import { useConversationDetail } from "@/hooks/conversation/useConversationDetail";
 import { ResultTab, Score, Section } from "@/components/result";
 
 export default function Result() {

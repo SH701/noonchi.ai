@@ -8,9 +8,9 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import {
   useConversations,
   useDeleteConversation,
-} from "@/hooks/useConversations";
+} from "@/hooks/conversation/useConversations";
 import { useChatHistoryStore } from "@/store/useChatHistorystore";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/useAuth";
 import { Conversation } from "@/types/conversation";
 import LoginModal from "@/components/modal/LoginModal";
 import {

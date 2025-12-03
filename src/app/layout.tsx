@@ -19,6 +19,7 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-180.png" />
+
         <meta name="theme-color" content="#0453fd" />
       </head>
       <body className="min-h-screen w-full">

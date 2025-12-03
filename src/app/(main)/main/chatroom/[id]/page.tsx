@@ -5,25 +5,25 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRecorder } from "@/hooks/useRecorder";
-import { useAuthStore } from "@/store/auth";
-import { useMessages } from "@/hooks/chat/useMessage";
-import { useConversationDetail } from "@/hooks/useConversationDetail";
-
+import { useRecorder } from "@/hooks/chatroom/useRecorder";
+import { useAuthStore } from "@/store/useAuth";
+import { useMessages } from "@/hooks/chatroom/useMessage";
+import { useConversationDetail } from "@/hooks/conversation/useConversationDetail";
 import { ChatMsg } from "@/types/chatmessage";
 import Loading from "./loading";
-
 import clsx from "clsx";
-import { useMessageFeedback } from "@/hooks/useMessageFeedback";
-import { useSendMessage } from "@/hooks/chat/useSendMessage";
-import { useAiReply } from "@/hooks/chat/useAiReply";
+import { useMessageFeedback } from "@/hooks/chatroom/useMessageFeedback";
+import { useSendMessage } from "@/hooks/chatroom/useSendMessage";
+import { useAiReply } from "@/hooks/chatroom/useAiReply";
 import {
   ChatroomHeader,
   ChatroomInput,
   MessageList,
-  ChatroomInfo,
 } from "@/components/chatroom";
-
+import dynamic from "next/dynamic";
+const ChatroomInfo = dynamic(import("@/components/chatroom/ChatroomInfo"), {
+  ssr: false,
+});
 type MicState = "idle" | "recording" | "recorded";
 
 export default function ChatroomPage() {

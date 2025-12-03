@@ -17,7 +17,6 @@ export type Interest =
 
 export type Role = "ROLE_GUEST" | "ROLE_USER";
 
-// 🔥 서버에서 내려주는 유저 정보 타입
 export interface User {
   id: string;
   email: string;
