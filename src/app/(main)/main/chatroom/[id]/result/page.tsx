@@ -9,7 +9,7 @@ import { ActionButton } from "@/components/ui/button";
 import MessageList from "@/components/chatroom/MessageList";
 import { useMessageFeedback } from "@/hooks/chatroom/useMessageFeedback";
 import { useConversationDetail } from "@/hooks/conversation/useConversationDetail";
-import { ResultTab, Score, Part } from "@/components/result";
+import { ResultTab, Point, Part } from "@/components/result";
 
 export default function Result() {
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
@@ -93,8 +93,8 @@ export default function Result() {
               </p>
             </div>
             <div className="space-y-3">
-              <Score label="Politeness" value={feedback.politenessScore} />
-              <Score label="Naturalness" value={feedback.naturalnessScore} />
+              <Point label="Politeness" value={feedback.politenessScore} />
+              <Point label="Naturalness" value={feedback.naturalnessScore} />
             </div>
           </div>
 

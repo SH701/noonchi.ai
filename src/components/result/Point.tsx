@@ -1,6 +1,6 @@
 "use client";
 
-export default function Score({
+export default function Point({
   label,
   value,
 }: {
