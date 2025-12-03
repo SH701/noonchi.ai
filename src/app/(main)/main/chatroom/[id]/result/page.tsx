@@ -9,8 +9,7 @@ import { ActionButton } from "@/components/ui/button";
 import MessageList from "@/components/chatroom/MessageList";
 import { useMessageFeedback } from "@/hooks/chatroom/useMessageFeedback";
 import { useConversationDetail } from "@/hooks/conversation/useConversationDetail";
-import { ResultTab, Score } from "@/components/result";
-import Section from "@/components/result/Section";
+import { ResultTab, Score, Part } from "@/components/result";
 
 export default function Result() {
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
@@ -111,11 +110,11 @@ export default function Result() {
               />
             ) : (
               <div className="space-y-4 pb-2">
-                <Section
+                <Part
                   title="Conversation Summary"
                   desc={feedback.summary || ""}
                 />
-                <Section
+                <Part
                   title="What you did well"
                   desc={feedback.goodPoints || ""}
                 />
