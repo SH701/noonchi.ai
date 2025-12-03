@@ -8,7 +8,12 @@ import { ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { useAuthStore } from "@/store/useAuth";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
-import { Face0, Face1, Face2, Face3 } from "@/components/character";
+import {
+  Character0,
+  Character1,
+  Character2,
+  Character3,
+} from "@/components/character";
 
 type Profile = {
   email: string;
@@ -19,10 +24,10 @@ type Profile = {
 };
 
 const FACES = [
-  { Component: Face0, id: "face0" },
-  { Component: Face1, id: "face1" },
-  { Component: Face2, id: "face2" },
-  { Component: Face3, id: "face3" },
+  { Component: Character0, id: "face0" },
+  { Component: Character1, id: "face1" },
+  { Component: Character2, id: "face2" },
+  { Component: Character3, id: "face3" },
 ];
 
 export default function ProfileEditPage() {

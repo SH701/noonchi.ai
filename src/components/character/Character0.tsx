@@ -1,4 +1,4 @@
-export default function Face0(props: React.SVGProps<SVGSVGElement>) {
+export default function Character0(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 347 353"

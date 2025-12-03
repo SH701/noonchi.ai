@@ -1,6 +1,6 @@
 'use client';
 
-export default function Face2(props: React.SVGProps<SVGSVGElement>) {
+export default function Character2(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 334 281"
