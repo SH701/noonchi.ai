@@ -1,13 +1,18 @@
 "use client";
 
-import { Face0, Face1, Face2, Face3 } from "@/components/character";
+import {
+  Character0,
+  Character1,
+  Character2,
+  Character3,
+} from "@/components/character";
 import Image from "next/image";
 
 const FACES = {
-  face0: Face0,
-  face1: Face1,
-  face2: Face2,
-  face3: Face3,
+  face0: Character0,
+  face1: Character1,
+  face2: Character2,
+  face3: Character3,
 };
 
 export default function ProfileImage({ src }: { src?: string }) {
