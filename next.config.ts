@@ -9,10 +9,6 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  swcMinify: true,
-
-  output: "standalone",
-
   experimental: {
     workerThreads: false,
     cpus: 1,
