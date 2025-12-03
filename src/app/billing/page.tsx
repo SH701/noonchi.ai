@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionButton, BackButton } from "@/components/ui/button";
+import { ActionButton, Back } from "@/components/ui/button";
 
 import { Check } from "lucide-react";
 import { useState } from "react";
@@ -45,7 +45,7 @@ export default function Billing() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="w-full max-w-sm mx-auto bg-gray-50 min-h-screen flex flex-col pt-12">
-        <BackButton />
+        <Back />
 
         <h1 className="text-2xl font-semibold text-gray-900 text-center mb-6">
           Choose Your credit pack

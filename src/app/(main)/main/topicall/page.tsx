@@ -5,7 +5,7 @@ import Image from "next/image";
 import { CategoryType, Topics } from "@/types/topic";
 import { topicsByCategory } from "@/data/topics";
 import { useRouter } from "next/navigation";
-import { BackButton } from "@/components/ui/button";
+import { Back } from "@/components/ui/button";
 import { useState } from "react";
 import { TopicSlider } from "@/components/mainpage";
 
@@ -18,7 +18,7 @@ export default function TopicAll() {
   return (
     <div className="px-5 pt-7  flex gap-3 flex-col">
       <div className="flex justify-between">
-        <BackButton />
+        <Back />
         <p className="text-xl text-gray-800 font-semibold pb-3">Topic</p>
         <div></div>
       </div>

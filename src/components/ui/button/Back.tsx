@@ -3,7 +3,7 @@
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
-export default function BackButton() {
+export default function Back() {
   const router = useRouter();
 
   return (
