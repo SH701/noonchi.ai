@@ -162,7 +162,7 @@ export default function InterviewSection() {
                 <p className="text-blue-600 text-sm font-medium mb-2">
                   Credits Used
                 </p>
-                <p className="text-5xl font-bold">
+                <p className="text-3xl font-semibold">
                   60 <span className="text-blue-600">credit</span>
                 </p>
                 <ActionButton
