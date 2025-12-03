@@ -6,13 +6,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import Face0 from "@/components/character/Face0";
-import Face1 from "@/components/character/Face1";
-import Face2 from "@/components/character/Face2";
-import Face3 from "@/components/character/Face3";
-
 import { useAuthStore } from "@/store/useAuth";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
+import { Face0, Face1, Face2, Face3 } from "@/components/character";
 
 type Profile = {
   email: string;
