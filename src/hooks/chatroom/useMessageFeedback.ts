@@ -7,7 +7,7 @@ export function useMessageFeedback(conversationId?: number) {
   return useMutation({
     mutationFn: async (messageId: string) => {
       const res = await apiFetch(`/api/messages/${messageId}/feedback`, {
-        method: "POST",
+        method: "GET",
       });
 
       if (!res.ok) throw new Error("Feedback API failed");

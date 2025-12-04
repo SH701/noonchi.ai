@@ -60,7 +60,6 @@ export default function ChatroomPage() {
     error: messagesError,
   } = useMessages(id);
 
-  console.log("방 정보:", conversation);
   useEffect(() => {
     if (!isInitialized && initialMessages && initialMessages.length > 0) {
       setMessages(initialMessages);
@@ -97,11 +96,13 @@ export default function ChatroomPage() {
     setMessage("");
 
     try {
-      const responseMessages = await chatting({
+      const res = await chatting({
         conversationId,
         content,
         audioUrl,
       });
+
+      const responseMessages = res.messages;
 
       const serverUserMsg = responseMessages.find(
         (m: ChatMsg) => m.type === "USER"
@@ -114,7 +115,6 @@ export default function ChatroomPage() {
       });
     } catch (err) {
       console.error("sendMessage error", err);
-
       setMessages((prev) => prev.filter((msg) => msg.messageId !== tempId));
     }
   };
@@ -155,7 +155,6 @@ export default function ChatroomPage() {
     try {
       setLoading(true);
 
-      console.log("=== 음성 파일 업로드 시작 ===");
       const presignRes = await fetch("/api/files/presigned-url", {
         method: "POST",
         headers: {
@@ -181,10 +180,23 @@ export default function ChatroomPage() {
       });
 
       const audioUrl = presignedUrl.split("?")[0];
+      console.log("audioUrl:", audioUrl);
+      const sttres = await fetch("/api/language/stt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          audioUrl: audioUrl,
+        }),
+      });
 
-      console.log("=== sendMessage 호출 with audioUrl:", audioUrl);
-      await sendMessage(undefined, audioUrl);
-
+      if (!sttres.ok) {
+        throw new Error("STT 요청 실패");
+      }
+      const sttText = await sttres.text();
+      await sendMessage(sttText, audioUrl);
       handleResetAudio();
     } catch (e) {
       console.error("❌ handleSendAudio error:", e);

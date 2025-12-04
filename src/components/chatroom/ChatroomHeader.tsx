@@ -7,6 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import Unfinished from "../modal/Unfinished";
+import Sucess from "../modal/Sucess";
 
 type Props = {
   name: string | undefined;
@@ -20,19 +22,19 @@ export default function ChatroomHeader({
   name,
   hidden,
   setHidden,
-  conversationId,
   onInfoOpen,
 }: Props) {
   const { id } = useParams<{ id: string }>();
-  const { role } = useAuthStore();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isEndModalOpen, setIsEndModalOpen] = useState(false);
   const { data: conversation } = useConversationDetail(id);
+
+  const [isUnfinishedOpen, setIsUnfinishedOpen] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+
   const handleExit = () => {
-    if (role === "ROLE_GUEST") {
-      setIsLoginModalOpen(true);
+    if (conversation?.taskAllCompleted === false) {
+      setIsUnfinishedOpen(true);
     } else {
-      setIsEndModalOpen(true);
+      setIsSuccessOpen(true);
     }
   };
 
@@ -91,31 +93,25 @@ export default function ChatroomHeader({
             </button>
           )}
         </div>
-        <div className="w-full px-5 py-2.5 bg-gray-700 flex gap-2 justify-between text-white">
+
+        <div className="w-full px-2 py-2.5 bg-gray-700 flex gap-1 justify-between text-white">
           <p className="py-1 px-2 text-xs bg-gray-600 rounded-md">
             Task {conversation?.taskCurrentLevel}
           </p>
-          <p>{conversation?.taskCurrentName}</p>
+          <p className="text-[10px]">{conversation?.taskCurrentName}</p>
           {conversation?.taskAllCompleted ? (
-            <Check className="text-blue-500 " />
+            <Check className="text-blue-500" />
           ) : (
-            <Check className="text-gray-400 " />
+            <Check className="text-gray-400" />
           )}
         </div>
       </div>
-      {isLoginModalOpen && (
-        <LoginModal
-          onClose={() => setIsLoginModalOpen(false)}
-          isOpen={isLoginModalOpen}
-        />
-      )}
-      {isEndModalOpen && (
-        <EndModal
-          isOpen={isEndModalOpen}
-          onClose={() => setIsEndModalOpen(false)}
-          conversationId={conversationId}
-        />
-      )}
+
+      <Unfinished
+        isOpen={isUnfinishedOpen}
+        onClose={() => setIsUnfinishedOpen(false)}
+      />
+      <Sucess isOpen={isSuccessOpen} onClose={() => setIsSuccessOpen(false)} />
     </>
   );
 }

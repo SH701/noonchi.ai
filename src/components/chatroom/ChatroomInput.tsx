@@ -24,7 +24,7 @@ export default function ChatroomInput({
   isTyping,
   micState,
   message,
-  pendingAudioUrl,
+
   showVoiceError,
 
   setIsTyping,
@@ -68,8 +68,9 @@ export default function ChatroomInput({
         ) : (
           <input
             type="text"
-            className="rounded-[100px] px-5 py-2 w-[334px] bg-gray-100"
+            className="rounded-[100px] px-5 py-2 w-[334px] bg-gray-100 "
             placeholder="Press the voice button."
+            disabled
           />
         )}
         <div className="flex gap-8 items-center justify-center">

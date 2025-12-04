@@ -40,6 +40,7 @@ export default function MessageItem({
     Record<string, boolean>
   >({});
   const [recommandtion, setRecommandtion] = useState(false);
+  const [activeTab, setActiveTab] = useState("nuance");
 
   const accessToken = useAuthStore((s) => s.accessToken);
 
@@ -49,7 +50,7 @@ export default function MessageItem({
     isMine &&
     (m.politenessScore ?? -1) >= 0 &&
     (m.naturalnessScore ?? -1) >= 0 &&
-    (m.politenessScore + m.naturalnessScore) / 2 <= 80;
+    (m.politenessScore + m.naturalnessScore) / 2 <= 70;
   const avgScore = ((m.politenessScore ?? 0) + (m.naturalnessScore ?? 0)) / 2;
 
   const isErrorOrFeedback =
@@ -66,11 +67,11 @@ export default function MessageItem({
   let scoreLabel = "None";
   let scoreColor = "text-green-500";
   let scoreIcon = "/chatroom/satisfied.png";
-  if (avgScore < 50) {
+  if (avgScore < 30) {
     scoreLabel = "Serious";
     scoreColor = "text-red-500";
     scoreIcon = "/chatroom/dissatisfied.png";
-  } else if (avgScore < 80) {
+  } else if (avgScore < 70) {
     scoreLabel = "Mild";
     scoreColor = "text-yellow-500";
     scoreIcon = "/chatroom/neutral.png";
@@ -148,12 +149,12 @@ export default function MessageItem({
       {/* 메시지 텍스트 + 부가 박스 */}
       <div className={clsx("max-w-[75%]", isMine && "ml-auto")}>
         {/* 메시지 박스 */}
-        <div className="relative flex items-center justify-center gap-3">
+        <div className="relative flex items-cetner justify-center gap-3">
           {showFeedbackButton && (
             <button
               onClick={handleFeedbackClick}
               disabled={loadingFeedbacks[m.messageId]}
-              className=" cursor-pointer"
+              className=" cursor-pointer mb-4"
             >
               {loadingFeedbacks[m.messageId] ? (
                 <svg
@@ -182,9 +183,9 @@ export default function MessageItem({
 
           {/* 유저 말풍선 박스 */}
           {isMine && (
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full">
               <div className={bubbleClass}>
-                <p className="text-sm leading-[130%] whitespace-pre-wrap my-1">
+                <p className="text-sm leading-[130%] whitespace-pre-wrap my-1 ">
                   {m.content}
                 </p>
               </div>
@@ -246,16 +247,44 @@ export default function MessageItem({
         </div>
 
         {/* 피드백 박스 */}
-        {isMine && isFeedbackOpen && m.feedback && (
-          <div className="p-4 bg-gray-600 rounded-xl  -mt-5 pt-6 transform translate-x-[30px] mr-7.5">
-            <div className="text-white text-sm pb-2 border-b border-gray-500">
-              {m.feedback.appropriateExpression}
+        <div className="w-full z-50 translate-x-[30px] max-w-[88%]">
+          {isMine && isFeedbackOpen && m.feedback && (
+            <div className="p-4 bg-gray-600 rounded-xl -mt-10 ">
+              <div className="text-white text-sm pb-3 border-b border-gray-500 mb-3 pt-4">
+                {m.feedback.appropriateExpression}
+              </div>
+
+              <div className="text-gray-300 text-sm mb-4">
+                {activeTab === "contents"
+                  ? m.feedback.contentsFeedback
+                  : m.feedback.nuanceFeedback}
+              </div>
+
+              <div className="flex gap-0 justify-end">
+                <button
+                  onClick={() => setActiveTab("contents")}
+                  className={`px-3 py-1 text-xs font-medium transition-colors rounded-l-full ${
+                    activeTab === "contents"
+                      ? "bg-white text-gray-800"
+                      : "bg-gray-500 text-gray-300 hover:bg-gray-400"
+                  }`}
+                >
+                  Contents
+                </button>
+                <button
+                  onClick={() => setActiveTab("nuance")}
+                  className={`px-3 py-1 text-xs font-medium transition-colors rounded-r-full ${
+                    activeTab === "nuance"
+                      ? "bg-white text-gray-800"
+                      : "bg-gray-500 text-gray-300 hover:bg-gray-400"
+                  }`}
+                >
+                  Nuance
+                </button>
+              </div>
             </div>
-            <div className="text-gray-300 text-sm -mt-5">
-              {m.feedback.explain}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
         {open && (
           <div className="px-3 pb-3 pt-6 bg-gray-600 rounded-xl  -mt-5">
             <p className="text-gray-100 text-sm">{m.reactionReason}</p>
