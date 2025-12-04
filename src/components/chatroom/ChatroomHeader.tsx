@@ -9,7 +9,7 @@ type Props = {
   name: string | undefined;
   hidden: boolean;
   setHidden: (value: boolean) => void;
-  conversationId: string; // 추가
+  conversationId: string;
   onInfoOpen: () => void;
 };
 

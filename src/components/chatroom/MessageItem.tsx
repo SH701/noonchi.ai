@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { useAuthStore } from "@/store/useAuth";
@@ -31,12 +31,23 @@ export default function MessageItem({
   const [loadingTranslate, setLoadingTranslate] = useState<
     Record<string, boolean>
   >({});
+  const [open, setOpen] = useState(false);
   const [loadingTTS, setLoadingTTS] = useState<Record<string, boolean>>({});
   const [loadingFeedbacks, setLoadingFeedbacks] = useState<
     Record<string, boolean>
   >({});
+  const [showRecommendation, setShowRecommendation] = useState(true);
 
   const accessToken = useAuthStore((s) => s.accessToken);
+
+  // 컴포넌트 마운트 시 5초간 Recommendation 표시
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowRecommendation(false);
+    }, 5000000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const showFeedbackButton =
     isMine &&
@@ -115,6 +126,10 @@ export default function MessageItem({
     }
   };
 
+  const handleReactionReason = () => {
+    setOpen((prev) => !prev);
+  };
+
   return (
     <div
       className={clsx(
@@ -165,15 +180,34 @@ export default function MessageItem({
               )}
             </button>
           )}
-          {/* 말풍선 박스 */}
-          <div className={bubbleClass}>
-            <p className="text-sm leading-[130%] whitespace-pre-wrap my-1">
-              {m.content}
-            </p>
 
-            {/* 번역/tts 버튼 (AI 메시지) */}
-            {!isMine && (
-              <div className="flex justify-between border-t border-gray-200 mt-2 pt-2">
+          {/* 유저 말풍선 박스 */}
+          {isMine && (
+            <div className="flex flex-col">
+              <div className={bubbleClass}>
+                <p className="text-sm leading-[130%] whitespace-pre-wrap my-1">
+                  {m.content}
+                </p>
+              </div>
+              <div
+                className={`flex items-center justify-end mt-1 ${scoreColor}`}
+              >
+                <Image src={scoreIcon} alt="아이콘" width={16} height={16} />
+                <span className="text-xs font-semibold">{scoreLabel}</span>
+              </div>
+            </div>
+          )}
+
+          {/* AI 말풍선 */}
+          {!isMine && m.reactionEmoji && (
+            <div className="flex flex-col gap-2 rounded-xl p-4 border border-gray-300 bg-white">
+              <p className="text-sm leading-[130%] whitespace-pre-wrap my-1">
+                {m.reactionEmoji}
+                {m.reactionDescription}
+                {m.content}
+              </p>
+
+              <div className="flex mt-2 pt-2 justify-between border-t border-gray-200">
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleTTsClick(m.messageId)}
@@ -199,19 +233,15 @@ export default function MessageItem({
                     />
                   </button>
                 </div>
-                <div>
-                  <BotMessageSquare className="size-5 text-gray-600" />
-                </div>
+
+                <BotMessageSquare
+                  className="size-5 text-gray-600"
+                  onClick={() => handleReactionReason()}
+                />
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-        {isMine && (
-          <div className={`flex items-center justify-end mt-1 ${scoreColor}`}>
-            <Image src={scoreIcon} alt="아이콘" width={16} height={16} />
-            <span className="text-xs font-semibold">{scoreLabel}</span>
-          </div>
-        )}
 
         {/* 피드백 박스 */}
         {isMine && isFeedbackOpen && m.feedback && (
@@ -224,13 +254,27 @@ export default function MessageItem({
             </div>
           </div>
         )}
-
+        {open && m.reactionEmoji && (
+          <div className="px-3 pb-3 pt-6 bg-gray-600 rounded-xl  ">
+            <p className="text-gray-100 text-sm">{m.reactionReason}</p>
+          </div>
+        )}
         {translated && (
-          <div className="px-3 pb-3 pt-6 bg-gray-600 rounded-xl  mt-2">
+          <div className="px-3 pb-3 pt-6 bg-gray-600 rounded-xl  -mt-5">
             <p className="text-gray-100 text-sm">{translated}</p>
           </div>
         )}
       </div>
+      {showRecommendation && (
+        <div className="max-w-[75%] ml-auto">
+          <div className="relative mb-4">
+            <div className="border-2 border-dashed border-gray-400 rounded-lg p-4 bg-white flex items-center justify-between">
+              <span className="text-gray-500 text-sm">Recommendation</span>
+              <div className="w-8 h-8 rounded-full border-2 border-gray-400 flex items-center justify-center"></div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

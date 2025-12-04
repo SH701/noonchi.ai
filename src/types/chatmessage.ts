@@ -3,12 +3,19 @@ export type ChatMsg = {
   conversationId: number;
   type: "USER" | "AI";
   content: string;
-  translatedContent?: string;
+  translatedContent?: string | null;
   audioUrl?: string | null;
-  createdAt: string;
-  politenessScore?: number;
-  naturalnessScore?: number;
-  pronunciationScore?: number;
-  feedback?: string;
+
+  politenessScore?: number | null;
+  naturalnessScore?: number | null;
+  pronunciationScore?: number | null;
+
+  reactionEmoji?: string | null;
+  reactionDescription?: string | null;
+  reactionReason?: string | null;
+  recommendation?: string | null;
+
+  feedback?: any;
   isLoading?: boolean;
+  createdAt: string;
 };

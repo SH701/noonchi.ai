@@ -14,16 +14,15 @@ import Loading from "./loading";
 import clsx from "clsx";
 import { useMessageFeedback } from "@/hooks/chatroom/useMessageFeedback";
 import { useSendMessage } from "@/hooks/chatroom/useSendMessage";
-import { useAiReply } from "@/hooks/chatroom/useAiReply";
+
 import {
   ChatroomHeader,
+  ChatroomInfo,
   ChatroomInput,
   MessageList,
 } from "@/components/chatroom";
 import dynamic from "next/dynamic";
-const ChatroomInfo = dynamic(import("@/components/chatroom/ChatroomInfo"), {
-  ssr: false,
-});
+
 type MicState = "idle" | "recording" | "recorded";
 
 export default function ChatroomPage() {
@@ -53,15 +52,14 @@ export default function ChatroomPage() {
 
   const conversationId = conversation?.conversationId ?? 0;
   const myAI = conversation?.aiPersona ?? null;
-  const { mutateAsync: sendUserMessage } = useSendMessage(conversationId);
-  const { mutateAsync: sendAiReply } = useAiReply(conversationId);
+  const { mutateAsync: chatting } = useSendMessage();
   const { mutate: createFeedback } = useMessageFeedback(conversationId);
   const {
     data: initialMessages = "",
     isLoading: isMessagesLoading,
     error: messagesError,
   } = useMessages(id);
-
+  useEffect(() => {}, [initialMessages]);
   useEffect(() => {
     if (initialMessages && initialMessages.length > 0) {
       setMessages(initialMessages);
@@ -80,64 +78,47 @@ export default function ChatroomPage() {
   };
 
   const sendMessage = async (content?: string, audioUrl?: string) => {
-    if ((!content || !content.trim()) && !audioUrl) return;
+    if (!content && !audioUrl) return;
 
-    const tempId = "temp-user-" + Date.now();
+    const tempId = "temp-" + Date.now();
 
     const optimistic: ChatMsg = {
       messageId: tempId,
       conversationId,
       type: "USER",
-      content: content ?? "[Voice message]",
-      translatedContent: "",
+      content: content ?? "[Voice Message]",
       audioUrl: audioUrl ?? null,
       createdAt: new Date().toISOString(),
-      politenessScore: -1,
-      naturalnessScore: -1,
-      pronunciationScore: -1,
     };
 
     setMessages((prev) => [...prev, optimistic]);
+
+    try {
+      const responseMessages = await chatting({
+        conversationId,
+        content,
+        audioUrl,
+      });
+
+      console.log("SERVER RESPONSE", responseMessages);
+
+      const serverUserMsg = responseMessages.find(
+        (m: ChatMsg) => m.type === "USER"
+      );
+      const aiMsg = responseMessages.find((m: ChatMsg) => m.type === "AI");
+
+      setMessages((prev) => [
+        ...prev.filter((msg) => msg.messageId !== tempId),
+        serverUserMsg!,
+        aiMsg!,
+      ]);
+    } catch (err) {
+      console.error("sendMessage error", err);
+
+      setMessages((prev) => prev.filter((msg) => msg.messageId !== tempId));
+    }
+
     setMessage("");
-    try {
-      const userMsg = await sendUserMessage({ content, audioUrl });
-
-      setMessages((prev) =>
-        prev.map((m) => (m.messageId === tempId ? userMsg : m))
-      );
-    } catch (e) {
-      console.error(e);
-
-      setMessages((prev) => prev.filter((m) => m.messageId !== tempId));
-      return;
-    }
-
-    const loadingAI: ChatMsg = {
-      messageId: "loading-ai",
-      conversationId,
-      type: "AI",
-      content: "AI가 대화를 생각하고 있어요..",
-      translatedContent: "",
-      audioUrl: null,
-      createdAt: new Date().toISOString(),
-      politenessScore: -1,
-      naturalnessScore: -1,
-      pronunciationScore: -1,
-      isLoading: true,
-    };
-
-    setMessages((prev) => [...prev, loadingAI]);
-
-    try {
-      const aiMsg = await sendAiReply();
-
-      setMessages((prev) =>
-        prev.map((m) => (m.messageId === "loading-ai" ? aiMsg : m))
-      );
-    } catch (e) {
-      console.error(e);
-      setMessages((prev) => prev.filter((m) => m.messageId !== "loading-ai"));
-    }
   };
 
   const handleFeedbacks = (messageId: string) => {

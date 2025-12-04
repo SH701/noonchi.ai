@@ -28,7 +28,7 @@ export default function MessageList({
     <>
       {messages.map((m) => {
         const isMine = m.type === "USER";
-        const isFeedbackOpen = feedbackOpenId === m.messageId;
+
         return (
           <MessageItem
             key={m.messageId}
