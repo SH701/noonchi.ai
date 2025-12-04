@@ -18,6 +18,7 @@ export type ConversationDetail = {
   taskCurrentLevel?: number;
   taskCurrentName?: string;
   taskAllCompleted?: boolean;
+  conversationType?:string
 };
 
 export function useConversationDetail(id?: string) {

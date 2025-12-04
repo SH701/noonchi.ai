@@ -1,6 +1,8 @@
 "use client";
 
 import { ActionButton, Back } from "@/components/ui/button";
+import { apiFetch } from "@/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -9,7 +11,7 @@ import { useState } from "react";
 export default function Billing() {
   const [selectedPack, setSelectedPack] = useState("level-up");
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   const packs = [
     {
       id: "starter",
@@ -43,9 +45,29 @@ export default function Billing() {
       ],
     },
   ];
-
+  const handleCharge = async () => {
+    const charge = await apiFetch("/api/users/credit/charge", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: 50,
+      }),
+    });
+    const creditUpdate = await apiFetch("/api/users/me", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["userProfile"],
+    });
+    return { charge, creditUpdate };
+  };
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="max-h-screen bg-gray-50">
       <div className="w-full max-w-sm mx-auto bg-gray-50 min-h-screen flex flex-col pt-12">
         <Back />
 
@@ -103,7 +125,11 @@ export default function Billing() {
             </div>
           ))}
           <div className=" flex items-center justify-center mt-6">
-            <ActionButton onClick={() => router.push("/main")}>
+            <ActionButton
+              onClick={() => {
+                handleCharge().then(() => router.push("/main"));
+              }}
+            >
               Get Credits
             </ActionButton>
           </div>

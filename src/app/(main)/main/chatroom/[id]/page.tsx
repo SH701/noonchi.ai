@@ -192,7 +192,7 @@ export default function ChatroomPage() {
       });
 
       const audioUrl = presignedUrl.split("?")[0];
-      console.log("audioUrl:", audioUrl);
+
       const sttres = await fetch("/api/language/stt", {
         method: "POST",
         headers: {

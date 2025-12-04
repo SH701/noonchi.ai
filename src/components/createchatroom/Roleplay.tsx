@@ -35,7 +35,14 @@ export default function RolePlay() {
 
     try {
       const topicEnum = TOPIC_ENUM_BY_ID[topicId];
+      const deduct = await apiFetch("/api/users/credit/deduct", {
+        method: "POST",
+        body: JSON.stringify({
+          amount: 20,
+        }),
+      });
 
+      if (!deduct.ok) throw new Error("크레딧 부족");
       const res = await apiFetch(`/api/conversations/role-playing`, {
         method: "POST",
         body: JSON.stringify({

@@ -26,6 +26,7 @@ export type Profile = {
   sentenceCount: number;
   profileImageUrl: string;
   interests: string[];
+  creditPoint: number;
 };
 export interface User {
   id: string;

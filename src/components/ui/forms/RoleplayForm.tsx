@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import FormInput from "../form/FormInput";
 import { ActionButton } from "../button";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface RoleplayProps {
   onSubmit: (data: { isAI: string; me: string; detail: string }) => void;
@@ -20,7 +21,7 @@ export default function RoleplayForm({
   const [isAI, setIsAI] = useState(AiRole || "");
   const [me, setMe] = useState(myRole || "");
   const [detail, setDetail] = useState("");
-
+  const queryClient = useQueryClient();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -28,7 +29,9 @@ export default function RoleplayForm({
       alert("Please fill in all required fields.");
       return;
     }
-
+    queryClient.invalidateQueries({
+      queryKey: ["userProfile"],
+    });
     onSubmit({ isAI, me, detail });
   };
   const inputStyle =

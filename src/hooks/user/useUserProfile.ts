@@ -6,7 +6,6 @@ import { Profile } from "@/types/user";
 
 export const useUserProfile = () => {
   const accessToken = useAuthStore((s) => s.accessToken);
-  const me = useAuthStore((s) => s.me);
 
   return useQuery<Profile>({
     queryKey: ["userProfile"],

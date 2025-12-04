@@ -7,6 +7,7 @@ import Loading from "../../chatroom/[id]/loading";
 
 import { apiFetch } from "@/lib/api";
 import InterviewForm from "@/components/ui/forms/InterviewForm";
+import { useQueryClient } from "@tanstack/react-query";
 
 const INTERVIEW_STYLES = [
   { value: "friendly", label: "Friendly" },
@@ -19,7 +20,7 @@ export type UploadedFiles = File[];
 export default function Interview() {
   const router = useRouter();
   const [showLoading, setShowLoading] = useState(false);
-
+  const queryClient = useQueryClient();
   const handleSubmit = async (data: any) => {
     setTimeout(() => setShowLoading(true), 0);
 
@@ -50,7 +51,16 @@ export default function Interview() {
           };
         })
       );
-
+      const deduct = await apiFetch("/api/users/credit/deduct", {
+        method: "POST",
+        body: JSON.stringify({
+          amount: 60,
+        }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["userProfile"],
+      });
+      if (!deduct.ok) throw new Error("크레딧 부족");
       const res = await apiFetch("/api/conversations/interview", {
         method: "POST",
         body: JSON.stringify({

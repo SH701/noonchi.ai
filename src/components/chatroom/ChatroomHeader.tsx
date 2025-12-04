@@ -8,6 +8,8 @@ import Unfinished from "../modal/Unfinished";
 import Sucess from "../modal/Sucess";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
 import { useAuthStore } from "@/store/useAuth";
+import { apiFetch } from "@/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   name: string | undefined;
@@ -29,7 +31,7 @@ export default function ChatroomHeader({
   const { data: user } = useUserProfile();
   const [isUnfinishedOpen, setIsUnfinishedOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
-
+  const queryClient = useQueryClient();
   const accessToken = useAuthStore((s) => s.accessToken);
   const router = useRouter();
 
@@ -39,7 +41,19 @@ export default function ChatroomHeader({
     } else {
       setIsSuccessOpen(true);
     }
+    const creditAmount =
+      conversation?.conversationType === "INTERVIEW" ? 40 : 10;
     try {
+      const deduct = await apiFetch("/api/users/credit/deduct", {
+        method: "POST",
+        body: JSON.stringify({ amount: creditAmount }),
+      });
+
+      if (!deduct.ok) {
+        alert("크레딧이 부족합니다.");
+        return;
+      }
+
       const res = await fetch(`/api/conversations/${conversationId}/end`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -49,6 +63,9 @@ export default function ChatroomHeader({
         console.error("Failed to end conversation:", res.status);
         return;
       }
+      queryClient.invalidateQueries({
+        queryKey: ["userProfile"],
+      });
       router.push(`/main/chatroom/${conversationId}/result`);
     } catch (error) {
       console.error("Error ending conversation:", error);
