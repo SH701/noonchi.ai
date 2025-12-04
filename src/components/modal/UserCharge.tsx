@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 export default function UserCharge({ isOpen, onClose }: ModalProps) {
   const router = useRouter();
+
   return (
     <Modal
       isOpen={isOpen}
@@ -48,7 +49,7 @@ export default function UserCharge({ isOpen, onClose }: ModalProps) {
 
       <ModalButton
         label="Go to payment"
-        onClick={() => router.push("/payment")}
+        onClick={() => router.push("/billing")}
       />
     </Modal>
   );

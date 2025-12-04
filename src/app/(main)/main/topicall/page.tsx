@@ -26,7 +26,6 @@ export default function TopicAll() {
       <TopicSlider
         topics={[
           { id: 1, label: "Career" },
-          { id: 2, label: "Family" },
           { id: 3, label: "Romance" },
           { id: 4, label: "Belonging" },
           { id: 5, label: "K-POP" },

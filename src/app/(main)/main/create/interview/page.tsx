@@ -8,6 +8,9 @@ import Loading from "../../chatroom/[id]/loading";
 import { apiFetch } from "@/lib/api";
 import InterviewForm from "@/components/ui/forms/InterviewForm";
 import { useQueryClient } from "@tanstack/react-query";
+import UserCharge from "@/components/modal/UserCharge";
+import { useUserProfile } from "@/hooks/user/useUserProfile";
+import GuestCharge from "@/components/modal/GuestCharge";
 
 const INTERVIEW_STYLES = [
   { value: "friendly", label: "Friendly" },
@@ -21,8 +24,10 @@ export default function Interview() {
   const router = useRouter();
   const [showLoading, setShowLoading] = useState(false);
   const queryClient = useQueryClient();
+  const [needCharge, setNeedCharge] = useState(false);
+  const { data: user } = useUserProfile();
   const handleSubmit = async (data: any) => {
-    setTimeout(() => setShowLoading(true), 0);
+    setShowLoading(true);
 
     try {
       const uploadedFiles = await Promise.all(
@@ -51,16 +56,20 @@ export default function Interview() {
           };
         })
       );
+
       const deduct = await apiFetch("/api/users/credit/deduct", {
         method: "POST",
-        body: JSON.stringify({
-          amount: 60,
-        }),
+        body: JSON.stringify({ amount: 60 }),
       });
-      queryClient.invalidateQueries({
-        queryKey: ["userProfile"],
-      });
-      if (!deduct.ok) throw new Error("크레딧 부족");
+
+      if (!deduct.ok) {
+        setShowLoading(false);
+        setNeedCharge(true);
+        return;
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+
       const res = await apiFetch("/api/conversations/interview", {
         method: "POST",
         body: JSON.stringify({
@@ -75,7 +84,6 @@ export default function Interview() {
       if (!res.ok) throw new Error("인터뷰 생성 실패");
 
       const convo = await res.json();
-
       router.push(`/main/chatroom/${convo.conversationId}`);
     } catch (e) {
       console.error(e);
@@ -112,6 +120,11 @@ export default function Interview() {
           />
         </div>
       </div>
+      {needCharge && user?.role === "ROLE_USER" ? (
+        <UserCharge isOpen={needCharge} onClose={() => setNeedCharge(false)} />
+      ) : (
+        <GuestCharge isOpen={needCharge} onClose={() => setNeedCharge(false)} />
+      )}
     </div>
   );
 }
