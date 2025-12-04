@@ -49,7 +49,7 @@ export default function ChatroomPage() {
     isLoading: isConversationLoading,
     error: conversationError,
   } = useConversationDetail(id);
-
+  const { refetch: refetchConversation } = useConversationDetail(id);
   const conversationId = conversation?.conversationId ?? 0;
   const myAI = conversation?.aiPersona ?? null;
   const { mutateAsync: chatting } = useSendMessage();
@@ -113,6 +113,7 @@ export default function ChatroomPage() {
         const filtered = prev.filter((msg) => msg.messageId !== tempId);
         return [...filtered, serverUserMsg!, aiMsg!];
       });
+      await refetchConversation();
     } catch (err) {
       console.error("sendMessage error", err);
       setMessages((prev) => prev.filter((msg) => msg.messageId !== tempId));

@@ -28,7 +28,6 @@ export default function MessageItem({
   isFeedbackOpen,
   handleFeedbacks,
   messageStatus = "default",
-  isFirstAIMessage = false,
 }: MessageItemProps) {
   const [translated, setTranslated] = useState<string | null>(null);
   const [loadingTranslate, setLoadingTranslate] = useState<
@@ -41,10 +40,8 @@ export default function MessageItem({
   >({});
   const [recommandtion, setRecommandtion] = useState(false);
   const [activeTab, setActiveTab] = useState("nuance");
-
+  const [recommendation, setRecommendation] = useState(true);
   const accessToken = useAuthStore((s) => s.accessToken);
-
-  const showRecommendation = !isMine && isFirstAIMessage;
 
   const showFeedbackButton =
     isMine &&
@@ -87,19 +84,28 @@ export default function MessageItem({
   );
 
   const handleTTsClick = async (messageId: string) => {
-    setLoadingTTS((prev) => ({ ...prev, [messageId]: true }));
     try {
+      if (!messageId) return;
+
       const res = await fetch(`/api/messages/${messageId}/tts`, {
         method: "PUT",
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
-      if (!res.ok) return;
+      if (!res.ok) {
+        throw new Error(`TTS 요청 실패: ${res.status}`);
+      }
+
       const audioUrl = await res.text();
+
       const audio = new Audio(audioUrl);
       audio.play();
-    } finally {
-      setLoadingTTS((prev) => ({ ...prev, [messageId]: false }));
+
+      return audioUrl;
+    } catch (err) {
+      console.error("handleTTS error:", err);
     }
   };
 
@@ -296,7 +302,7 @@ export default function MessageItem({
           </div>
         )}
       </div>
-      {showRecommendation && (
+      {recommendation && !isMine && (
         <div className="max-w-[75%] ml-auto">
           <div className="relative mb-4">
             <div className="border-2 border-dashed border-gray-400 rounded-lg p-4 bg-white flex items-center justify-between gap-2">

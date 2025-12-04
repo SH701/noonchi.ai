@@ -1,6 +1,7 @@
 import { Info } from "lucide-react";
 import { ModalButton } from "../ui/button";
 import Modal from "../ui/modal/Modal";
+import { useRouter } from "next/navigation";
 
 export default function Sucess({
   isOpen,
@@ -9,17 +10,18 @@ export default function Sucess({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const router = useRouter();
   return (
     <Modal
-      title="Log in to save your interview and view yout feedback"
-      description="Viewing yout learning report will cost 50 credits"
+      title="Sign up to save your interview and view yout feedback"
+      description="Viewing yout learning report will cost 40 credits"
       isOpen={isOpen}
       onClose={onClose}
       className="pt-20 bg-white rounded-2xl flex flex-col items-center justify-center gap-3 py-6 px-5 w-[334px] "
     >
       <Info className="text-green-500 size-10 absolute top-4" />
       <div className="flex flex-col gap-3 w-full mt-4 items-center">
-        <ModalButton label="Log in" onClick={onClose} />
+        <ModalButton label="Sign up" onClick={() => router.push("/signup")} />
       </div>
     </Modal>
   );

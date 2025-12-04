@@ -1,14 +1,13 @@
-import LoginModal from "@/components/modal/LoginModal";
-import EndModal from "@/components/result/EndModal";
 import { useConversationDetail } from "@/hooks/conversation/useConversationDetail";
-import { useAuthStore } from "@/store/useAuth";
 import { Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Unfinished from "../modal/Unfinished";
 import Sucess from "../modal/Sucess";
+import { useUserProfile } from "@/hooks/user/useUserProfile";
+import { useAuthStore } from "@/store/useAuth";
 
 type Props = {
   name: string | undefined;
@@ -23,18 +22,36 @@ export default function ChatroomHeader({
   hidden,
   setHidden,
   onInfoOpen,
+  conversationId,
 }: Props) {
   const { id } = useParams<{ id: string }>();
   const { data: conversation } = useConversationDetail(id);
-
+  const { data: user } = useUserProfile();
   const [isUnfinishedOpen, setIsUnfinishedOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
 
-  const handleExit = () => {
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const router = useRouter();
+
+  const handleExit = async () => {
     if (conversation?.taskAllCompleted === false) {
       setIsUnfinishedOpen(true);
     } else {
       setIsSuccessOpen(true);
+    }
+    try {
+      const res = await fetch(`/api/conversations/${conversationId}/end`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (!res.ok) {
+        console.error("Failed to end conversation:", res.status);
+        return;
+      }
+      router.push(`/main/chatroom/${conversationId}/result`);
+    } catch (error) {
+      console.error("Error ending conversation:", error);
     }
   };
 
@@ -98,7 +115,7 @@ export default function ChatroomHeader({
           <p className="py-1 px-2 text-xs bg-gray-600 rounded-md">
             Task {conversation?.taskCurrentLevel}
           </p>
-          <p className="text-[10px]">{conversation?.taskCurrentName}</p>
+          <p className="text-xs">{conversation?.taskCurrentName}</p>
           {conversation?.taskAllCompleted ? (
             <Check className="text-blue-500" />
           ) : (
@@ -106,12 +123,16 @@ export default function ChatroomHeader({
           )}
         </div>
       </div>
-
       <Unfinished
         isOpen={isUnfinishedOpen}
         onClose={() => setIsUnfinishedOpen(false)}
       />
-      <Sucess isOpen={isSuccessOpen} onClose={() => setIsSuccessOpen(false)} />
+      {user?.role === "ROLE_USER" ? null : (
+        <Sucess
+          isOpen={isSuccessOpen}
+          onClose={() => setIsSuccessOpen(false)}
+        />
+      )}
     </>
   );
 }

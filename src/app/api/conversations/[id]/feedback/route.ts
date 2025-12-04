@@ -13,14 +13,7 @@ export async function GET(req: NextRequest, ctx: Ctx) {
   );
 }
 
-export async function POST(req: NextRequest, ctx: Ctx) {
-  const { id } = await ctx.params;
-  return proxyJSON(
-    req,
-    `/api/conversations/${encodeURIComponent(id)}/feedback`,
-    { method: "POST", forwardAuth: true }
-  );
-}
+
 
 // (필요하면) CORS 프리플라이트
 export async function OPTIONS() {
