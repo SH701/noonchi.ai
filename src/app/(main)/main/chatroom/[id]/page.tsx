@@ -21,7 +21,6 @@ import {
   ChatroomInput,
   MessageList,
 } from "@/components/chatroom";
-import dynamic from "next/dynamic";
 
 type MicState = "idle" | "recording" | "recorded";
 
@@ -40,6 +39,7 @@ export default function ChatroomPage() {
   const [pendingAudioUrl, setPendingAudioUrl] = useState<string | null>(null);
   const [showVoiceError, setShowVoiceError] = useState(false);
   const [micState, setMicState] = useState<MicState>("idle");
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const { startRecording, stopRecording } = useRecorder();
@@ -59,12 +59,14 @@ export default function ChatroomPage() {
     isLoading: isMessagesLoading,
     error: messagesError,
   } = useMessages(id);
-  useEffect(() => {}, [initialMessages]);
+
+  console.log("방 정보:", conversation);
   useEffect(() => {
-    if (initialMessages && initialMessages.length > 0) {
+    if (!isInitialized && initialMessages && initialMessages.length > 0) {
       setMessages(initialMessages);
+      setIsInitialized(true);
     }
-  }, [initialMessages]);
+  }, [initialMessages, isInitialized]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -92,6 +94,7 @@ export default function ChatroomPage() {
     };
 
     setMessages((prev) => [...prev, optimistic]);
+    setMessage("");
 
     try {
       const responseMessages = await chatting({
@@ -100,25 +103,20 @@ export default function ChatroomPage() {
         audioUrl,
       });
 
-      console.log("SERVER RESPONSE", responseMessages);
-
       const serverUserMsg = responseMessages.find(
         (m: ChatMsg) => m.type === "USER"
       );
       const aiMsg = responseMessages.find((m: ChatMsg) => m.type === "AI");
 
-      setMessages((prev) => [
-        ...prev.filter((msg) => msg.messageId !== tempId),
-        serverUserMsg!,
-        aiMsg!,
-      ]);
+      setMessages((prev) => {
+        const filtered = prev.filter((msg) => msg.messageId !== tempId);
+        return [...filtered, serverUserMsg!, aiMsg!];
+      });
     } catch (err) {
       console.error("sendMessage error", err);
 
       setMessages((prev) => prev.filter((msg) => msg.messageId !== tempId));
     }
-
-    setMessage("");
   };
 
   const handleFeedbacks = (messageId: string) => {
@@ -157,7 +155,6 @@ export default function ChatroomPage() {
     try {
       setLoading(true);
 
-      // 1. S3에 업로드만 수행
       console.log("=== 음성 파일 업로드 시작 ===");
       const presignRes = await fetch("/api/files/presigned-url", {
         method: "POST",
@@ -202,7 +199,7 @@ export default function ChatroomPage() {
   const hasError = conversationError || messagesError;
 
   if ((isDataLoading && messages.length === 0) || !accessToken) {
-    <Loading />;
+    return <Loading />;
   }
 
   if (hasError && messages.length === 0) {
@@ -224,7 +221,6 @@ export default function ChatroomPage() {
           onInfoOpen={() => setInfoOpen(true)}
         />
 
-        {/* Messages */}
         <div className={clsx("flex-1 bg-[#F9FAFB] px-4 py-4 overflow-y-auto")}>
           <MessageList
             messages={messages}
@@ -271,8 +267,8 @@ export default function ChatroomPage() {
         <ChatroomInfo
           isOpen={infoOpen}
           onClose={() => setInfoOpen(false)}
-          companyName={conversation?.companyName ?? ""}
-          jobTitle={conversation?.jobTitle ?? ""}
+          companyName={conversation?.interviewCompanyName ?? ""}
+          jobTitle={conversation?.interviewJobTitle ?? ""}
           interviewStyle={conversation?.interviewStyle ?? ""}
         />
       </div>

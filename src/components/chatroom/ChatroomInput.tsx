@@ -60,7 +60,7 @@ export default function ChatroomInput({
       <div
         className={clsx(
           isTyping ? "h-[136px]" : "h-[174px]",
-          "border-t border-gray-200 max-w-[375px] w-full flex justify-center items-center flex-col gap-6 absoulte bottom-0 z-50"
+          "border-t border-gray-200 md:max-w-[375px] w-full flex justify-center items-center flex-col gap-6 absoulte bottom-0 z-50"
         )}
       >
         {isTyping ? (

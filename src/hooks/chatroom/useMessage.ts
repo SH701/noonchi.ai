@@ -38,6 +38,10 @@ export function useMessages(conversationId?: string) {
         naturalnessScore: m.naturalnessScore ?? -1,
         pronunciationScore: m.pronunciationScore ?? -1,
         feedback: m.feedback,
+        reactionEmoji: m.reactionEmoji,
+        reactionDescription: m.reactionDescription,
+        reactionReason: m.reactionReason,
+        recommendation: m.recommendation,
       }));
     },
     staleTime: 0,

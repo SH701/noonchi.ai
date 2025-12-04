@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/useAuth";
 import { MyAI } from "@/types/persona";
 import { Info, User } from "lucide-react";
 import { BotMessageSquare } from "lucide-react";
+import { LightBulbIcon } from "@heroicons/react/24/solid";
 
 type MessageItemProps = {
   m: any;
@@ -17,6 +18,7 @@ type MessageItemProps = {
   feedbackOpenId: string | null;
   handleFeedbacks: (messageId: string) => void;
   messageStatus?: "default" | "error";
+  isFirstAIMessage?: boolean;
 };
 
 export default function MessageItem({
@@ -26,6 +28,7 @@ export default function MessageItem({
   isFeedbackOpen,
   handleFeedbacks,
   messageStatus = "default",
+  isFirstAIMessage = false,
 }: MessageItemProps) {
   const [translated, setTranslated] = useState<string | null>(null);
   const [loadingTranslate, setLoadingTranslate] = useState<
@@ -36,18 +39,11 @@ export default function MessageItem({
   const [loadingFeedbacks, setLoadingFeedbacks] = useState<
     Record<string, boolean>
   >({});
-  const [showRecommendation, setShowRecommendation] = useState(true);
+  const [recommandtion, setRecommandtion] = useState(false);
 
   const accessToken = useAuthStore((s) => s.accessToken);
 
-  // 컴포넌트 마운트 시 5초간 Recommendation 표시
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowRecommendation(false);
-    }, 5000000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const showRecommendation = !isMine && isFirstAIMessage;
 
   const showFeedbackButton =
     isMine &&
@@ -129,6 +125,9 @@ export default function MessageItem({
   const handleReactionReason = () => {
     setOpen((prev) => !prev);
   };
+  const handlerecommendation = () => {
+    setRecommandtion((prev) => !prev);
+  };
 
   return (
     <div
@@ -199,7 +198,7 @@ export default function MessageItem({
           )}
 
           {/* AI 말풍선 */}
-          {!isMine && m.reactionEmoji && (
+          {!isMine && (
             <div className="flex flex-col gap-2 rounded-xl p-4 border border-gray-300 bg-white">
               <p className="text-sm leading-[130%] whitespace-pre-wrap my-1">
                 {m.reactionEmoji}
@@ -208,13 +207,13 @@ export default function MessageItem({
               </p>
 
               <div className="flex mt-2 pt-2 justify-between border-t border-gray-200">
-                <div className="flex gap-2">
+                <div className="flex gap-2 ">
                   <button
                     onClick={() => handleTTsClick(m.messageId)}
                     disabled={loadingTTS[m.messageId]}
                   >
                     <Image
-                      src="/etc/volume_up.svg"
+                      src="/message/volume_up.svg"
                       width={20}
                       height={20}
                       alt="TTS"
@@ -226,15 +225,18 @@ export default function MessageItem({
                     disabled={loadingTranslate[m.messageId]}
                   >
                     <Image
-                      src="/etc/language.svg"
+                      src="/message/language.svg"
                       width={20}
                       height={20}
                       alt="Translate"
                     />
                   </button>
                 </div>
-
-                <BotMessageSquare
+                <Image
+                  src="/message/ai.png"
+                  width={20}
+                  height={20}
+                  alt="Translate"
                   className="size-5 text-gray-600"
                   onClick={() => handleReactionReason()}
                 />
@@ -249,13 +251,13 @@ export default function MessageItem({
             <div className="text-white text-sm pb-2 border-b border-gray-500">
               {m.feedback.appropriateExpression}
             </div>
-            <div className="text-gray-300 text-sm mt-2">
+            <div className="text-gray-300 text-sm -mt-5">
               {m.feedback.explain}
             </div>
           </div>
         )}
-        {open && m.reactionEmoji && (
-          <div className="px-3 pb-3 pt-6 bg-gray-600 rounded-xl  ">
+        {open && (
+          <div className="px-3 pb-3 pt-6 bg-gray-600 rounded-xl  -mt-5">
             <p className="text-gray-100 text-sm">{m.reactionReason}</p>
           </div>
         )}
@@ -268,11 +270,48 @@ export default function MessageItem({
       {showRecommendation && (
         <div className="max-w-[75%] ml-auto">
           <div className="relative mb-4">
-            <div className="border-2 border-dashed border-gray-400 rounded-lg p-4 bg-white flex items-center justify-between">
-              <span className="text-gray-500 text-sm">Recommendation</span>
-              <div className="w-8 h-8 rounded-full border-2 border-gray-400 flex items-center justify-center"></div>
+            <div className="border-2 border-dashed border-gray-400 rounded-lg p-4 bg-white flex items-center justify-between gap-2">
+              <p className="text-gray-500 text-sm">Recommendation</p>
+              <div className="w-6 h-6 rounded-full border-2 border-gray-400 flex items-center justify-center border-dotted">
+                <LightBulbIcon
+                  className="size-4"
+                  onClick={() => handlerecommendation()}
+                />
+              </div>
             </div>
           </div>
+          {recommandtion && (
+            <div className="border-2 border-dashed border-gray-400 rounded-lg p-4 bg-white flex items-start justify-between gap-2 flex-col">
+              <p className="text-gray-500 text-sm wrap-break-word">
+                {m.recommendation}
+              </p>
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={() => handleTTsClick(m.messageId)}
+                  disabled={loadingTTS[m.messageId]}
+                >
+                  <Image
+                    src="/message/volume_up.svg"
+                    width={20}
+                    height={20}
+                    alt="TTS"
+                  />
+                </button>
+
+                <button
+                  onClick={() => handleTranslateClick(m.messageId)}
+                  disabled={loadingTranslate[m.messageId]}
+                >
+                  <Image
+                    src="/message/language.svg"
+                    width={20}
+                    height={20}
+                    alt="Translate"
+                  />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

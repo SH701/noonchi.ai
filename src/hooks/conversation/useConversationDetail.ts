@@ -12,9 +12,12 @@ export type ConversationDetail = {
   chatNodeId: string;
   createdAt: string;
   endedAt: string | null;
-  companyName: string;
-  jobTitle: string;
+  interviewCompanyName?: string;
+  interviewJobTitle?: string;
   interviewStyle: string;
+  taskCurrentLevel?: number;
+  taskCurrentName?: string;
+  taskAllCompleted?: boolean;
 };
 
 export function useConversationDetail(id?: string) {
