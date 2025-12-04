@@ -6,20 +6,38 @@ import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { topicsByCategory } from "@/data/topics";
 import RoleplayForm from "@/components/ui/forms/RoleplayForm";
 import { apiFetch } from "@/lib/api";
-const TOPIC_ENUM_BY_ID: Record<number, string> = {
-  1: "after_work_escape_mode",
-  2: "could_you_soften_your_tone",
-  3: "midnight_mom_energy",
-  4: "bias_talk_irl",
-};
+import { useState } from "react";
+import Loading from "@/app/(main)/main/chatroom/[id]/loading";
+
+export const TOPIC_ENUMS = {
+  Career: {
+    1: "after_work_escape_mode",
+  },
+  Romance: {
+    1: "could_you_soften_your_tone",
+  },
+  Belonging: {
+    1: "midnight_mom_energy",
+  },
+  "K-POP": {
+    1: "bias_talk_irl",
+  },
+} as const;
+
 export default function RolePlay() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [loading, setLoading] = useState(false);
   const mode = searchParams.get("mode") as "topic" | "custom";
   const category = searchParams.get(
     "category"
   ) as keyof typeof topicsByCategory;
   const topicId = Number(searchParams.get("topicId"));
+
+  const topicEnum =
+    TOPIC_ENUMS[category]?.[
+      topicId as keyof (typeof TOPIC_ENUMS)[typeof category]
+    ];
 
   const topic =
     category && topicId
@@ -32,17 +50,15 @@ export default function RolePlay() {
     detail: string;
   }) => {
     if (!topic) return;
-
+    setLoading(true);
     try {
-      const topicEnum = TOPIC_ENUM_BY_ID[topicId];
       const deduct = await apiFetch("/api/users/credit/deduct", {
         method: "POST",
-        body: JSON.stringify({
-          amount: 20,
-        }),
+        body: JSON.stringify({ amount: 20 }),
       });
 
       if (!deduct.ok) throw new Error("크레딧 부족");
+
       const res = await apiFetch(`/api/conversations/role-playing`, {
         method: "POST",
         body: JSON.stringify({
@@ -50,15 +66,17 @@ export default function RolePlay() {
           details: data.detail,
         }),
       });
-      if (!res.ok) throw new Error("인터뷰 생성 실패");
-      const convo = await res.json();
 
+      if (!res.ok) throw new Error("인터뷰 생성 실패");
+
+      const convo = await res.json();
+      setLoading(false);
       router.push(`/main/chatroom/${convo.conversationId}`);
     } catch (err) {
       console.error("Error:", err);
     }
   };
-
+  if (loading) return <Loading />;
   return (
     <div className="flex flex-col pt-14 relative bg-white w-full overflow-x-hidden">
       <div className="flex items-center w-full px-4">
@@ -72,6 +90,7 @@ export default function RolePlay() {
           Create
         </h1>
       </div>
+
       <h2 className="text-left text-xl font-bold mb-12 pl-5 mt-6">
         Role-Playing
       </h2>

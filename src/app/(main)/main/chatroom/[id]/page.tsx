@@ -40,7 +40,7 @@ export default function ChatroomPage() {
   const [showVoiceError, setShowVoiceError] = useState(false);
   const [micState, setMicState] = useState<MicState>("idle");
   const [isInitialized, setIsInitialized] = useState(false);
-
+  const [aiLoading, setAiLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { startRecording, stopRecording } = useRecorder();
 
@@ -81,6 +81,7 @@ export default function ChatroomPage() {
   const sendMessage = async (content?: string, audioUrl?: string) => {
     if (!content && !audioUrl) return;
 
+    setLoading(true);
     const tempId = "temp-" + Date.now();
 
     const optimistic: ChatMsg = {
@@ -92,7 +93,18 @@ export default function ChatroomPage() {
       createdAt: new Date().toISOString(),
     };
 
-    setMessages((prev) => [...prev, optimistic]);
+    const loadingBubble: ChatMsg = {
+      messageId: "ai-loading",
+      conversationId,
+      type: "AI",
+      content: "",
+      audioUrl: null,
+      createdAt: new Date().toISOString(),
+      isLoading: true,
+    };
+
+    // 사용자 메시지 + AI 로딩 말풍선 추가
+    setMessages((prev) => [...prev, optimistic, loadingBubble]);
     setMessage("");
 
     try {
@@ -109,10 +121,16 @@ export default function ChatroomPage() {
       );
       const aiMsg = responseMessages.find((m: ChatMsg) => m.type === "AI");
 
+      setLoading(false);
+
       setMessages((prev) => {
-        const filtered = prev.filter((msg) => msg.messageId !== tempId);
+        const filtered = prev.filter(
+          (msg) => msg.messageId !== tempId && msg.messageId !== "ai-loading"
+        );
+
         return [...filtered, serverUserMsg!, aiMsg!];
       });
+
       await refetchConversation();
     } catch (err) {
       console.error("sendMessage error", err);

@@ -73,7 +73,7 @@ export default function RoleplayForm({
             height={16}
           />
           <p className="text-blue-600 text-xs">
-            It costs 60 credits to run this chat
+            It costs 20 credits to run this chat
           </p>
         </div>
         <div className="mt-2">
