@@ -115,7 +115,7 @@ export default function ChatroomHeader({
             <button
               onClick={handleExit}
               aria-label="End conversation"
-              className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
+              className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer w-25 flex justify-end"
             >
               <Image
                 src="/etc/exit_to_app.svg"
