@@ -19,6 +19,7 @@ type MessageItemProps = {
   handleFeedbacks: (messageId: string) => void;
   messageStatus?: "default" | "error";
   isFirstAIMessage?: boolean;
+  isPending?: boolean;
 };
 
 export default function MessageItem({
@@ -29,6 +30,7 @@ export default function MessageItem({
   feedbackOpenId,
   handleFeedbacks,
   messageStatus = "default",
+  isPending = false,
 }: MessageItemProps) {
   const [translated, setTranslated] = useState<string | null>(null);
   const [loadingTranslate, setLoadingTranslate] = useState<
@@ -49,7 +51,6 @@ export default function MessageItem({
     (m.politenessScore ?? -1) >= 0 &&
     (m.naturalnessScore ?? -1) >= 0 &&
     (m.politenessScore + m.naturalnessScore) / 2 <= 80;
-  const avgScore = ((m.politenessScore ?? 0) + (m.naturalnessScore ?? 0)) / 2;
 
   const isErrorOrFeedback =
     messageStatus === "error" ||
@@ -61,15 +62,22 @@ export default function MessageItem({
     await handleFeedbacks(m.messageId);
     setLoadingFeedbacks((prev) => ({ ...prev, [m.messageId]: false }));
   };
-
+  const hasValidScore =
+    m.politenessScore != null &&
+    m.naturalnessScore != null &&
+    m.politenessScore >= 0 &&
+    m.naturalnessScore >= 0;
+  const avgScore2 = hasValidScore
+    ? (m.politenessScore + m.naturalnessScore) / 2
+    : 100;
   let scoreLabel = "None";
   let scoreColor = "text-green-500";
   let scoreIcon = "/chatroom/satisfied.png";
-  if (avgScore < 50) {
+  if (avgScore2 < 50) {
     scoreLabel = "Serious";
     scoreColor = "text-red-500";
     scoreIcon = "/chatroom/dissatisfied.png";
-  } else if (avgScore < 80) {
+  } else if (avgScore2 < 80) {
     scoreLabel = "Mild";
     scoreColor = "text-yellow-500";
     scoreIcon = "/chatroom/neutral.png";
@@ -77,6 +85,7 @@ export default function MessageItem({
 
   const bubbleClass = clsx(
     "relative z-30 p-4 rounded-2xl border  w-full",
+    isPending && "animate-pulse opacity-70",
     isMine
       ? isErrorOrFeedback
         ? "bg-rose-100 text-black border-red-500"
@@ -210,12 +219,14 @@ export default function MessageItem({
                   {m.content}
                 </p>
               </div>
-              <div
-                className={`flex items-center justify-end mt-1 ${scoreColor}`}
-              >
-                <Image src={scoreIcon} alt="아이콘" width={16} height={16} />
-                <span className="text-xs font-semibold">{scoreLabel}</span>
-              </div>
+              {!isPending && (
+                <div
+                  className={`flex items-center justify-end mt-1 ${scoreColor}`}
+                >
+                  <Image src={scoreIcon} alt="아이콘" width={16} height={16} />
+                  <span className="text-xs font-semibold">{scoreLabel}</span>
+                </div>
+              )}
             </div>
           )}
 

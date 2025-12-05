@@ -28,13 +28,14 @@ export default function MessageList({
     <>
       {messages.map((m) => {
         const isMine = m.type === "USER";
-
+        const isPending = String(m.messageId).startsWith("temp-");
         return (
           <MessageItem
             key={m.messageId}
             m={m}
             myAI={myAI}
             isMine={isMine}
+            isPending={isPending}
             isFeedbackOpen={feedbackOpenId === m.messageId}
             feedbackOpenId={feedbackOpenId}
             handleFeedbacks={handleFeedbacks}

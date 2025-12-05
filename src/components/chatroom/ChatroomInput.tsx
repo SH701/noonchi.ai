@@ -4,12 +4,14 @@
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
+
 interface ChatroomInputProps {
   isTyping: boolean;
   micState: "idle" | "recording" | "recorded";
   message: string;
   pendingAudioUrl: string | null;
   showVoiceError: boolean;
+  isAIResponding?: boolean; // ✅ 추가
 
   setIsTyping: (v: boolean) => void;
   setMessage: (v: string) => void;
@@ -24,8 +26,8 @@ export default function ChatroomInput({
   isTyping,
   micState,
   message,
-
   showVoiceError,
+  isAIResponding = false,
 
   setIsTyping,
   setMessage,
@@ -69,7 +71,9 @@ export default function ChatroomInput({
           <input
             type="text"
             className="rounded-[100px] px-5 py-2 w-[334px] bg-gray-100 "
-            placeholder="Press the voice button."
+            placeholder={
+              isAIResponding ? "AI is responding..." : "Press the voice button."
+            }
             disabled
           />
         )}
@@ -80,12 +84,14 @@ export default function ChatroomInput({
                 <button
                   className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-100"
                   onClick={handleResetAudio}
+                  disabled={isAIResponding}
                 >
                   <Image
                     src="/chatroom/cancel.png"
                     alt="Refresh"
                     width={64}
                     height={64}
+                    className={isAIResponding ? "opacity-50" : ""}
                   />
                 </button>
               ) : (
@@ -93,41 +99,45 @@ export default function ChatroomInput({
               )}
 
               {micState === "idle" && (
-                <button onClick={handleMicClick}>
+                <button onClick={handleMicClick} disabled={isAIResponding}>
                   <Image
                     src="/chatroom/voice.png"
                     alt="Mic"
                     width={82}
                     height={82}
+                    className={isAIResponding ? "opacity-50" : ""}
                   />
                 </button>
               )}
 
               {micState === "recording" && (
-                <button onClick={handleMicClick}>
+                <button onClick={handleMicClick} disabled={isAIResponding}>
                   <Image
                     src="/chatroom/voicesave.png"
                     alt="Pause"
                     width={82}
                     height={82}
+                    className={isAIResponding ? "opacity-50" : ""}
                   />
                 </button>
               )}
 
               {micState === "recorded" && (
-                <button onClick={handleSendAudio}>
+                <button onClick={handleSendAudio} disabled={isAIResponding}>
                   <Image
                     src="/chatroom/send.png"
                     alt="Send"
                     width={82}
                     height={82}
+                    className={isAIResponding ? "opacity-50" : ""}
                   />
                 </button>
               )}
 
               <button
-                className=" bg-white rounded-full flex items-center justify-center hover:bg-gray-100"
+                className="bg-white rounded-full flex items-center justify-center hover:bg-gray-100 disabled:opacity-50"
                 onClick={() => setIsTyping(true)}
+                disabled={isAIResponding}
               >
                 <Image
                   src="/chatroom/bluekeyboard.png"
@@ -143,7 +153,8 @@ export default function ChatroomInput({
             <div className="flex items-center w-full max-w-[334px] min-w-0 border border-blue-300 rounded-full bg-white mx-4">
               <button
                 onClick={() => setIsTyping(false)}
-                className="p-2 shrink-0"
+                className="p-2 shrink-0 disabled:opacity-50"
+                disabled={isAIResponding}
               >
                 <Image
                   src="/chatroom/mic.png"
@@ -155,16 +166,25 @@ export default function ChatroomInput({
 
               <input
                 type="text"
-                placeholder="Type your answer..."
-                className="grow min-w-0 p-2 text-gray-500 placeholder-gray-400 border-none outline-none"
+                placeholder={
+                  isAIResponding ? "AI is responding..." : "Type your answer..."
+                }
+                className="grow min-w-0 p-2 text-gray-500 placeholder-gray-400 border-none outline-none disabled:bg-gray-50"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && sendMessage(message)}
+                onKeyDown={(e) =>
+                  e.key === "Enter" &&
+                  !isAIResponding &&
+                  message.trim() &&
+                  sendMessage(message)
+                }
+                disabled={isAIResponding}
               />
 
               <button
                 onClick={() => sendMessage(message)}
-                className="shrink-0 p-3 hover:bg-gray-50 rounded-full transition-colors"
+                className="shrink-0 p-3 hover:bg-gray-50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isAIResponding || !message.trim()}
               >
                 <Image
                   src="/chatroom/up.png"

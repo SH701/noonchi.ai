@@ -43,7 +43,7 @@ export default function ChatroomPage() {
   const [aiLoading, setAiLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { startRecording, stopRecording } = useRecorder();
-
+  const isAIResponding = messages.some((m) => m.isLoading && m.type === "AI");
   const {
     data: conversation,
     isLoading: isConversationLoading,
@@ -300,6 +300,7 @@ export default function ChatroomPage() {
           pendingAudioUrl={pendingAudioUrl}
           showVoiceError={showVoiceError}
           setIsTyping={setIsTyping}
+          isAIResponding={isAIResponding}
           setMessage={setMessage}
           handleMicClick={handleMicClick}
           handleResetAudio={handleResetAudio}

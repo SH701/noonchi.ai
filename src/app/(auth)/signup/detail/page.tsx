@@ -64,7 +64,6 @@ export default function SignupStep2() {
     useAuthStore.getState().setRefreshToken(data.refreshToken);
     useAuthStore.getState().setRole("ROLE_USER");
 
-    // ✅ userProfile 쿼리 무효화 및 리페치
     await queryClient.invalidateQueries({
       queryKey: ["userProfile"],
     });
