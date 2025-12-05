@@ -29,6 +29,7 @@ export default function ChatroomPage() {
 
   const accessToken = useAuthStore((s) => s.accessToken);
   const [infoOpen, setInfoOpen] = useState(false);
+  const { startRecording, stopRecording } = useRecorder();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<ChatMsg[]>([]);
@@ -42,8 +43,8 @@ export default function ChatroomPage() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { startRecording, stopRecording } = useRecorder();
   const isAIResponding = messages.some((m) => m.isLoading && m.type === "AI");
+  const [sttText, setSttText] = useState("");
   const {
     data: conversation,
     isLoading: isConversationLoading,
@@ -162,72 +163,118 @@ export default function ChatroomPage() {
 
   const handleMicClick = async () => {
     if (micState === "idle") {
-      startRecording();
+      // 🔴 아직 녹음 안 하는 상태 → 녹음 시작
       setMicState("recording");
+      try {
+        await startRecording();
+      } catch (error) {
+        console.error("녹음 시작 실패:", error);
+        setMicState("idle");
+        showVoiceErrorMessage();
+      }
     } else if (micState === "recording") {
-      const file = await stopRecording();
-      setPendingAudioFile(file);
-      setPendingAudioUrl(URL.createObjectURL(file));
-      setMicState("recorded");
+      try {
+        const blob = await stopRecording();
+        const url = URL.createObjectURL(blob);
+        console.log("🎧 녹음 blob size:", blob.size, "type:", blob.type);
+
+        if (!blob || blob.size === 0) {
+          throw new Error("빈 오디오 blob");
+        }
+
+        setPendingAudioFile(blob);
+
+        setPendingAudioUrl(url);
+
+        if (!accessToken || !conversationId) {
+          throw new Error("토큰 또는 대화 ID 없음");
+        }
+
+        const blobType = blob.type || "audio/webm";
+        const fileExtension = blobType.includes("webm") ? "webm" : "wav";
+
+        const presignRes = await fetch("/api/files/presigned-url", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            fileType: blobType,
+            fileExtension,
+          }),
+        });
+
+        if (!presignRes.ok) {
+          throw new Error("presigned-url 요청 실패");
+        }
+
+        const { url: presignedUrl } = await presignRes.json();
+
+        const uploadRes = await fetch(presignedUrl, {
+          method: "PUT",
+          headers: { "Content-Type": blobType },
+          body: blob,
+        });
+
+        if (!uploadRes.ok) {
+          throw new Error("S3 업로드 실패");
+        }
+
+        const audioUrl = presignedUrl.split("?")[0];
+
+        const sttres = await fetch("/api/language/stt", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            audioUrl,
+          }),
+        });
+
+        if (!sttres.ok) {
+          throw new Error("STT 요청 실패");
+        }
+
+        const content = await sttres.text();
+
+        setSttText(content);
+        setMicState("recorded");
+
+        setPendingAudioUrl(audioUrl);
+      } catch (error) {
+        console.error("녹음 중지/STT 변환 실패:", error);
+        showVoiceErrorMessage();
+        handleResetAudio();
+      }
     }
   };
 
   const handleResetAudio = () => {
+    if (pendingAudioUrl) {
+      try {
+        URL.revokeObjectURL(pendingAudioUrl);
+      } catch {}
+    }
     setPendingAudioFile(null);
     setPendingAudioUrl(null);
     setMicState("idle");
+    setSttText("");
   };
 
   const handleSendAudio = async () => {
-    if (!pendingAudioFile || !accessToken) return;
-    if (!conversationId) return;
+    if (!sttText || !pendingAudioUrl) return;
+    if (!accessToken || !conversationId) return;
 
     try {
       setLoading(true);
 
-      const presignRes = await fetch("/api/files/presigned-url", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          fileType: "audio/wav",
-          fileExtension: "wav",
-        }),
-      });
+      await sendMessage(sttText, pendingAudioUrl);
 
-      if (!presignRes.ok) {
-        throw new Error("presigned-url 요청 실패");
-      }
-
-      const { url: presignedUrl } = await presignRes.json();
-
-      await fetch(presignedUrl, {
-        method: "PUT",
-        headers: { "Content-Type": "audio/wav" },
-        body: pendingAudioFile,
-      });
-
-      const audioUrl = presignedUrl.split("?")[0];
-
-      const sttres = await fetch("/api/language/stt", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          audioUrl: audioUrl,
-        }),
-      });
-
-      if (!sttres.ok) {
-        throw new Error("STT 요청 실패");
-      }
-      const sttText = await sttres.text();
-      await sendMessage(sttText, audioUrl);
       handleResetAudio();
+      setSttText("");
     } catch (e) {
       console.error("❌ handleSendAudio error:", e);
       alert("음성 메시지 전송에 실패했습니다.");
@@ -306,6 +353,7 @@ export default function ChatroomPage() {
           handleResetAudio={handleResetAudio}
           handleSendAudio={handleSendAudio}
           sendMessage={sendMessage}
+          sttText={sttText}
         />
         <ChatroomInfo
           isOpen={infoOpen}

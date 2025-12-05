@@ -11,8 +11,8 @@ interface ChatroomInputProps {
   message: string;
   pendingAudioUrl: string | null;
   showVoiceError: boolean;
-  isAIResponding?: boolean; // ✅ 추가
-
+  isAIResponding?: boolean;
+  sttText: string;
   setIsTyping: (v: boolean) => void;
   setMessage: (v: string) => void;
 
@@ -28,7 +28,7 @@ export default function ChatroomInput({
   message,
   showVoiceError,
   isAIResponding = false,
-
+  sttText,
   setIsTyping,
   setMessage,
 
@@ -61,91 +61,95 @@ export default function ChatroomInput({
 
       <div
         className={clsx(
-          isTyping ? "h-[136px]" : "h-[174px]",
-          "border-t border-gray-200 md:max-w-[375px] w-full flex justify-center items-center flex-col gap-6 absoulte bottom-0 z-50"
+          "h-[150px] border-t border-gray-200 md:max-w-[375px] w-full flex justify-center items-center flex-col gap-6 absoulte bottom-0 z-50"
         )}
       >
-        {isTyping ? (
-          ""
-        ) : (
-          <input
-            type="text"
-            className="rounded-[100px] px-5 py-2 w-[334px] bg-gray-100 "
-            placeholder={
-              isAIResponding ? "AI is responding..." : "Press the voice button."
-            }
-            disabled
-          />
-        )}
         <div className="flex gap-8 items-center justify-center">
           {!isTyping && (
             <>
-              {micState === "recording" || micState === "recorded" ? (
-                <button
-                  className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-100"
-                  onClick={handleResetAudio}
-                  disabled={isAIResponding}
-                >
-                  <Image
-                    src="/chatroom/cancel.png"
-                    alt="Refresh"
-                    width={64}
-                    height={64}
-                    className={isAIResponding ? "opacity-50" : ""}
+              <div>
+                <div>
+                  <input
+                    type="text"
+                    className="rounded-[100px] px-5 py-1 w-[334px] bg-gray-100 mt-2 "
+                    placeholder={
+                      isAIResponding
+                        ? "AI is responding..."
+                        : "Press the voice button."
+                    }
+                    value={sttText}
+                    disabled
                   />
-                </button>
-              ) : (
-                <div className="w-12 h-12" />
-              )}
+                </div>
+                <div className="flex gap-4 justify-between mx-10 items-center  pt-2">
+                  {micState === "recording" || micState === "recorded" ? (
+                    <button
+                      className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-100"
+                      onClick={handleResetAudio}
+                      disabled={isAIResponding}
+                    >
+                      <Image
+                        src="/chatroom/cancel.png"
+                        alt="Refresh"
+                        width={64}
+                        height={64}
+                        className={isAIResponding ? "opacity-50 " : ""}
+                      />
+                    </button>
+                  ) : (
+                    <div className="w-12 h-12" />
+                  )}
 
-              {micState === "idle" && (
-                <button onClick={handleMicClick} disabled={isAIResponding}>
-                  <Image
-                    src="/chatroom/voice.png"
-                    alt="Mic"
-                    width={82}
-                    height={82}
-                    className={isAIResponding ? "opacity-50" : ""}
-                  />
-                </button>
-              )}
+                  {micState === "idle" && (
+                    <button onClick={handleMicClick} disabled={isAIResponding}>
+                      <Image
+                        src="/chatroom/voice.png"
+                        alt="Mic"
+                        width={82}
+                        height={82}
+                        className={isAIResponding ? "opacity-50" : ""}
+                      />
+                    </button>
+                  )}
 
-              {micState === "recording" && (
-                <button onClick={handleMicClick} disabled={isAIResponding}>
-                  <Image
-                    src="/chatroom/voicesave.png"
-                    alt="Pause"
-                    width={82}
-                    height={82}
-                    className={isAIResponding ? "opacity-50" : ""}
-                  />
-                </button>
-              )}
+                  {micState === "recording" && (
+                    <button onClick={handleMicClick} disabled={isAIResponding}>
+                      <Image
+                        src="/chatroom/voicesave.png"
+                        alt="Pause"
+                        width={82}
+                        height={82}
+                        className={isAIResponding ? "opacity-50" : ""}
+                      />
+                    </button>
+                  )}
 
-              {micState === "recorded" && (
-                <button onClick={handleSendAudio} disabled={isAIResponding}>
-                  <Image
-                    src="/chatroom/send.png"
-                    alt="Send"
-                    width={82}
-                    height={82}
-                    className={isAIResponding ? "opacity-50" : ""}
-                  />
-                </button>
-              )}
+                  {micState === "recorded" && (
+                    <button onClick={handleSendAudio} disabled={isAIResponding}>
+                      <Image
+                        src="/chatroom/send.png"
+                        alt="Send"
+                        width={60}
+                        height={60}
+                        className={isAIResponding ? "opacity-50" : ""}
+                      />
+                    </button>
+                  )}
 
-              <button
-                className="bg-white rounded-full flex items-center justify-center hover:bg-gray-100 disabled:opacity-50"
-                onClick={() => setIsTyping(true)}
-                disabled={isAIResponding}
-              >
-                <Image
-                  src="/chatroom/bluekeyboard.png"
-                  alt="Keyboard"
-                  width={56}
-                  height={56}
-                />
-              </button>
+                  <button
+                    className="bg-white rounded-full flex items-center justify-center hover:bg-gray-100 disabled:opacity-50"
+                    onClick={() => setIsTyping(true)}
+                    disabled={isAIResponding}
+                  >
+                    <Image
+                      src="/chatroom/bluekeyboard.png"
+                      alt="Keyboard"
+                      width={56}
+                      height={56}
+                    />
+                  </button>
+                </div>
+              </div>
             </>
           )}
 
