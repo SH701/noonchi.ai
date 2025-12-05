@@ -63,10 +63,12 @@ export default function ChatroomHeader({
         return;
       }
 
+      console.log("start end API");
       const res = await fetch(`/api/conversations/${conversationId}/end`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${accessToken}` },
       });
+      console.log("end API response received");
 
       if (!res.ok) {
         console.error("Failed to end conversation:", res.status);

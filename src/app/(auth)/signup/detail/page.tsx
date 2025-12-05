@@ -69,6 +69,7 @@ export default function SignupStep2() {
       setTimeout(() => {
         router.push(`/main/chatroom/${pendingInterviewId}`);
         localStorage.removeItem("pendingInterviewId");
+        useAuthStore.getState().setRole("ROLE_USER");
       }, 1500);
     } else {
       setTimeout(() => router.push("/main"), 1500);
