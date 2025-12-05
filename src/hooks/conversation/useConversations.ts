@@ -35,26 +35,36 @@ export const useConversations = (filter: FilterState = null) => {
     },
   });
 };
-export const useDeleteConversation = () => {
+
+export function useDeleteConversation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (conversationId: string | number) => {
-      const res = await apiFetch(`/api/conversations/${conversationId}`, {
+      console.log("🗑️ Deleting conversation:", conversationId);
+
+      const response = await apiFetch(`/api/conversations/${conversationId}`, {
         method: "DELETE",
       });
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Failed to delete chat: ${text}`);
+      console.log("Delete response status:", response.status);
+
+      if (!response.ok) {
+        throw new Error("Failed to delete conversation");
       }
 
-      return conversationId;
+      if (response.status === 204) {
+        return null;
+      }
+
+      return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data, conversationId) => {
       queryClient.invalidateQueries({
-        queryKey: ["conversations", "history"],
+        queryKey: ["conversations"],
+        exact: false,
+        refetchType: "all",
       });
     },
   });
-};
+}

@@ -21,6 +21,7 @@ import {
   Sort,
 } from "@/components/bothistory";
 import { InprogressIcon, DoneIcon } from "@/components/ui/icon";
+import { useQueryClient } from "@tanstack/react-query";
 
 const getName = (name?: string) => (name && name.trim() ? name : "Unknown");
 const getImg = (url?: string) => (typeof url === "string" ? url : "");
@@ -30,7 +31,7 @@ export default function ChatBothistoryPage() {
 
   const { keyword, sort, selectedFilter, expanded, toggleExpand } =
     useChatHistoryStore();
-
+  const queryClient = useQueryClient();
   const {
     data: conversations = [],
     isLoading,
@@ -58,11 +59,22 @@ export default function ChatBothistoryPage() {
   }, [filteredConversations, sort]);
 
   const handleOpenChat = (conversationId: string | number) => {
-    router.push(`/main/custom/chatroom/${conversationId}`);
+    router.push(`/main/chatroom/${conversationId}`);
   };
 
   const handleDeleteChat = (conversationId: string | number) => {
-    deleteMutation.mutate(conversationId);
+    if (confirm("정말 삭제하시겠습니까?")) {
+      deleteMutation.mutate(conversationId, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["conversations", "history", selectedFilter],
+          });
+        },
+        onError: (error) => {
+          console.error("❌ Delete error:", error);
+        },
+      });
+    }
   };
 
   return (
@@ -146,7 +158,7 @@ export default function ChatBothistoryPage() {
                               {name}
                             </h3>
                             <span
-                              className={`flex items-center gap-0.5 text-xs px-1 py-0.5 rounded-full ${
+                              className={`flex items-center  gap-0.5 text-xs px-1 py-0.5 rounded-full ${
                                 chat.status === "ACTIVE"
                                   ? "bg-blue-100 text-blue-600"
                                   : "bg-green-100 text-green-500"
@@ -155,7 +167,7 @@ export default function ChatBothistoryPage() {
                               {chat.status === "ACTIVE" ? (
                                 <>
                                   <InprogressIcon className="w-4 h-4" />
-                                  <span className="pb-0.5">In progress</span>
+                                  <span className="pb-0.5">Inprogress</span>
                                 </>
                               ) : (
                                 <>
@@ -200,8 +212,8 @@ export default function ChatBothistoryPage() {
                       isOpen={isOpen}
                       status={chat.status as "ACTIVE" | "ENDED"}
                       conversationId={chat.conversationId}
-                      onOpenChat={() => handleOpenChat}
-                      onDelete={() => handleDeleteChat}
+                      onOpenChat={() => handleOpenChat(chat.conversationId)}
+                      onDelete={() => handleDeleteChat(chat.conversationId)}
                     />
                   </div>
                 );
