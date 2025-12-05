@@ -52,7 +52,7 @@ export default function Billing() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: 50,
+        amount: 5000,
       }),
     });
     const creditUpdate = await apiFetch("/api/users/me", {

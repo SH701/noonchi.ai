@@ -39,6 +39,9 @@ export default function ChatroomHeader({
     if (conversation?.taskAllCompleted === false) {
       setIsUnfinishedOpen(true);
     } else {
+      if (user?.role !== "ROLE_USER") {
+        localStorage.setItem("pendingInterviewId", conversationId);
+      }
       setIsSuccessOpen(true);
     }
     const creditAmount =
@@ -66,7 +69,9 @@ export default function ChatroomHeader({
       queryClient.invalidateQueries({
         queryKey: ["userProfile"],
       });
-      router.push(`/main/chatroom/${conversationId}/result`);
+      if (user?.role === "ROLE_USER") {
+        router.push(`/main/chatroom/${conversationId}/result`);
+      }
     } catch (error) {
       console.error("Error ending conversation:", error);
     }
