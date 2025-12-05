@@ -10,6 +10,7 @@ import { useUserProfile } from "@/hooks/user/useUserProfile";
 import { useAuthStore } from "@/store/useAuth";
 import { apiFetch } from "@/lib/api";
 import { useQueryClient } from "@tanstack/react-query";
+import LoadingModal from "./LoadingModal";
 
 type Props = {
   name: string | undefined;
@@ -34,6 +35,7 @@ export default function ChatroomHeader({
   const queryClient = useQueryClient();
   const accessToken = useAuthStore((s) => s.accessToken);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleExit = () => {
     if (conversation?.taskAllCompleted === false) {
@@ -49,7 +51,7 @@ export default function ChatroomHeader({
   const processConversationEnd = async () => {
     const creditAmount =
       conversation?.conversationType === "INTERVIEW" ? 40 : 10;
-
+    setLoading(true);
     try {
       const deduct = await apiFetch("/api/users/credit/deduct", {
         method: "POST",
@@ -74,12 +76,15 @@ export default function ChatroomHeader({
       queryClient.invalidateQueries({
         queryKey: ["userProfile"],
       });
-
+      setLoading(false);
       router.push(`/main/chatroom/${conversationId}/result`);
     } catch (error) {
       console.error("Error ending conversation:", error);
     }
   };
+  if (loading) {
+    return <LoadingModal open={true} />;
+  }
   return (
     <>
       <div className="flex flex-col sticky top-0 z-50">
