@@ -35,17 +35,21 @@ export default function ChatroomHeader({
   const accessToken = useAuthStore((s) => s.accessToken);
   const router = useRouter();
 
-  const handleExit = async () => {
+  const handleExit = () => {
     if (conversation?.taskAllCompleted === false) {
       setIsUnfinishedOpen(true);
-    } else {
-      if (user?.role !== "ROLE_USER") {
-        localStorage.setItem("pendingInterviewId", conversationId);
-      }
+    } else if (user?.role !== "ROLE_USER") {
+      localStorage.setItem("pendingInterviewId", conversationId);
       setIsSuccessOpen(true);
+    } else {
+      processConversationEnd();
     }
+  };
+
+  const processConversationEnd = async () => {
     const creditAmount =
       conversation?.conversationType === "INTERVIEW" ? 40 : 10;
+
     try {
       const deduct = await apiFetch("/api/users/credit/deduct", {
         method: "POST",
@@ -66,17 +70,16 @@ export default function ChatroomHeader({
         console.error("Failed to end conversation:", res.status);
         return;
       }
+
       queryClient.invalidateQueries({
         queryKey: ["userProfile"],
       });
-      if (user?.role === "ROLE_USER") {
-        router.push(`/main/chatroom/${conversationId}/result`);
-      }
+
+      router.push(`/main/chatroom/${conversationId}/result`);
     } catch (error) {
       console.error("Error ending conversation:", error);
     }
   };
-
   return (
     <>
       <div className="flex flex-col sticky top-0 z-50">
