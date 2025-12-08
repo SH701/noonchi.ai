@@ -3,54 +3,47 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Loading from "@/components/loading/loading";
 import Image from "next/image";
-import { useAuthStore } from "@/store/useAuth";
+
+import Loading from "@/components/loading/loading";
 import { ActionButton } from "@/components/ui/button";
-import { Level } from "@/types/user";
+import { useAuthStore } from "@/store/useAuth";
+import { performLogin } from "@/lib/service/login";
 
 export default function LoginPage() {
   const router = useRouter();
 
   const setAccessToken = useAuthStore((s) => s.setAccessToken);
+  const setRefreshToken = useAuthStore((s) => s.setRefreshToken);
+  const setMe = useAuthStore((s) => s.setMe);
   const setKoreanLevel = useAuthStore((s) => s.setKoreanLevel);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const setMe = useAuthStore((s) => s.setMe);
+
   const handleLogin = async () => {
-    setLoading(true);
     setError("");
+    setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message || "Login failed");
-        setLoading(false);
-        return;
-      }
-      const { accessToken, refreshToken } = data;
+      const { accessToken, refreshToken, me } = await performLogin(
+        email,
+        password
+      );
+
       setAccessToken(accessToken);
-      useAuthStore.getState().setRefreshToken(refreshToken);
-      const meRes = await fetch("/api/users/me", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const me = await meRes.json();
+      setRefreshToken(refreshToken);
       setMe(me);
 
       if (me.koreanLevel) {
-        setKoreanLevel(me.koreanLevel as Level);
+        setKoreanLevel(me.koreanLevel);
       }
+
       router.replace("/main");
-    } catch (err) {
-      setError("Something went wrong");
+    } catch {
+      setError("Login failed");
     } finally {
       setLoading(false);
     }
@@ -101,10 +94,11 @@ export default function LoginPage() {
           </div>
 
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+
           <div className="flex items-center justify-center">
             <ActionButton
               onClick={handleLogin}
-              disabled={loading || !email || !password}
+              disabled={!email || !password || loading}
             >
               Sign in
             </ActionButton>

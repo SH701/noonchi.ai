@@ -2,27 +2,30 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
 import { ActionButton } from "@/components/ui/button";
 import Loading from "@/components/loading/loading";
-import { useAuthStore } from "@/store/useAuth";
 import SignupFormStep2 from "@/components/signup/SignupForm2";
 import SignupTemplate from "@/components/signup/SignupTemplate";
 import SignupHeader from "@/components/signup/SignupHeader";
+import { useAuthStore } from "@/store/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
+import { performSignup } from "@/lib/service/signup";
 
 export default function SignupStep2() {
   const router = useRouter();
-  const { accessToken } = useAuthStore();
   const setAccessToken = useAuthStore((s) => s.setAccessToken);
+  const setRefreshToken = useAuthStore((s) => s.setRefreshToken);
+  const setMe = useAuthStore((s) => s.setMe);
+  const setRole = useAuthStore((s) => s.setRole);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState<"MALE" | "FEMALE">("MALE");
-  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setEmail(sessionStorage.getItem("signupEmail") || "");
@@ -34,53 +37,35 @@ export default function SignupStep2() {
   const handleSignup = async () => {
     if (!canSubmit) return;
 
-    const requestBody = {
-      email,
-      password,
-      nickname: name,
-      gender,
-      birthDate,
-    };
+    try {
+      setLoading(true);
 
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(requestBody),
-    });
+      const { accessToken, refreshToken, role, me } = await performSignup({
+        email,
+        password,
+        nickname: name,
+        gender,
+        birthDate,
+      });
 
-    const responseText = await res.text();
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      setRole(role);
+      setMe(me);
 
-    if (!res.ok) {
-      alert(`회원가입 실패: ${res.status}\n${responseText}`);
-      return;
-    }
+      await queryClient.invalidateQueries({ queryKey: ["userProfile"] });
 
-    const data = JSON.parse(responseText);
-
-    setAccessToken(data.accessToken);
-    useAuthStore.getState().setRefreshToken(data.refreshToken);
-    useAuthStore.getState().setRole("ROLE_USER");
-
-    await queryClient.invalidateQueries({
-      queryKey: ["userProfile"],
-    });
-    await queryClient.refetchQueries({
-      queryKey: ["userProfile"],
-    });
-
-    setLoading(true);
-    const pendingInterviewId = localStorage.getItem("pendingInterviewId");
-
-    if (pendingInterviewId) {
-      setTimeout(() => {
+      const pendingInterviewId = localStorage.getItem("pendingInterviewId");
+      if (pendingInterviewId) {
         router.push(`/main/chatroom/${pendingInterviewId}`);
         localStorage.removeItem("pendingInterviewId");
-      }, 1500);
-    } else {
-      setTimeout(() => router.push("/main"), 1500);
+      } else {
+        router.push("/main");
+      }
+    } catch {
+      alert("Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
