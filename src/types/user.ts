@@ -15,6 +15,14 @@ export type Interest =
 export type Role = "ROLE_GUEST" | "ROLE_USER";
 
 export type Profile = {
+  accessToken: string;
+  refreshToken: string;
+  user: 
+    User
+  
+};
+
+export type User = {
   id: number;
   email: string;
   nickname: string;
@@ -28,12 +36,3 @@ export type Profile = {
   interests: string[];
   creditPoint: number;
 };
-export interface User {
-  id: string;
-  email: string;
-  password: string;
-  koreanLevel: Level;
-  profileImageUrl: string;
-  interests: Interest[];
-  role: Role;
-}

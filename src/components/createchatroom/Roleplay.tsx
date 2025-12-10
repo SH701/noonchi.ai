@@ -8,6 +8,7 @@ import RoleplayForm from "@/components/ui/forms/RoleplayForm";
 import { apiFetch } from "@/lib/api/api";
 import { useState } from "react";
 import Loading from "@/app/(main)/main/chatroom/[id]/loading";
+import { ConversationResponse } from "@/types/interview";
 
 export const TOPIC_ENUMS = {
   Career: {
@@ -54,32 +55,44 @@ export default function RolePlay() {
       alert("준비중인 시나리오 입니다!");
       return router.push("/main");
     }
+
     setLoading(true);
+
     try {
       const deduct = await apiFetch("/api/users/credit/deduct", {
         method: "POST",
         body: JSON.stringify({ amount: 20 }),
       });
 
-      if (!deduct.ok) throw new Error("크레딧 부족");
+      if (!deduct === true) {
+        alert("크레딧이 부족합니다.");
+        setLoading(false);
+        return;
+      }
 
-      const res = await apiFetch(`/api/conversations/role-playing`, {
-        method: "POST",
-        body: JSON.stringify({
-          conversationTopic: topicEnum,
-          details: data.detail,
-        }),
-      });
+      const convo = await apiFetch<ConversationResponse>(
+        "/api/conversations/role-playing",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            conversationTopic: topicEnum,
+            details: data.detail,
+          }),
+        }
+      );
 
-      if (!res.ok) throw new Error("인터뷰 생성 실패");
+      if (!convo || !convo.conversationId) {
+        throw new Error("대화 생성 실패");
+      }
 
-      const convo = await res.json();
       setLoading(false);
       router.push(`/main/chatroom/${convo.conversationId}`);
-    } catch (err) {
-      console.error("Error:", err);
+    } catch (error) {
+      console.error("Error:", error);
+      setLoading(false);
     }
   };
+
   if (loading) return <Loading />;
   return (
     <div className="flex flex-col pt-14 relative bg-white w-full overflow-x-hidden">

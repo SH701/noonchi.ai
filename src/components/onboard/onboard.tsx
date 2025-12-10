@@ -11,7 +11,7 @@ import Link from "next/link";
 import { isTokenExpired, getOrCreateDeviceId } from "@/utils/auth";
 import { useAuthStore } from "@/store/useAuth";
 import { Button } from "../ui/button";
-import { useGuestLogin } from "@/hooks/mutations/useGuest";
+import { useGuest } from "@/hooks/mutations/useGuest";
 import React from "react";
 import Loading from "@/components/loading/loading";
 
@@ -33,7 +33,7 @@ export default function Onboard() {
   const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { accessToken, setAccessToken } = useAuthStore();
-  const { mutateAsync: guestLogin } = useGuestLogin();
+  const { mutateAsync: guestLogin } = useGuest();
   const lastIndex = slides.length - 1;
   const handleSkip = () => {
     sliderRef.current?.slickGoTo(slides.length - 1);

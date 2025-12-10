@@ -40,7 +40,7 @@ export default function ChatroomHeader({
   const handleExit = () => {
     if (conversation?.taskAllCompleted === false) {
       setIsUnfinishedOpen(true);
-    } else if (user?.role !== "ROLE_USER") {
+    } else if (user?.user.role !== "ROLE_USER") {
       localStorage.setItem("pendingInterviewId", conversationId);
       setIsSuccessOpen(true);
     } else {
@@ -52,38 +52,40 @@ export default function ChatroomHeader({
     const creditAmount =
       conversation?.conversationType === "INTERVIEW" ? 40 : 10;
     setLoading(true);
+
     try {
       const deduct = await apiFetch("/api/users/credit/deduct", {
         method: "POST",
         body: JSON.stringify({ amount: creditAmount }),
       });
 
-      if (!deduct.ok) {
+      if (!deduct === true) {
         alert("크레딧이 부족합니다.");
+        setLoading(false);
         return;
       }
 
-      console.log("start end API");
       const res = await fetch(`/api/conversations/${conversationId}/end`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      console.log("end API response received");
 
       if (!res.ok) {
         console.error("Failed to end conversation:", res.status);
+        setLoading(false);
         return;
       }
 
-      queryClient.invalidateQueries({
-        queryKey: ["userProfile"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+
       setLoading(false);
       router.push(`/main/chatroom/${conversationId}/result`);
     } catch (error) {
       console.error("Error ending conversation:", error);
+      setLoading(false);
     }
   };
+
   if (loading) {
     return <LoadingModal open={true} />;
   }
@@ -159,7 +161,7 @@ export default function ChatroomHeader({
         isOpen={isUnfinishedOpen}
         onClose={() => setIsUnfinishedOpen(false)}
       />
-      {user?.role === "ROLE_USER" ? null : (
+      {user?.user.role === "ROLE_USER" ? null : (
         <Sucess
           isOpen={isSuccessOpen}
           onClose={() => setIsSuccessOpen(false)}

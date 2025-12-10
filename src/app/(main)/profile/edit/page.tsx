@@ -51,11 +51,13 @@ export default function ProfileEditPage() {
   useEffect(() => {
     if (!profile) return;
 
-    setOriginalProfile(profile);
-    setNickname(profile.nickname);
-    setProfileImageUrl(profile.profileImageUrl);
+    setOriginalProfile(profile.user);
+    setNickname(profile.user.nickname);
+    setProfileImageUrl(profile.user.profileImageUrl);
 
-    const faceIndex = FACES.findIndex((f) => f.id === profile.profileImageUrl);
+    const faceIndex = FACES.findIndex(
+      (f) => f.id === profile.user.profileImageUrl
+    );
     if (faceIndex >= 0) {
       setSelectedFace(faceIndex);
     } else {

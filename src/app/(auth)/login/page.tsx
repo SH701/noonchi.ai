@@ -9,6 +9,7 @@ import Loading from "@/components/loading/loading";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuth";
 import { performLogin } from "@/lib/service/login";
+import { Level } from "@/types/user";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function LoginPage() {
       setMe(me);
 
       if (me.koreanLevel) {
-        setKoreanLevel(me.koreanLevel);
+        setKoreanLevel(me.koreanLevel as Level);
       }
 
       router.replace("/main");

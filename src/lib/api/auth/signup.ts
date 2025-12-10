@@ -7,17 +7,15 @@ interface SignupPayload {
   gender: "MALE" | "FEMALE";
   birthDate: string;
 }
-
+ interface SignupResponse  {
+  accessToken: string;
+  refreshToken: string;
+};
 export async function signup(payload: SignupPayload) {
-  const res = await apiFetch("/api/auth/signup", {
+  const data = await apiFetch<SignupResponse>("/api/auth/signup", {
     method: "POST",
     body: JSON.stringify(payload),
   });
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text);
-  }
-
-  return res.json();
+  return data;
 }

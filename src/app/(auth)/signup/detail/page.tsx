@@ -40,7 +40,7 @@ export default function SignupStep2() {
     try {
       setLoading(true);
 
-      const { accessToken, refreshToken, role, me } = await performSignup({
+      const { accessToken, refreshToken, user } = await performSignup({
         email,
         password,
         nickname: name,
@@ -50,8 +50,8 @@ export default function SignupStep2() {
 
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
-      setRole(role);
-      setMe(me);
+
+      setMe(user);
 
       await queryClient.invalidateQueries({ queryKey: ["userProfile"] });
 

@@ -122,11 +122,12 @@ export default function Interview() {
           />
         </div>
       </div>
-      {needCharge && user?.role === "ROLE_USER" ? (
-        <UserCharge isOpen={needCharge} onClose={() => setNeedCharge(false)} />
-      ) : (
-        <GuestCharge isOpen={needCharge} onClose={() => setNeedCharge(false)} />
-      )}
+      {needCharge &&
+        (user?.user.role === "ROLE_USER" ? (
+          <UserCharge isOpen={true} onClose={() => setNeedCharge(false)} />
+        ) : (
+          <GuestCharge isOpen={true} onClose={() => setNeedCharge(false)} />
+        ))}
     </div>
   );
 }

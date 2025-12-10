@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useMessages } from "@/hooks/queries/useChatQuery";
-import { useConversaitonFeedback } from "@/hooks/queries/useConversationFeedback";
+import { useChatQuery } from "@/hooks/queries/useChatQuery";
+import { useConversationFeedback } from "@/hooks/queries/useConversationFeedback";
 import { Button } from "@/components/ui/button";
 import MessageList from "@/components/chatroom/MessageList";
 import { useMessageFeedback } from "@/hooks/mutations/useMessageFeedback";
@@ -50,13 +50,13 @@ export default function Result() {
     data: initialMessages = [],
     error: messagesError,
     isLoading: messagesLoading,
-  } = useMessages(id);
+  } = useChatQuery(id);
 
   const {
     data: feedback,
     error: feedbackError,
     isLoading: feedbackLoading,
-  } = useConversaitonFeedback(id);
+  } = useConversationFeedback(id);
   useEffect(() => {
     if (!isInitialized && initialMessages && initialMessages.length > 0) {
       setMessages(initialMessages);

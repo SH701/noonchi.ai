@@ -30,7 +30,7 @@ export default function Main() {
             alt="크레딧"
           />
           <p className="text-sm font-semibold text-gray-600">
-            {user?.creditPoint}
+            {user?.user.creditPoint}
           </p>
           <p className="text-xs text-gray-400 pt-0.5">credits</p>
         </div>

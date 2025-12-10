@@ -2,6 +2,7 @@
 
 import TabBar from "@/components/ui/tab-bar/tab-bar";
 import { useUserProfile } from "@/hooks/queries/useUserProfile";
+
 import { usePathname, useRouter } from "next/navigation";
 
 export default function MainsLayout({
