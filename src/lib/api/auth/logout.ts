@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 
 export function logout() {
   const cookiesToClear = [

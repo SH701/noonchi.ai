@@ -7,17 +7,15 @@ import Image from "next/image";
 
 import Loading from "@/components/loading/loading";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/store/useAuth";
+
 import { performLogin } from "@/lib/service/login";
-import { Level } from "@/types/user";
+import { useUserStore, useAuthStore } from "@/store";
 
 export default function LoginPage() {
   const router = useRouter();
 
-  const setAccessToken = useAuthStore((s) => s.setAccessToken);
-  const setRefreshToken = useAuthStore((s) => s.setRefreshToken);
-  const setMe = useAuthStore((s) => s.setMe);
-  const setKoreanLevel = useAuthStore((s) => s.setKoreanLevel);
+  const setTokens = useAuthStore((s) => s.setTokens);
+  const setUser = useUserStore((s) => s.setUser);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,18 +27,14 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { accessToken, refreshToken, me } = await performLogin(
+      const { accessToken, refreshToken, user } = await performLogin(
         email,
         password
       );
 
-      setAccessToken(accessToken);
-      setRefreshToken(refreshToken);
-      setMe(me);
+      setTokens(accessToken, refreshToken);
 
-      if (me.koreanLevel) {
-        setKoreanLevel(me.koreanLevel as Level);
-      }
+      setUser(user);
 
       router.replace("/main");
     } catch {

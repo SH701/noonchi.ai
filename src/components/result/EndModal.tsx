@@ -1,10 +1,9 @@
 "use client";
 
-
 import Modal from "@/components/ui/modal/Modal";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 import { useState } from "react";
 import LoadingModal from "../chatroom/LoadingModal";
 import { Button } from "../ui/button";

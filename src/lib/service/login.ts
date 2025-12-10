@@ -1,11 +1,11 @@
 import { login } from "../api/auth/login";
 
-import type { Profile } from "@/types/user";
+import { User } from "@/types/user.type";
 
 export type PerformLoginResult = {
   accessToken: string;
   refreshToken: string;
-  user: Profile["user"];
+  user: User;
 };
 
 export async function performLogin(email: string, password: string) {
@@ -14,6 +14,6 @@ export async function performLogin(email: string, password: string) {
   return {
     accessToken: res.accessToken,
     refreshToken: res.refreshToken,
-    me: res.user,
+    user: res.user,
   };
 }

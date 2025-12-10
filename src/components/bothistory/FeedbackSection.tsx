@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 import { useConversationFeedback } from "@/hooks/queries/useConversationFeedback";
 
 export default function FeedbackSection({ id }: { id: number | string }) {

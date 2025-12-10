@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useUserProfile } from "@/hooks/queries/useUserProfile";
+import { useUser } from "@/hooks/queries/useUser";
 import {
   ProfileHeader,
   ProfileImage,
@@ -12,9 +12,9 @@ import { logout } from "@/lib/api/auth/logout";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { data: profile } = useUserProfile();
+  const { data: profile } = useUser();
 
-  if (profile?.user.role === "ROLE_GUEST") {
+  if (profile?.role === "ROLE_GUEST") {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
         <h2 className="text-2xl font-bold mb-4">Sign Up Required</h2>
@@ -42,20 +42,20 @@ export default function ProfilePage() {
 
       <div className="flex-1 flex flex-col items-center w-[375px] mx-auto">
         <div className="flex flex-col items-center pt-6">
-          <ProfileImage src={profile?.user.profileImageUrl} />
+          <ProfileImage src={profile?.profileImageUrl} />
 
           <button
             onClick={() => router.push("/profile/edit")}
             className="text-xl font-semibold mt-4"
           >
-            {profile?.user.nickname}
+            {profile?.nickname}
           </button>
         </div>
 
         <div className="px-4 pt-6 w-full">
           <StatsCard
-            sentenceCount={profile?.user.sentenceCount}
-            koreanLevel={profile?.user.koreanLevel || "1"}
+            sentenceCount={profile?.sentenceCount}
+            koreanLevel={profile?.koreanLevel || "1"}
           />
         </div>
 

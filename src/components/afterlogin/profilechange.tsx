@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 "use client";
 
 import React, { useRef, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 
 const FACES: string[] = [
   "/characters/character1.png",

@@ -1,8 +1,8 @@
 import { apiFetch } from "@/lib/api/api";
-import type { Profile } from "@/types/user";
+import { AuthResponse } from "@/types/auth";
 
 export async function login(email: string, password: string) {
-  return apiFetch<Profile>(`/api/auth/login`, {
+  return apiFetch<AuthResponse>(`/api/auth/login`, {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });

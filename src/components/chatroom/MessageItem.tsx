@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 import { MyAI } from "@/types/persona";
 import { Info, User } from "lucide-react";
 import { BotMessageSquare } from "lucide-react";

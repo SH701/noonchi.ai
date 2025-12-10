@@ -9,7 +9,7 @@ import { apiFetch } from "@/lib/api/api";
 import InterviewForm from "@/components/ui/forms/InterviewForm";
 import { useQueryClient } from "@tanstack/react-query";
 import UserCharge from "@/components/modal/UserCharge";
-import { useUserProfile } from "@/hooks/queries/useUserProfile";
+import { useUserProfile } from "@/hooks/queries/useUser";
 import GuestCharge from "@/components/modal/GuestCharge";
 import {
   INTERVIEW_STYLES,

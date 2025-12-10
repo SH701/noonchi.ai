@@ -1,7 +1,7 @@
 "use client";
 
 import TabBar from "@/components/ui/tab-bar/tab-bar";
-import { useUserProfile } from "@/hooks/queries/useUserProfile";
+import { useUser } from "@/hooks/queries/useUser";
 
 import { usePathname, useRouter } from "next/navigation";
 
@@ -22,7 +22,7 @@ export default function MainsLayout({
     (path) => pathname === path || pathname.startsWith(path + "/")
   );
 
-  const { isError, error } = useUserProfile();
+  const { isError, error } = useUser();
   if (isError) {
     const status = Number(error.message);
     if (status === 401 || status === 403) {

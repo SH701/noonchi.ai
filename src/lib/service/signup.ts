@@ -1,11 +1,11 @@
-import { Profile } from "@/types/user";
+import { User } from "@/types/user.type";
 import { signup } from "../api/auth/signup";
-import { getMe } from "../api/users/me";
+import { getUser } from "../api/users/me";
 
 export type PerformSignResult = {
   accessToken: string;
   refreshToken: string;
-  user: Profile["user"];
+  user: User;
 };
 
 export async function performSignup(payload: {
@@ -17,11 +17,11 @@ export async function performSignup(payload: {
 }): Promise<PerformSignResult> {
   const res = await signup(payload);
 
-  const me = await getMe();
+  const user = await getUser();
 
   return {
     accessToken: res.accessToken,
     refreshToken: res.refreshToken,
-    user: me,
+    user: user,
   };
 }

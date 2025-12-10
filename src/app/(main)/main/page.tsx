@@ -6,12 +6,12 @@ import { useState } from "react";
 import ComingSoonModal from "@/components/modal/Comingsoon";
 import { CategoryType } from "@/types/topic";
 import { Interviewsection, TopicList } from "@/components/mainpage";
-import { useUserProfile } from "@/hooks/queries/useUserProfile";
+import { useUser } from "@/hooks/queries/useUser";
 
 export default function Main() {
   const [category, setCategory] = useState<CategoryType>("Career");
   const [showComingSoon, setShowComingSoon] = useState(false);
-  const { data: user } = useUserProfile();
+  const { data: user } = useUser();
 
   return (
     <>
@@ -30,7 +30,7 @@ export default function Main() {
             alt="크레딧"
           />
           <p className="text-sm font-semibold text-gray-600">
-            {user?.user.creditPoint}
+            {user?.creditPoint}
           </p>
           <p className="text-xs text-gray-400 pt-0.5">credits</p>
         </div>

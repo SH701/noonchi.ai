@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import { isTokenExpired, getOrCreateDeviceId } from "@/utils/auth";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 import { Button } from "../ui/button";
 import { useGuest } from "@/hooks/mutations/useGuest";
 import React from "react";

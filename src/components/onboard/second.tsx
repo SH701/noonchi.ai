@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/store/useAuth";
+import { usePreferenceStore } from "@/store/preference/usePreference";
 import Image from "next/image";
 
 const levelImg = {
@@ -19,8 +19,8 @@ const levelDescription = {
 } as const;
 
 export default function Second() {
-  const koreanLevel = useAuthStore((s) => s.koreanLevel);
-  const setKoreanLevel = useAuthStore((s) => s.setKoreanLevel);
+  const koreanLevel = usePreferenceStore((s) => s.koreanLevel);
+  const setKoreanLevel = usePreferenceStore((s) => s.setKoreanLevel);
 
   return (
     <div className="px-4 pt-4 h-full flex flex-col">

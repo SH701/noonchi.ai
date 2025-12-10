@@ -1,8 +1,8 @@
 "use client";
 
-
 import Onboard from "@/components/onboard/onboard";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store";
+
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

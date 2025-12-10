@@ -7,16 +7,15 @@ import Loading from "@/components/loading/loading";
 import SignupFormStep2 from "@/components/signup/SignupForm2";
 import SignupTemplate from "@/components/signup/SignupTemplate";
 import SignupHeader from "@/components/signup/SignupHeader";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { performSignup } from "@/lib/service/signup";
+import { useUserStore } from "@/store";
 
 export default function SignupStep2() {
   const router = useRouter();
-  const setAccessToken = useAuthStore((s) => s.setAccessToken);
-  const setRefreshToken = useAuthStore((s) => s.setRefreshToken);
-  const setMe = useAuthStore((s) => s.setMe);
-  const setRole = useAuthStore((s) => s.setRole);
+  const setTokens = useAuthStore((s) => s.setTokens);
+  const setUser = useUserStore((s) => s.setUser);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,10 +47,9 @@ export default function SignupStep2() {
         birthDate,
       });
 
-      setAccessToken(accessToken);
-      setRefreshToken(refreshToken);
+      setTokens(accessToken, refreshToken);
 
-      setMe(user);
+      setUser(user);
 
       await queryClient.invalidateQueries({ queryKey: ["userProfile"] });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/store/useAuth";
+import { usePreferenceStore } from "@/store/preference/usePreference";
 
 const INTEREST_OPTIONS = [
   "💬 Daily",
@@ -17,8 +17,8 @@ const INTEREST_OPTIONS = [
 ] as const;
 
 export default function Third() {
-  const interests = useAuthStore((s) => s.interests);
-  const setInterests = useAuthStore((s) => s.setInterests);
+  const interests = usePreferenceStore((s) => s.interests);
+  const setInterests = usePreferenceStore((s) => s.setInterests);
 
   return (
     <div className="px-4 pt-4 h-full flex flex-col">

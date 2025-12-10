@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 import { MyAI } from "@/types/persona";
 import { apiFetch } from "@/lib/api/api";
 

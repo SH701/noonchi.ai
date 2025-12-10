@@ -11,7 +11,7 @@ import {
   MessageList,
 } from "@/components/chatroom";
 import { useParams } from "next/navigation";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 import { AnimatePresence, motion } from "framer-motion";
 import { useConversationDetail } from "@/hooks/queries/useConversationDetail";
 import { useChatMessages } from "@/hooks/useChatMessages";

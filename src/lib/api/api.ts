@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 
 export async function apiFetch<T>(
   url: string,

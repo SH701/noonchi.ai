@@ -1,8 +1,8 @@
 import { apiFetch } from "@/lib/api/api";
-import { Profile } from "@/types/user";
+import { User } from "@/types/user.type";
 
-export async function getMe() {
-  const data = await apiFetch<Profile["user"]>("/api/users/me");
+export async function getUser() {
+  const data = await apiFetch<User>("/api/users/me");
 
   return data;
 }

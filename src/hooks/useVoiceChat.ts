@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRecorder } from "@/hooks/useRecorder";
-import { useAuthStore } from "@/store/useAuth";
+import { useAuthStore } from "@/store/auth/useAuth";
 
 type MicState = "idle" | "recording" | "recorded";
 

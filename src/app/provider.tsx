@@ -1,17 +1,17 @@
 "use client";
 
+import { useUserStore } from "@/store/users/useUsers";
 import { useEffect } from "react";
-import { useAuthStore } from "@/store/useAuth";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const setMe = useAuthStore((s) => s.setMe);
+  const setUser = useUserStore((s) => s.setUser);
 
   useEffect(() => {
     async function loadMe() {
       try {
         const res = await fetch("/api/users/me", { cache: "no-store" });
         if (res.ok) {
-          setMe(await res.json());
+          setUser(await res.json());
         }
       } catch (e) {
         console.error(e);
