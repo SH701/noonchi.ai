@@ -1,12 +1,38 @@
-export type InterviewRequest = {
+export type PresignedUrlResponse = {
+  url: string;
+};
+
+export type ConversationResponse = {
+  conversationId: number;
+};
+
+export type UploadedFile = {
+  fileUrl: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+};
+
+export type InterviewFormData = {
   companyName: string;
   jobTitle: string;
   jobPosting: string;
-  interviewStyle: "STANDARD" | "BEHAVIORAL" | "CUSTOM"; // 서버 ENUM에 맞게 수정해야 함
-  files: {
-    fileUrl: string;
-    fileName: string;
-    fileType: string;
-    fileSize: number;
-  }[];
+  interviewStyle: string;
+  files: File[];
 };
+
+export type InterviewApiRequest = {
+  companyName: string;
+  jobTitle: string;
+  jobPosting: string;
+  interviewStyle: string;
+  files: UploadedFile[];
+};
+
+export const INTERVIEW_STYLES = [
+  { value: "friendly", label: "Friendly" },
+  { value: "standard", label: "Standard" },
+  { value: "strict", label: "Strict" },
+] as const;
+
+export type InterviewStyle = (typeof INTERVIEW_STYLES)[number]["value"];

@@ -1,20 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/api/api";
 
 export function useGuestLogin() {
   return useMutation({
     mutationFn: async (deviceId: string) => {
-      const res = await fetch(`/api/auth/guest-login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ deviceId }),
-      });
+      try {
+        const data = await apiFetch<{ accessToken: string }>(
+          `/api/auth/guest-login`,
+          {
+            method: "POST",
+            body: JSON.stringify({ deviceId }),
+          }
+        );
 
-      if (!res.ok) {
-        throw new Error(`Guest 로그인 실패: ${res.status}`);
+        return data.accessToken;
+      } catch (error) {
+        console.error("Guest 로그인 실패:", error);
+        throw error;
       }
-
-      const data = await res.json();
-      return data.accessToken;
     },
   });
 }

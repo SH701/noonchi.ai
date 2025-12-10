@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/useAuth";
 import { MyAI } from "@/types/persona";
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
 
 export type ConversationDetail = {
   conversationId: number;
@@ -18,7 +18,7 @@ export type ConversationDetail = {
   taskCurrentLevel?: number;
   taskCurrentName?: string;
   taskAllCompleted?: boolean;
-  conversationType?:string
+  conversationType?: string;
 };
 
 export function useConversationDetail(id?: string) {
@@ -28,18 +28,19 @@ export function useConversationDetail(id?: string) {
     queryKey: ["conversation", id],
     enabled: !!accessToken && !!id,
     queryFn: async () => {
-      const res = await apiFetch(`/api/conversations/${id}`, {
-        cache: "no-store",
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(
-          `Failed to load conversation (${res.status}): ${text || "Unknown"}`
+      try {
+        const data = await apiFetch<ConversationDetail>(
+          `/api/conversations/${id}`,
+          {
+            cache: "no-store",
+          }
         );
-      }
 
-      return res.json();
+        return data;
+      } catch (error) {
+        console.error("Failed to fetch conversation:", error);
+        throw error;
+      }
     },
     staleTime: 1000 * 60,
   });

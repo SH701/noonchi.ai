@@ -1,47 +1,41 @@
 "use client";
 
 import { useState } from "react";
-
 import Image from "next/image";
 
 import { Button } from "../button";
-
 import { FileUpload, FormInput } from "../form";
+import { InterviewFormData } from "@/types/interview";
 
 export interface InterviewFormProps {
   interviewStyles: readonly { value: string; label: string }[];
-  onSubmit: (data: {
-    company: string;
-    position: string;
-    jobPosting: string;
-    style: string;
-    files: File[];
-  }) => void;
+  onSubmit: (data: InterviewFormData) => void;
 }
 
 export default function InterviewForm({
   interviewStyles,
   onSubmit,
 }: InterviewFormProps) {
-  const [company, setCompany] = useState("");
-  const [position, setPosition] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
   const [jobPosting, setJobPosting] = useState("");
-  const [style, setStyle] = useState("standard");
+  const [interviewStyle, setInterviewStyle] = useState("standard");
   const [files, setFiles] = useState<File[]>([]);
   const [hidden, setHidden] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!company.trim() || !position.trim()) {
+    if (!companyName.trim() || !jobTitle.trim()) {
       alert("회사명과 지원 직무를 입력해주세요.");
       return;
     }
 
     onSubmit({
-      company,
-      position,
+      companyName,
+      jobTitle,
       jobPosting,
-      style,
+      interviewStyle,
       files,
     });
   };
@@ -51,16 +45,16 @@ export default function InterviewForm({
       <FormInput
         label="Company"
         required
-        value={company}
-        onChange={setCompany}
+        value={companyName}
+        onChange={setCompanyName}
         placeholder="Enter the company name"
       />
 
       <FormInput
         label="Position Applied For"
         required
-        value={position}
-        onChange={setPosition}
+        value={jobTitle}
+        onChange={setJobTitle}
         placeholder="Enter the job title"
       />
 
@@ -77,14 +71,14 @@ export default function InterviewForm({
         <label className="text-sm font-semibold text-black mb-2 flex gap-2">
           Interview Style
         </label>
-        <div className="flex gap-3 mt-2  justify-center">
+        <div className="flex gap-3 mt-2 justify-center">
           {interviewStyles.map((opt) => (
             <Button
               key={opt.value}
-              variant={style === opt.value ? "selected" : "outline"}
+              variant={interviewStyle === opt.value ? "selected" : "outline"}
               size="sm"
               className="w-[90px] h-11"
-              onClick={() => setStyle(opt.value)}
+              onClick={() => setInterviewStyle(opt.value)}
             >
               {opt.label}
             </Button>

@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
 
 export async function getMe() {
   const res = await apiFetch("/api/users/me");

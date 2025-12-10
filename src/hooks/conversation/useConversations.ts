@@ -1,21 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Conversation } from "@/types/conversation";
 import { FilterState } from "@/types/history";
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
 
 const filterMap: Record<Exclude<FilterState, null>, string> = {
   done: "ENDED",
   "in-progress": "ACTIVE",
 };
 
+type ConversationsResponse = {
+  content: unknown;
+};
+
+type DeleteConversationResponse = {
+  conversationId: number;
+  deletedAt?: string;
+} | null;
+
 const normalizeConversations = (arr: unknown): Conversation[] =>
   (Array.isArray(arr) ? arr : [])
     .filter(Boolean)
-    .filter((c: any) => !!c?.aiPersona) as Conversation[];
+    .filter((c: unknown): c is Conversation => {
+      const conversation = c as Partial<Conversation>;
+      return !!conversation?.aiPersona;
+    });
 
 export const useConversations = (filter: FilterState = null) => {
-  return useQuery({
+  return useQuery<Conversation[], Error>({
     queryKey: ["conversations", "history", filter],
     queryFn: async () => {
       let query = `/api/conversations?sortBy=CREATED_AT_DESC&page=1&size=1000`;
@@ -23,15 +34,14 @@ export const useConversations = (filter: FilterState = null) => {
       if (filter && filterMap[filter]) {
         query += `&status=${filterMap[filter]}`;
       }
-      const res = await apiFetch(query);
 
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(`${res.status} ${res.statusText}: ${errText}`);
+      try {
+        const data = await apiFetch<ConversationsResponse>(query);
+        return normalizeConversations(data?.content);
+      } catch (error) {
+        console.error("Failed to fetch conversations:", error);
+        throw error;
       }
-
-      const data = await res.json();
-      return normalizeConversations(data?.content);
     },
   });
 };
@@ -39,27 +49,23 @@ export const useConversations = (filter: FilterState = null) => {
 export function useDeleteConversation() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<DeleteConversationResponse, Error, string | number>({
     mutationFn: async (conversationId: string | number) => {
-      console.log("🗑️ Deleting conversation:", conversationId);
+      try {
+        const result = await apiFetch<DeleteConversationResponse>(
+          `/api/conversations/${conversationId}`,
+          {
+            method: "DELETE",
+          }
+        );
 
-      const response = await apiFetch(`/api/conversations/${conversationId}`, {
-        method: "DELETE",
-      });
-
-      console.log("Delete response status:", response.status);
-
-      if (!response.ok) {
-        throw new Error("Failed to delete conversation");
+        return result;
+      } catch (error) {
+        console.error("Failed to delete conversation:", error);
+        throw error;
       }
-
-      if (response.status === 204) {
-        return null;
-      }
-
-      return response.json();
     },
-    onSuccess: (data, conversationId) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["conversations"],
         exact: false,

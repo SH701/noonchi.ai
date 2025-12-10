@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuth";
-import { useConversaitonFeedback } from "@/hooks/conversation/useConversationFeedback";
+import { useConversationFeedback } from "@/hooks/conversation/useConversationFeedback";
 
 export default function FeedbackSection({ id }: { id: number | string }) {
   const router = useRouter();
@@ -12,7 +12,7 @@ export default function FeedbackSection({ id }: { id: number | string }) {
     data: feedback,
     isLoading,
     error,
-  } = useConversaitonFeedback(conversationId);
+  } = useConversationFeedback(conversationId);
 
   const viewfeedback = () => {
     router.push(`/main/chatroom/${conversationId}/result`);

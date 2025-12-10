@@ -2,25 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
-import { useAuthStore } from "@/store/useAuth";
 import {
   ProfileHeader,
   ProfileImage,
   ProfileMenuList,
   StatsCard,
 } from "@/components/profile";
+import { logout } from "@/lib/api/auth/logout";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { data: profile, isLoading } = useUserProfile();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p>Loading...</p>
-      </div>
-    );
-  }
+  const { data: profile } = useUserProfile();
 
   if (profile?.role === "ROLE_GUEST") {
     return (
@@ -40,20 +32,7 @@ export default function ProfilePage() {
   }
 
   const handleLogout = () => {
-    const cookies = [
-      "__clerk_db_jwt",
-      "__client_uat",
-      "__session",
-      "accessToken",
-      "refreshToken",
-    ];
-    cookies.forEach(
-      (name) =>
-        (document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`)
-    );
-    useAuthStore.getState().logout();
-    localStorage.removeItem("auth-store");
-    localStorage.removeItem("device_id");
+    logout();
     router.push("/login");
   };
 

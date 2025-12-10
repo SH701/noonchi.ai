@@ -1,4 +1,6 @@
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
+import { ChatMsg } from "@/types/chatmessage";
+import { Feedback } from "@/types/feedback";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useMessageFeedback(conversationId?: number) {
@@ -6,23 +8,32 @@ export function useMessageFeedback(conversationId?: number) {
 
   return useMutation({
     mutationFn: async (messageId: string) => {
-      const res = await apiFetch(`/api/messages/${messageId}/feedback`, {
-        method: "GET",
-      });
+      try {
+        const feedbackData = await apiFetch<Feedback>(
+          `/api/messages/${messageId}/feedback`,
+          {
+            method: "GET",
+          }
+        );
 
-      if (!res.ok) throw new Error("Feedback API failed");
-
-      return res.json();
+        return feedbackData;
+      } catch (error) {
+        console.error("Failed to fetch message feedback:", error);
+        throw error;
+      }
     },
 
     onSuccess: (feedbackData, messageId) => {
-      queryClient.setQueryData(["messages", conversationId], (old: any) => {
-        if (!old) return old;
+      queryClient.setQueryData<ChatMsg[]>(
+        ["messages", conversationId],
+        (old) => {
+          if (!old) return old;
 
-        return old.map((msg: any) =>
-          msg.messageId === messageId ? { ...msg, feedback: feedbackData } : msg
-        );
-      });
+          return old.map((msg) =>
+            msg.messageId === messageId ? { ...msg, ...feedbackData } : msg
+          );
+        }
+      );
     },
   });
 }

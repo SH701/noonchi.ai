@@ -1,4 +1,5 @@
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
+import { ChatMsg } from "@/types/chatmessage";
 import { useMutation } from "@tanstack/react-query";
 
 export function useSendMessage() {
@@ -12,16 +13,17 @@ export function useSendMessage() {
       content?: string;
       audioUrl?: string;
     }) => {
-      const res = await apiFetch("/api/messages", {
-        method: "POST",
-        body: JSON.stringify({ conversationId, content, audioUrl }),
-      });
+      try {
+        const data = await apiFetch<ChatMsg[]>("/api/messages", {
+          method: "POST",
+          body: JSON.stringify({ conversationId, content, audioUrl }),
+        });
 
-      if (!res.ok) {
-        throw new Error("Failed to send message");
+        return data;
+      } catch (error) {
+        console.error("Failed to send message:", error);
+        throw error;
       }
-
-      return res.json();
     },
   });
 }

@@ -5,7 +5,7 @@ import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 
 import { topicsByCategory } from "@/data/topics";
 import RoleplayForm from "@/components/ui/forms/RoleplayForm";
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
 import { useState } from "react";
 import Loading from "@/app/(main)/main/chatroom/[id]/loading";
 

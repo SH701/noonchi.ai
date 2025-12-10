@@ -1,28 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { Feedback } from "@/types/feedback";
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
 
-export function useConversaitonFeedback(conversationId?: string) {
+export function useConversationFeedback(conversationId?: string) {
   return useQuery<Feedback>({
     queryKey: ["feedback", conversationId],
     enabled: !!conversationId,
     queryFn: async () => {
-      const res = await apiFetch(
-        `/api/conversations/${conversationId}/feedback`,
-        {
-          cache: "no-store",
-        }
-      );
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(
-          `Failed to fetch feedback (${res.status}): ${text || "Unknown"}`
+      try {
+        const data = await apiFetch<Feedback>(
+          `/api/conversations/${conversationId}/feedback`,
+          {
+            cache: "no-store",
+          }
         );
-      }
 
-      return await res.json();
+        return data;
+      } catch (error) {
+        console.error("Failed to fetch feedback:", error);
+        throw error;
+      }
     },
     staleTime: 0,
     gcTime: 0,

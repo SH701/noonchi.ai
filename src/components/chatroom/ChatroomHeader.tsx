@@ -8,7 +8,7 @@ import Unfinished from "../modal/Unfinished";
 import Sucess from "../modal/Sucess";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
 import { useAuthStore } from "@/store/useAuth";
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingModal from "./LoadingModal";
 

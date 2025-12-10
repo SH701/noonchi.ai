@@ -88,7 +88,6 @@ export default function Result() {
   console.log(feedback);
   return (
     <div className="min-h-screen bg-white flex flex-col overflow-x-hidden">
-      {/* 메인 콘텐츠 (스크롤 가능 영역) */}
       <div className="flex-1 flex justify-center overflow-y-auto">
         <div className="">
           <div className="px-4 pt-6 pb-4  w-full max-w-[500px]">
@@ -128,30 +127,22 @@ export default function Result() {
               />
             ) : (
               <div className="space-y-4 pb-2">
-                <Part
-                  title="Conversation Summary"
-                  desc={feedback.summary || ""}
-                />
-                <Part
-                  title="What you did well"
-                  desc={feedback.goodPoints || "참 잘했어요!"}
-                />
+                <Part title="Conversation Summary" desc={feedback.summary} />
+                <Part title="What you did well" desc={feedback.goodPoints} />
                 <div className="bg-white rounded-2xl border border-gray-200 p-4">
                   <h3 className="text-gray-900 text-base font-semibold font-pretendard leading-[130%] mb-3">
                     What you can improve
                   </h3>
                   <div className="border-t border-gray-200 pt-3 flex flex-col">
                     <p className="text-gray-700 text-sm font-medium font-pretendard leading-[130%] mb-4">
-                      {feedback.improvementPoints?.[0]?.point ||
-                        "점검 중입니다."}
+                      {feedback.improvementPoints?.[0]?.point}
                     </p>
                     <div className="bg-gray-50 rounded-xl p-3">
                       <p className="text-gray-600 bg-blue-200 w-10 py-1 font-semibold text-center rounded-full text-sm font-pretendard leading-[130%] mb-3">
                         Try
                       </p>
                       <p className="text-gray-700 text-sm font-medium font-pretendard leading-[130%]">
-                        {feedback.improvementPoints?.[0]?.tip ||
-                          "점검 중입니다2."}
+                        {feedback.improvementPoints?.[0]?.tip}
                       </p>
                     </div>
                   </div>

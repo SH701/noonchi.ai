@@ -5,20 +5,20 @@ import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import Loading from "../../chatroom/[id]/loading";
 
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
 import InterviewForm from "@/components/ui/forms/InterviewForm";
 import { useQueryClient } from "@tanstack/react-query";
 import UserCharge from "@/components/modal/UserCharge";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
 import GuestCharge from "@/components/modal/GuestCharge";
-
-const INTERVIEW_STYLES = [
-  { value: "friendly", label: "Friendly" },
-  { value: "standard", label: "Standard" },
-  { value: "strict", label: "Strict" },
-] as const;
-
-export type UploadedFiles = File[];
+import {
+  INTERVIEW_STYLES,
+  InterviewFormData,
+  InterviewApiRequest,
+  PresignedUrlResponse,
+  ConversationResponse,
+  UploadedFile,
+} from "@/types/interview";
 
 export default function Interview() {
   const router = useRouter();
@@ -26,30 +26,31 @@ export default function Interview() {
   const queryClient = useQueryClient();
   const [needCharge, setNeedCharge] = useState(false);
   const { data: user } = useUserProfile();
-  const handleSubmit = async (data: any) => {
+
+  const handleSubmit = async (data: InterviewFormData) => {
     setShowLoading(true);
-
     try {
-      const uploadedFiles = await Promise.all(
+      const uploadedFiles: UploadedFile[] = await Promise.all(
         data.files.map(async (file: File) => {
-          const presignRes = await apiFetch("/api/files/presigned-url", {
-            method: "POST",
-            body: JSON.stringify({
-              fileExtension: file.name.split(".").pop(),
-              fileType: file.type,
-            }),
-          });
+          const presignedData = await apiFetch<PresignedUrlResponse>(
+            "/api/files/presigned-url",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                fileExtension: file.name.split(".").pop(),
+                fileType: file.type,
+              }),
+            }
+          );
 
-          const { url } = await presignRes.json();
-
-          await fetch(url, {
+          await fetch(presignedData.url, {
             method: "PUT",
             headers: { "Content-Type": file.type },
             body: file,
           });
 
           return {
-            fileUrl: url.split("?")[0],
+            fileUrl: presignedData.url.split("?")[0],
             fileName: file.name,
             fileType: file.type,
             fileSize: file.size,
@@ -57,36 +58,37 @@ export default function Interview() {
         })
       );
 
-      const deduct = await apiFetch("/api/users/credit/deduct", {
-        method: "POST",
-        body: JSON.stringify({ amount: 60 }),
-      });
+      try {
+        await apiFetch<void>("/api/users/credit/deduct", {
+          method: "POST",
+          body: JSON.stringify({ amount: 60 }),
+        });
 
-      if (!deduct.ok) {
+        queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+      } catch (error) {
+        console.error("크레딧 차감 실패:", error);
         setShowLoading(false);
         setNeedCharge(true);
         return;
       }
 
-      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+      const convo = await apiFetch<ConversationResponse>(
+        "/api/conversations/interview",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            companyName: data.companyName,
+            jobTitle: data.jobTitle,
+            jobPosting: data.jobPosting,
+            interviewStyle: data.interviewStyle.toUpperCase(),
+            files: uploadedFiles,
+          } as InterviewApiRequest),
+        }
+      );
 
-      const res = await apiFetch("/api/conversations/interview", {
-        method: "POST",
-        body: JSON.stringify({
-          companyName: data.company,
-          jobTitle: data.position,
-          jobPosting: data.jobPosting,
-          interviewStyle: data.style.toUpperCase(),
-          files: uploadedFiles,
-        }),
-      });
-
-      if (!res.ok) throw new Error("인터뷰 생성 실패");
-
-      const convo = await res.json();
       router.push(`/main/chatroom/${convo.conversationId}`);
     } catch (e) {
-      console.error(e);
+      console.error("인터뷰 생성 실패:", e);
       alert("인터뷰 생성 실패 🤯");
       setShowLoading(false);
     }
