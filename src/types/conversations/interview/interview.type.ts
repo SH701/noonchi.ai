@@ -2,9 +2,6 @@ export type PresignedUrlResponse = {
   url: string;
 };
 
-export type ConversationResponse = {
-  conversationId: number;
-};
 
 export type UploadedFile = {
   fileUrl: string;

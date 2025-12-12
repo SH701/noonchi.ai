@@ -17,7 +17,7 @@ export async function apiFetch<T>(
 
   if (!res.ok) {
     if (res.status === 401) {
-      useAuthStore.getState().logout();
+      useAuthStore.getState().clearTokens();
     }
     const text = await res.text();
     throw new Error(text || `API Error: ${res.status}`);

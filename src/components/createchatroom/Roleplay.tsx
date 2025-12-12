@@ -2,98 +2,72 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+
+import Loading from "@/app/(main)/main/chatroom/[id]/loading";
+import RoleplayForm from "@/components/ui/forms/RoleplayForm";
+import UserCharge from "../modal/UserCharge";
+import GuestCharge from "../modal/GuestCharge";
 
 import { topicsByCategory } from "@/data/topics";
-import RoleplayForm from "@/components/ui/forms/RoleplayForm";
-import { apiFetch } from "@/lib/api/api";
-import { useState } from "react";
-import Loading from "@/app/(main)/main/chatroom/[id]/loading";
-import { ConversationResponse } from "@/types/interview";
 
-export const TOPIC_ENUMS = {
-  Career: {
-    1: "after_work_escape_mode",
-  },
-  Romance: {
-    1: "could_you_soften_your_tone",
-  },
-  Belonging: {
-    1: "midnight_mom_energy",
-  },
-  "K-POP": {
-    1: "bias_talk_irl",
-  },
-} as const;
+import { TOPIC_ENUMS } from "@/types/conversations/role-playing/roleplay.type";
+
+import {
+  useCreateRoleplay,
+  useDeductCredit,
+} from "@/hooks/mutations/useRoleplay";
+import { useUser } from "@/hooks/queries/useUser";
 
 export default function RolePlay() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const { data: user } = useUser();
+  const [needCharge, setNeedCharge] = useState(false);
+
   const mode = searchParams.get("mode") as "topic" | "custom";
   const category = searchParams.get(
     "category"
   ) as keyof typeof topicsByCategory;
   const topicId = Number(searchParams.get("topicId"));
 
-  const topicEnum =
-    TOPIC_ENUMS[category]?.[
-      topicId as keyof (typeof TOPIC_ENUMS)[typeof category]
-    ];
-
   const topic =
     category && topicId
       ? topicsByCategory[category]?.find((t) => t.id === topicId)
       : undefined;
 
-  const handleSubmit = async (data: {
-    isAI: string;
-    me: string;
-    detail: string;
-  }) => {
-    if (!topic) return;
-    if (!topicEnum) {
-      alert("준비중인 시나리오 입니다!");
-      return router.push("/main");
-    }
+  const deductCredit = useDeductCredit();
+  const createRoleplay = useCreateRoleplay();
+  const loading = deductCredit.isPending || createRoleplay.isPending;
 
-    setLoading(true);
-
+  const handleSubmit = async ({ details }: { details: string }) => {
     try {
-      const deduct = await apiFetch("/api/users/credit/deduct", {
-        method: "POST",
-        body: JSON.stringify({ amount: 20 }),
+      await deductCredit.mutateAsync(20);
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+
+      const conversationTopic = TOPIC_ENUMS[category][1];
+
+      const convo = await createRoleplay.mutateAsync({
+        conversationTopic,
+        details: details,
       });
 
-      if (!deduct === true) {
-        alert("크레딧이 부족합니다.");
-        setLoading(false);
+      router.push(`/main/chatroom/${convo.conversationId}`);
+    } catch (error) {
+      if (deductCredit.isError) {
+        setNeedCharge(true);
         return;
       }
 
-      const convo = await apiFetch<ConversationResponse>(
-        "/api/conversations/role-playing",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            conversationTopic: topicEnum,
-            details: data.detail,
-          }),
-        }
-      );
-
-      if (!convo || !convo.conversationId) {
-        throw new Error("대화 생성 실패");
-      }
-
-      setLoading(false);
-      router.push(`/main/chatroom/${convo.conversationId}`);
-    } catch (error) {
-      console.error("Error:", error);
-      setLoading(false);
+      console.error("채팅 생성 실패:", error);
+      alert("채팅 생성 실패 🤯");
     }
   };
 
   if (loading) return <Loading />;
+
   return (
     <div className="flex flex-col pt-14 relative bg-white w-full overflow-x-hidden">
       <div className="flex items-center w-full px-4">
@@ -103,6 +77,7 @@ export default function RolePlay() {
         >
           <ChevronLeftIcon className="size-6" />
         </button>
+
         <h1 className="flex-1 text-center font-semibold text-black text-lg">
           Create
         </h1>
@@ -113,7 +88,7 @@ export default function RolePlay() {
       </h2>
 
       <div className="w-full flex justify-center">
-        <div className="w-full max-w-[375px] px-5">
+        <div className="w-full max-w-93.75 px-5">
           <RoleplayForm
             AiRole={topic?.aiRole}
             myRole={topic?.myRole}
@@ -122,6 +97,13 @@ export default function RolePlay() {
           />
         </div>
       </div>
+
+      {needCharge &&
+        (user?.role === "ROLE_USER" ? (
+          <UserCharge isOpen={true} onClose={() => setNeedCharge(false)} />
+        ) : (
+          <GuestCharge isOpen={true} onClose={() => setNeedCharge(false)} />
+        ))}
     </div>
   );
 }

@@ -40,7 +40,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-white flex flex-col">
       <ProfileHeader />
 
-      <div className="flex-1 flex flex-col items-center w-[375px] mx-auto">
+      <div className="flex-1 flex flex-col items-center w-93.75 mx-auto">
         <div className="flex flex-col items-center pt-6">
           <ProfileImage src={profile?.profileImageUrl} />
 

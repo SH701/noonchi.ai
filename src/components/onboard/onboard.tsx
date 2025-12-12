@@ -32,25 +32,28 @@ export default function Onboard() {
   const sliderRef = useRef<Slider>(null);
   const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { accessToken, setAccessToken } = useAuthStore();
+
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const setAccessToken = useAuthStore((s) => s.setTokens);
+
   const { mutateAsync: guestLogin } = useGuest();
   const lastIndex = slides.length - 1;
+
   const handleSkip = () => {
     sliderRef.current?.slickGoTo(slides.length - 1);
   };
+
   const handleOnboardingToMain = async () => {
     try {
       if (accessToken && !isTokenExpired(accessToken)) {
-        console.log("유효한 access token 존재 - 메인으로 이동");
         router.push("/main");
         return;
       }
 
       const deviceId = getOrCreateDeviceId();
+      const newToken = await guestLogin(deviceId);
 
-      const NewToken = await guestLogin(deviceId);
-
-      setAccessToken(NewToken);
+      setAccessToken(newToken.accessToken, null);
 
       router.push("/main");
     } catch (error) {
@@ -58,6 +61,7 @@ export default function Onboard() {
       alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
+
   useEffect(() => {
     if (currentSlide === 3) {
       const timer = setTimeout(async () => {
@@ -67,7 +71,7 @@ export default function Onboard() {
 
       return () => clearTimeout(timer);
     }
-  }, [currentSlide, handleOnboardingToMain]);
+  }, [currentSlide]); // ✅ 수정: handleOnboardingToMain 의존성 제거 (무한 루프 방지)
 
   const handleNext = () => {
     if (currentSlide === lastIndex) {
@@ -76,6 +80,7 @@ export default function Onboard() {
       sliderRef.current?.slickNext();
     }
   };
+
   useEffect(() => {
     if (loading) {
       const timer = setTimeout(async () => {
@@ -83,7 +88,8 @@ export default function Onboard() {
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [loading]);
+  }, [loading]); // ✅ 수정: 의존성 단순화
+
   if (loading) {
     return <Loading />;
   }
@@ -124,7 +130,7 @@ export default function Onboard() {
                     className={
                       isFormSlide
                         ? "relative flex-1 flex items-start pt-20 px-4 overflow-y-auto"
-                        : "relative h-[400px] flex items-center justify-center"
+                        : "relative h-100 flex items-center justify-center"
                     }
                   >
                     {i !== slides.length - 1 && (

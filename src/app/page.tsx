@@ -17,7 +17,7 @@ export default function Home() {
   }, [accessToken, router]);
 
   return (
-    <main className="h-screen w-full max-w-[375px] mx-auto flex items-center justify-center overflow-hidden">
+    <main className="h-screen w-full max-w-93.75 mx-auto flex items-center justify-center overflow-hidden">
       <Onboard />
     </main>
   );

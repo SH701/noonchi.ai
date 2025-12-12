@@ -17,14 +17,14 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <link rel="manifest" href="/manifest.json" />
+        {/* <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-180.png" />
-        <meta name="theme-color" content="#0453fd" />
+        <meta name="theme-color" content="#0453fd" /> */}
       </head>
       <body className="min-h-screen w-full">
         <QueryProvider>
           <div className="w-full min-h-screen md:flex md:justify-center">
-            <div className="w-full md:max-w-[375px] md:shadow-xl bg-white">
+            <div className="w-full md:max-w-93.75 md:shadow-xl bg-white">
               {children}
             </div>
           </div>
