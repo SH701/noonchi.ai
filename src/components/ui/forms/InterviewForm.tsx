@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { Button } from "../button";
 import { FileUpload, FormInput } from "../form";
-import { InterviewFormData } from "@/types/interview";
+import { InterviewFormData } from "@/types/conversations/interview/interview.type";
 
 export interface InterviewFormProps {
   interviewStyles: readonly { value: string; label: string }[];
@@ -78,7 +78,7 @@ export default function InterviewForm({
               variant={interviewStyle === opt.value ? "selected" : "outline"}
               size="sm"
               type="button"
-              className="w-[90px] h-11"
+              className="w-22.5 h-11"
               onClick={() => setInterviewStyle(opt.value)}
             >
               {opt.label}
