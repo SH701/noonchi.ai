@@ -1,5 +1,6 @@
 # Noonchi
-noonchi.ai.kr
+Link: [https://noonchi.ai.kr](https://noonchi.ai.kr)
+
 **Noonchi**는 한국어 대화에서의 상황·관계·말투를 학습하도록 돕는  
 AI 대화형 코칭 서비스입니다.  
 OpenAI API, TTS, 번역 및 음성인식 기능을 결합하여  
