@@ -1,5 +1,5 @@
-import { apiMutations } from "@/lib/api/mutations";
-import { RoleplayApiRequest } from "@/types/conversations/role-playing/roleplay.type";
+import { apiMutations } from "@/api/mutations";
+import { RoleplayApiRequest } from "@/types/conversations";
 import { useMutation } from "@tanstack/react-query";
 
 export const useCreateRoleplay = () => {

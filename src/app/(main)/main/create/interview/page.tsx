@@ -15,10 +15,7 @@ import {
   useUploadFiles,
   useCreateInterview,
 } from "@/hooks/mutations/useInterview";
-import {
-  INTERVIEW_STYLES,
-  InterviewFormData,
-} from "@/types/conversations/interview/interview.type";
+import { INTERVIEW_STYLES, InterviewFormData } from "@/types/conversations";
 import { useDeductCredit } from "@/hooks/mutations/useCredit";
 
 export default function Interview() {

@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { apiMutations } from "@/lib/api/mutations";
-import { InterviewApiRequest } from "@/types/conversations/interview/interview.type";
+import { apiMutations } from "@/api/mutations";
+import { InterviewApiRequest } from "@/types/conversations";
 
 export const useUploadFiles = () => {
   return useMutation({

@@ -8,7 +8,7 @@ import {
   ProfileMenuList,
   StatsCard,
 } from "@/components/profile";
-import { apiMutations } from "@/lib/api/mutations";
+import { apiMutations } from "@/api/mutations";
 
 export default function ProfilePage() {
   const router = useRouter();

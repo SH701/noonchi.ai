@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth/useAuth";
-import { apiClient, ConversationDetail } from "@/lib/api/client";
+import { apiClient, ConversationDetail } from "@/api/client";
 
 export function useConversationDetail(id?: string) {
   const accessToken = useAuthStore((s) => s.accessToken);

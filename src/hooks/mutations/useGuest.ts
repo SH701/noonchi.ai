@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { apiMutations } from "@/lib/api/mutations";
+import { apiMutations } from "@/api/mutations";
 
 export function useGuest() {
   return useMutation({

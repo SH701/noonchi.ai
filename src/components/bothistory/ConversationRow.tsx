@@ -1,6 +1,7 @@
 "use client";
 
-import { Conversation } from "@/types/conversation";
+
+import { Conversation } from "@/types/conversations";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 interface Props {

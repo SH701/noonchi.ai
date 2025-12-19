@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { Button } from "../button";
 import { FileUpload, FormInput } from "../form";
-import { InterviewFormData } from "@/types/conversations/interview/interview.type";
+import { InterviewFormData } from "@/types/conversations";
 
 export interface InterviewFormProps {
   interviewStyles: readonly { value: string; label: string }[];

@@ -1,4 +1,4 @@
-import { apiMutations } from "@/lib/api/mutations";
+import { apiMutations } from "@/api/mutations";
 import { useMutation } from "@tanstack/react-query";
 
 export function useSendMessage() {

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { Feedback } from "@/types/feedback";
-import { apiFetch } from "@/lib/api/api";
+import { apiFetch } from "@/api/api";
 
 export function useConversationFeedback(conversationId?: string) {
   return useQuery<Feedback>({

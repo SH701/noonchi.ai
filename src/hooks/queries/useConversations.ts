@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Conversation } from "@/types/conversation";
-import { FilterState } from "@/types/history";
-import { apiFetch } from "@/lib/api/api";
-import { apiMutations, DeleteConversationResponse } from "@/lib/api/mutations";
+import { Conversation, FilterState } from "@/types/conversations";
+
+import { apiFetch } from "@/api/api";
+import { apiMutations, DeleteConversationResponse } from "@/api/mutations";
 
 const filterMap: Record<Exclude<FilterState, null>, string> = {
   done: "ENDED",
@@ -45,24 +45,26 @@ export const useConversations = (filter: FilterState = null) => {
 export function useDeleteConversation() {
   const queryClient = useQueryClient();
 
-  return useMutation<DeleteConversationResponse | null, Error, string | number>({
-    mutationFn: async (conversationId: string | number) => {
-      try {
-        const result = await apiMutations.conversations.deleteConversation(
-          String(conversationId)
-        );
-        return result;
-      } catch (error) {
-        console.error("Failed to delete conversation:", error);
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["conversations"],
-        exact: false,
-        refetchType: "all",
-      });
-    },
-  });
+  return useMutation<DeleteConversationResponse | null, Error, string | number>(
+    {
+      mutationFn: async (conversationId: string | number) => {
+        try {
+          const result = await apiMutations.conversations.deleteConversation(
+            String(conversationId)
+          );
+          return result;
+        } catch (error) {
+          console.error("Failed to delete conversation:", error);
+          throw error;
+        }
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["conversations"],
+          exact: false,
+          refetchType: "all",
+        });
+      },
+    }
+  );
 }

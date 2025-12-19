@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth/useAuth";
 
-import { apiClient } from "@/lib/api/client";
+import { apiClient } from "@/api/client";
 import { ChatMsg } from "@/types/messages";
 
 export function useChatQuery(conversationId?: string) {

@@ -1,6 +1,6 @@
 import { User } from "@/types/user/user.type";
-import { apiMutations } from "../api/mutations";
-import { apiClient } from "../api/client";
+import { apiMutations } from "../../api/mutations";
+import { apiClient } from "../../api/client";
 
 export type PerformSignResult = {
   accessToken: string;

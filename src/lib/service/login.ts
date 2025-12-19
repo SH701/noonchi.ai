@@ -1,4 +1,4 @@
-import { apiMutations } from "../api/mutations";
+import { apiMutations } from "../../api/mutations";
 import { User } from "@/types/user/user.type";
 
 export type PerformLoginResult = {

@@ -1,5 +1,5 @@
-import { apiClient } from "@/lib/api/client";
-import { apiMutations } from "@/lib/api/mutations";
+import { apiClient } from "@/api/client";
+import { apiMutations } from "@/api/mutations";
 
 import { ChatMsg, Feedback } from "@/types/messages";
 

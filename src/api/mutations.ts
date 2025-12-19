@@ -3,12 +3,12 @@ import { apiFetch } from "./api";
 import { AuthResponse, LoginRequest, SignupRequest } from "@/types/auth";
 import { normalizeChatMessage } from "@/utils/normalizeChatMessage";
 
-import { RoleplayApiRequest } from "@/types/conversations/role-playing/roleplay.type";
-import { ConversationResponse } from "@/types/conversations/conversations.type";
 import {
   InterviewApiRequest,
   PresignedUrlResponse,
   UploadedFile,
+  ConversationResponse,
+  RoleplayApiRequest,
 } from "@/types/conversations";
 import { ChatMsg } from "@/types/messages";
 
