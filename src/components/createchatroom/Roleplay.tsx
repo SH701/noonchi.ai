@@ -14,11 +14,9 @@ import { topicsByCategory } from "@/data/topics";
 
 import { TOPIC_ENUMS } from "@/types/conversations/role-playing/roleplay.type";
 
-import {
-  useCreateRoleplay,
-  useDeductCredit,
-} from "@/hooks/mutations/useRoleplay";
+import { useCreateRoleplay } from "@/hooks/mutations/useRoleplay";
 import { useUser } from "@/hooks/queries/useUser";
+import { useDeductCredit } from "@/hooks/mutations/useCredit";
 
 export default function RolePlay() {
   const router = useRouter();

@@ -32,7 +32,7 @@ export default function Fourth() {
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <div className="w-[375px] h-[426px] flex items-center justify-center">
+      <div className="w-93.75 h-106.5 flex items-center justify-center">
         <LottieAnimation
           animationData={animationData}
           style={{ width: "375px", height: "426px" }}

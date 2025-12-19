@@ -1,36 +1,25 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth/useAuth";
 import { useConversationFeedback } from "@/hooks/queries/useConversationFeedback";
+import { useDeleteConversation } from "@/hooks/queries/useConversations";
 
 export default function FeedbackSection({ id }: { id: number | string }) {
   const router = useRouter();
   const conversationId = String(id);
-  const accessToken = useAuthStore((s) => s.accessToken);
   const {
     data: feedback,
     isLoading,
     error,
   } = useConversationFeedback(conversationId);
+  const { mutate: deleteConversation } = useDeleteConversation();
 
   const viewfeedback = () => {
     router.push(`/main/chatroom/${conversationId}/result`);
   };
 
-  const handleDeleteChat = async () => {
-    try {
-      const res = await fetch(`/api/conversations/${conversationId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete chat");
-      }
-    } catch (err) {
-      console.error("Delete chat error:", err);
-    }
+  const handleDeleteChat = () => {
+    deleteConversation(conversationId);
   };
 
   if (isLoading) return <p>Loading…</p>;
@@ -66,10 +55,10 @@ export default function FeedbackSection({ id }: { id: number | string }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-4 mt-[34px]">
+      <div className="flex items-center justify-center gap-4 mt-8.5">
         <button
           onClick={viewfeedback}
-          className="px-4 min-w-[120px] h-9 text-white bg-blue-600 rounded-lg cursor-pointer"
+          className="px-4 min-w-30 h-9 text-white bg-blue-600 rounded-lg cursor-pointer"
         >
           <p className="text-xs">View Feedback</p>
         </button>

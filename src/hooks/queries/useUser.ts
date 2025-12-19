@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useAuthStore } from "@/store/auth/useAuth";
-import { apiFetch } from "@/lib/api/api";
+import { apiClient } from "@/lib/api/client";
 import { useUserStore } from "@/store";
-import { User } from "@/types/user.type";
+import { User } from "@/types/user/user.type";
 
 export const useUser = () => {
   const accessToken = useAuthStore((s) => s.accessToken);
@@ -14,7 +14,7 @@ export const useUser = () => {
     enabled: !!accessToken,
 
     queryFn: async () => {
-      const profile = await apiFetch<User>("/api/users/me");
+      const profile = await apiClient.users.getMe();
       setUser(profile);
       return profile;
     },

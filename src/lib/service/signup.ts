@@ -1,6 +1,6 @@
-import { User } from "@/types/user.type";
-import { signup } from "../api/auth/signup";
-import { getUser } from "../api/users/me";
+import { User } from "@/types/user/user.type";
+import { apiMutations } from "../api/mutations";
+import { apiClient } from "../api/client";
 
 export type PerformSignResult = {
   accessToken: string;
@@ -15,9 +15,9 @@ export async function performSignup(payload: {
   gender: "MALE" | "FEMALE";
   birthDate: string;
 }): Promise<PerformSignResult> {
-  const res = await signup(payload);
+  const res = await apiMutations.auth.signup(payload);
 
-  const user = await getUser();
+  const user = await apiClient.users.getMe();
 
   return {
     accessToken: res.accessToken,

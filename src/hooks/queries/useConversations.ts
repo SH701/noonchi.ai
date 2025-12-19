@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Conversation } from "@/types/conversation";
 import { FilterState } from "@/types/history";
 import { apiFetch } from "@/lib/api/api";
+import { apiMutations, DeleteConversationResponse } from "@/lib/api/mutations";
 
 const filterMap: Record<Exclude<FilterState, null>, string> = {
   done: "ENDED",
@@ -11,11 +12,6 @@ const filterMap: Record<Exclude<FilterState, null>, string> = {
 type ConversationsResponse = {
   content: unknown;
 };
-
-type DeleteConversationResponse = {
-  conversationId: number;
-  deletedAt?: string;
-} | null;
 
 const normalizeConversations = (arr: unknown): Conversation[] =>
   (Array.isArray(arr) ? arr : [])
@@ -49,16 +45,12 @@ export const useConversations = (filter: FilterState = null) => {
 export function useDeleteConversation() {
   const queryClient = useQueryClient();
 
-  return useMutation<DeleteConversationResponse, Error, string | number>({
+  return useMutation<DeleteConversationResponse | null, Error, string | number>({
     mutationFn: async (conversationId: string | number) => {
       try {
-        const result = await apiFetch<DeleteConversationResponse>(
-          `/api/conversations/${conversationId}`,
-          {
-            method: "DELETE",
-          }
+        const result = await apiMutations.conversations.deleteConversation(
+          String(conversationId)
         );
-
         return result;
       } catch (error) {
         console.error("Failed to delete conversation:", error);

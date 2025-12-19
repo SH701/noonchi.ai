@@ -7,10 +7,10 @@ import { useState } from "react";
 import Unfinished from "../modal/Unfinished";
 import Sucess from "../modal/Sucess";
 import { useUser } from "@/hooks/queries/useUser";
-import { useAuthStore } from "@/store/auth/useAuth";
-import { apiFetch } from "@/lib/api/api";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingModal from "./LoadingModal";
+import { useDeductCredit } from "@/hooks/mutations/useCredit";
+import { useConversationEnd } from "@/hooks/mutations/useConversationEnd";
 
 type Props = {
   name: string | undefined;
@@ -33,10 +33,11 @@ export default function ChatroomHeader({
   const [isUnfinishedOpen, setIsUnfinishedOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const queryClient = useQueryClient();
-  const accessToken = useAuthStore((s) => s.accessToken);
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
+  const deductCredit = useDeductCredit();
+  const endConversation = useConversationEnd();
   const handleExit = () => {
     if (conversation?.taskAllCompleted === false) {
       setIsUnfinishedOpen(true);
@@ -44,37 +45,26 @@ export default function ChatroomHeader({
       localStorage.setItem("pendingInterviewId", conversationId);
       setIsSuccessOpen(true);
     } else {
-      processConversationEnd();
+      ConversationEnd();
     }
   };
 
-  const processConversationEnd = async () => {
+  const ConversationEnd = async () => {
     const creditAmount =
       conversation?.conversationType === "INTERVIEW" ? 40 : 10;
     setLoading(true);
 
     try {
-      const deduct = await apiFetch("/api/users/credit/deduct", {
-        method: "POST",
-        body: JSON.stringify({ amount: creditAmount }),
-      });
+      await deductCredit.mutateAsync(creditAmount);
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+    } catch (error) {
+      console.error("크레딧 차감 실패:", error);
+      setLoading(false);
+      return;
+    }
 
-      if (!deduct === true) {
-        alert("크레딧이 부족합니다.");
-        setLoading(false);
-        return;
-      }
-
-      const res = await fetch(`/api/conversations/${conversationId}/end`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-
-      if (!res.ok) {
-        console.error("Failed to end conversation:", res.status);
-        setLoading(false);
-        return;
-      }
+    try {
+      await endConversation.mutateAsync(conversationId);
 
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
 

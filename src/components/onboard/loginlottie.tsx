@@ -32,7 +32,7 @@ export default function LoginLottie() {
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <div className="w-[266px] h-[60px] flex items-center justify-center">
+      <div className="w-66.5 h-15 flex items-center justify-center">
         <LottieAnimation
           animationData={animationData}
           style={{ width: "266px", height: "60px" }}

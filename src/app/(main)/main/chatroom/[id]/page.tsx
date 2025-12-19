@@ -106,7 +106,7 @@ export default function ChatroomPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="fixed bottom-[139px] left-1/2 -translate-x-1/2 -translate-y-3 z-40 flex flex-col items-center"
+            className="fixed bottom-34.75 left-1/2 -translate-x-1/2 -translate-y-3 z-40 flex flex-col items-center"
           >
             <Image
               src="/etc/voice_error.png"

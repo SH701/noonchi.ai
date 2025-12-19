@@ -90,7 +90,7 @@ export default function Result() {
     <div className="min-h-screen bg-white flex flex-col overflow-x-hidden">
       <div className="flex-1 flex justify-center overflow-y-auto">
         <div className="">
-          <div className="px-4 pt-6 pb-4  w-full max-w-[500px]">
+          <div className="px-4 pt-6 pb-4  w-full max-w-125">
             <div className="flex items-center gap-3 mb-3">
               <Image
                 src="/characters/Noonchicoach.svg"

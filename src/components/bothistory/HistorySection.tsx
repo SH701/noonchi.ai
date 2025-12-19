@@ -27,7 +27,7 @@ export default function HistorySection({
           className="overflow-hidden"
         >
           {status === "ACTIVE" ? (
-            <div className="px-3 flex gap-2 items-center justify-center bg-[#F3F4F6] h-[83px]">
+            <div className="px-3 flex gap-2 items-center justify-center bg-[#F3F4F6] h-20.75">
               <button
                 onClick={onOpenChat}
                 className="w-25 h-9 py-2 bg-blue-600 text-white rounded-xl cursor-pointer"

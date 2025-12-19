@@ -4,17 +4,20 @@
 import { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import { useAuthStore } from "@/store/auth/useAuth";
 import { MyAI } from "@/types/persona";
 import { Info, User } from "lucide-react";
-import { BotMessageSquare } from "lucide-react";
+
 import { LightBulbIcon } from "@heroicons/react/24/solid";
+import {
+  useMessageTTS,
+  useMessageTranslate,
+} from "@/hooks/mutations/useMessageFeedback";
 
 type MessageItemProps = {
   m: any;
   myAI: MyAI | null;
   isMine: boolean;
-  isFeedbackOpen: boolean;
+
   feedbackOpenId: string | null;
   handleFeedbacks: (messageId: string) => void;
   messageStatus?: "default" | "error";
@@ -26,25 +29,23 @@ export default function MessageItem({
   m,
   myAI,
   isMine,
-  isFeedbackOpen,
   feedbackOpenId,
   handleFeedbacks,
   messageStatus = "default",
   isPending = false,
 }: MessageItemProps) {
   const [translated, setTranslated] = useState<string | null>(null);
-  const [loadingTranslate, setLoadingTranslate] = useState<
-    Record<string, boolean>
-  >({});
   const [open, setOpen] = useState(false);
-  const [loadingTTS, setLoadingTTS] = useState<Record<string, boolean>>({});
   const [loadingFeedbacks, setLoadingFeedbacks] = useState<
     Record<string, boolean>
   >({});
   const [recommandtion, setRecommandtion] = useState(false);
   const [activeTab, setActiveTab] = useState("nuance");
-  const [recommendation, setRecommendation] = useState(true);
-  const accessToken = useAuthStore((s) => s.accessToken);
+  const [recommendation] = useState(true);
+
+  const { mutate: fetchTTS, isPending: loadingTTS } = useMessageTTS();
+  const { mutate: fetchTranslate, isPending: loadingTranslate } =
+    useMessageTranslate();
 
   const showFeedbackButton =
     isMine &&
@@ -93,50 +94,34 @@ export default function MessageItem({
       : "bg-white text-black border-gray-300"
   );
 
-  const handleTTsClick = async (messageId: string) => {
-    try {
-      if (!messageId) return;
+  const handleTTsClick = (messageId: string) => {
+    if (!messageId) return;
 
-      const res = await fetch(`/api/messages/${messageId}/tts`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(`TTS 요청 실패: ${res.status}`);
-      }
-
-      const audioUrl = await res.text();
-
-      const audio = new Audio(audioUrl);
-      audio.play();
-
-      return audioUrl;
-    } catch (err) {
-      console.error("handleTTS error:", err);
-    }
+    fetchTTS(messageId, {
+      onSuccess: (audioUrl) => {
+        const audio = new Audio(audioUrl);
+        audio.play();
+      },
+      onError: (err) => {
+        console.error("handleTTS error:", err);
+      },
+    });
   };
 
-  const handleTranslateClick = async (messageId: string) => {
-    setLoadingTranslate((prev) => ({ ...prev, [messageId]: true }));
-    try {
-      if (translated) {
-        setTranslated(null);
-        return;
-      }
-      const res = await fetch(`/api/messages/${messageId}/translate`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-
-      if (!res.ok) return;
-      const text = await res.text();
-      setTranslated(text);
-    } finally {
-      setLoadingTranslate((prev) => ({ ...prev, [messageId]: false }));
+  const handleTranslateClick = (messageId: string) => {
+    if (translated) {
+      setTranslated(null);
+      return;
     }
+
+    fetchTranslate(messageId, {
+      onSuccess: (text) => {
+        setTranslated(text);
+      },
+      onError: (err) => {
+        console.error("handleTranslate error:", err);
+      },
+    });
   };
 
   const handleReactionReason = () => {
@@ -243,7 +228,7 @@ export default function MessageItem({
                 <div className="flex gap-2 ">
                   <button
                     onClick={() => handleTTsClick(m.messageId)}
-                    disabled={loadingTTS[m.messageId]}
+                    disabled={loadingTTS}
                   >
                     <Image
                       src="/message/volume_up.svg"
@@ -255,7 +240,7 @@ export default function MessageItem({
 
                   <button
                     onClick={() => handleTranslateClick(m.messageId)}
-                    disabled={loadingTranslate[m.messageId]}
+                    disabled={loadingTranslate}
                   >
                     <Image
                       src="/message/language.svg"
@@ -279,7 +264,7 @@ export default function MessageItem({
         </div>
 
         {/* 피드백 박스 */}
-        <div className="w-full z-50 translate-x-[30px] max-w-[88%]">
+        <div className="w-full z-50 translate-x-7.5 max-w-[88%]">
           {isMine && feedbackOpenId === m.messageId && m.feedback && (
             <div className="p-4 bg-gray-600 rounded-xl -mt-10 ">
               <div className="text-white text-sm pb-3 border-b border-gray-500 mb-3 pt-4">
@@ -349,7 +334,7 @@ export default function MessageItem({
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={() => handleTTsClick(m.messageId)}
-                  disabled={loadingTTS[m.messageId]}
+                  disabled={loadingTTS}
                 >
                   <Image
                     src="/message/volume_up.svg"
@@ -361,7 +346,7 @@ export default function MessageItem({
 
                 <button
                   onClick={() => handleTranslateClick(m.messageId)}
-                  disabled={loadingTranslate[m.messageId]}
+                  disabled={loadingTranslate}
                 >
                   <Image
                     src="/message/language.svg"

@@ -24,8 +24,7 @@ export default function SearchBar() {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
-              }
+              if (e.key === "Enter") { /* empty */ }
             }}
             className="border p-1 rounded overflow-hidden placeholder:pl-1 my-1"
             placeholder="Search..."

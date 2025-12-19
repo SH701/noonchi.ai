@@ -71,7 +71,7 @@ export default function Onboard() {
 
       return () => clearTimeout(timer);
     }
-  }, [currentSlide]); // ✅ 수정: handleOnboardingToMain 의존성 제거 (무한 루프 방지)
+  }, [currentSlide]);
 
   const handleNext = () => {
     if (currentSlide === lastIndex) {
@@ -88,7 +88,7 @@ export default function Onboard() {
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [loading]); // ✅ 수정: 의존성 단순화
+  }, [loading]);
 
   if (loading) {
     return <Loading />;

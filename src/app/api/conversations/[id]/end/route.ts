@@ -1,15 +1,13 @@
-// app/api/conversations/[id]/end/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> } // ✅ Promise 타입
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-  const { id } = await params; // ✅ await 필수!
-
-  console.log("Received id:", id); // 디버깅용
+  const { id } = await params; 
 
   const token = req.headers.get("authorization");
   if (!token) {

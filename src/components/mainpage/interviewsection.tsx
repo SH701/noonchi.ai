@@ -49,7 +49,7 @@ export default function InterviewSection() {
                     layoutId="interview-card"
                     onClick={handleImageClick}
                     className="
-                      relative w-[288px] h-[344px] rounded-xl overflow-hidden shadow-lg 
+                      relative w-[288px] h-86 rounded-xl overflow-hidden shadow-lg 
                       cursor-pointer
                     "
                   >
@@ -93,7 +93,7 @@ export default function InterviewSection() {
                 <div
                   key={s.id}
                   className="
-                    relative w-[288px] h-[344px] rounded-xl overflow-hidden shadow-lg 
+                    relative w-[288px] h-86 rounded-xl overflow-hidden shadow-lg 
                     opacity-40
                   "
                 >
@@ -117,7 +117,7 @@ export default function InterviewSection() {
           >
             <motion.div
               layoutId="interview-card"
-              className="relative w-full h-[60vh] md:max-w-[375px]"
+              className="relative w-full h-[60vh] md:max-w-93.75"
               transition={sharedTransition}
             >
               <Image

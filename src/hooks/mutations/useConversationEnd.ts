@@ -1,8 +1,8 @@
 import { apiMutations } from "@/lib/api/mutations";
 import { useMutation } from "@tanstack/react-query";
 
-export function useSendMessage() {
+export const useConversationEnd = () => {
   return useMutation({
-    mutationFn: apiMutations.messages.send,
+    mutationFn: apiMutations.conversations.endConversation,
   });
-}
+};

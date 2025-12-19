@@ -1,6 +1,5 @@
-import { login } from "../api/auth/login";
-
-import { User } from "@/types/user.type";
+import { apiMutations } from "../api/mutations";
+import { User } from "@/types/user/user.type";
 
 export type PerformLoginResult = {
   accessToken: string;
@@ -9,7 +8,7 @@ export type PerformLoginResult = {
 };
 
 export async function performLogin(email: string, password: string) {
-  const res = await login(email, password);
+  const res = await apiMutations.auth.login(email, password);
 
   return {
     accessToken: res.accessToken,

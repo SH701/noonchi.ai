@@ -8,7 +8,7 @@ import {
   ProfileMenuList,
   StatsCard,
 } from "@/components/profile";
-import { logout } from "@/lib/api/auth/logout";
+import { apiMutations } from "@/lib/api/mutations";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -31,8 +31,8 @@ export default function ProfilePage() {
     );
   }
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await apiMutations.auth.logout();
     router.push("/login");
   };
 

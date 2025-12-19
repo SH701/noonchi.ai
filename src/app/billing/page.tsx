@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Back from "@/components/ui/button/Back";
-import { apiFetch } from "@/lib/api/api";
+import { useChargeCredit } from "@/hooks/mutations/useCredit";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { Check } from "lucide-react";
@@ -46,26 +46,15 @@ export default function Billing() {
       ],
     },
   ];
+
+  const chargeCredit = useChargeCredit();
   const handleCharge = async () => {
-    const charge = await apiFetch("/api/users/credit/charge", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        amount: 50,
-      }),
-    });
-    const creditUpdate = await apiFetch("/api/users/me", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["userProfile"],
-    });
-    return { charge, creditUpdate };
+    try {
+      await chargeCredit.mutateAsync(50);
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+    } catch (error) {
+      console.error("크레딧 차감 실패:", error);
+    }
   };
   return (
     <div className="max-h-screen bg-gray-50">

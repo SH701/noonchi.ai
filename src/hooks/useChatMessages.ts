@@ -1,25 +1,30 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ChatMsg } from "@/types/chatmessage";
 import { useMessageFeedback } from "./mutations/useMessageFeedback";
 import { useSendMessage } from "./mutations/useSendMessage";
 import { useChatQuery } from "./queries/useChatQuery";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function useChatMessages(conversationId?: number) {
-  const [messages, setMessages] = useState<ChatMsg[]>([]);
-  const [initialized, setInitialized] = useState(false);
+  const [optimisticMessages, setOptimisticMessages] = useState<ChatMsg[]>([]);
+  const queryClient = useQueryClient();
 
-  const { data: initialMessages = [], isLoading: isMessagesLoading } =
+  const { data: serverMessages = [], isLoading: isMessagesLoading } =
     useChatQuery(conversationId ? String(conversationId) : undefined);
 
   const { mutateAsync: sendMutation, isPending } = useSendMessage();
   const { mutate: createFeedback } = useMessageFeedback(conversationId ?? 0);
 
-  useEffect(() => {
-    if (!initialized && initialMessages.length > 0) {
-      setMessages(initialMessages);
-      setInitialized(true);
-    }
-  }, [initialized, initialMessages]);
+  const messages = useMemo(() => {
+    if (optimisticMessages.length === 0) return serverMessages;
+
+    const optimisticIds = new Set(optimisticMessages.map(m => m.messageId));
+    const merged = [...serverMessages.filter(m => !optimisticIds.has(m.messageId)), ...optimisticMessages];
+
+    return merged.sort(
+      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+  }, [serverMessages, optimisticMessages]);
 
   const isAIResponding = useMemo(
     () => messages.some((m) => m.isLoading && m.type === "AI"),
@@ -51,24 +56,21 @@ export function useChatMessages(conversationId?: number) {
       isLoading: true,
     };
 
-    setMessages((prev) => [...prev, optimistic, loadingBubble]);
-   
+    setOptimisticMessages([optimistic, loadingBubble]);
+
     try {
-      const res = await sendMutation({ conversationId, content, audioUrl });
-      const responseMessages = res.messages;
+      await sendMutation({ conversationId, content, audioUrl });
 
-      const serverUserMsg = responseMessages.find((m) => m.type === "USER");
-      const aiMsg = responseMessages.find((m) => m.type === "AI");
+      // Optimistic 메시지 제거
+      setOptimisticMessages([]);
 
-      setMessages((prev) => {
-        const filtered = prev.filter(
-          (msg) => msg.messageId !== tempId && msg.messageId !== "ai-loading"
-        );
-        return [...filtered, serverUserMsg!, aiMsg!];
+      // 서버에서 최신 메시지 목록 다시 가져오기
+      queryClient.invalidateQueries({
+        queryKey: ["messages", String(conversationId)]
       });
     } catch (err) {
       console.error("sendMessage error", err);
-      setMessages((prev) => prev.filter((msg) => msg.messageId !== tempId));
+      setOptimisticMessages([]);
     }
   };
 
@@ -87,10 +89,7 @@ export function useChatMessages(conversationId?: number) {
     }
 
     createFeedback(messageId, {
-      onSuccess: (feedback) => {
-        setMessages((prev) =>
-          prev.map((m) => (m.messageId === messageId ? { ...m, feedback } : m))
-        );
+      onSuccess: () => {
         setFeedbackOpenId(messageId);
       },
     });
