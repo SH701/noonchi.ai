@@ -10,7 +10,7 @@ import MessageList from "@/components/chatroom/MessageList";
 import { useMessageFeedback } from "@/hooks/mutations/useMessageFeedback";
 import { useConversationDetail } from "@/hooks/queries/useConversationDetail";
 import { ResultTab, Point, Part } from "@/components/result";
-import { ChatMsg } from "@/types/chatmessage";
+import { ChatMsg } from "@/types/messages";
 
 export default function Result() {
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");

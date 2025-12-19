@@ -1,4 +1,4 @@
-import { ModalProps } from "@/types/modal";
+import { ModalProps } from "@/types/etc";
 import Modal from "../ui/modal/Modal";
 import { Button } from "../ui/button";
 

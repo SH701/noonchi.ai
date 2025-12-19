@@ -1,14 +1,16 @@
 import { apiFetch } from "./api";
-import { ChatMsg } from "@/types/chatmessage";
-import { AuthResponse } from "@/types/auth";
+
+import { AuthResponse, LoginRequest, SignupRequest } from "@/types/auth";
 import { normalizeChatMessage } from "@/utils/normalizeChatMessage";
+
+import { RoleplayApiRequest } from "@/types/conversations/role-playing/roleplay.type";
+import { ConversationResponse } from "@/types/conversations/conversations.type";
 import {
   InterviewApiRequest,
   PresignedUrlResponse,
   UploadedFile,
-} from "@/types/conversations/interview/interview.type";
-import { RoleplayApiRequest } from "@/types/conversations/role-playing/roleplay.type";
-import { ConversationResponse } from "@/types/conversations/conversations.type";
+} from "@/types/conversations";
+import { ChatMsg } from "@/types/messages";
 
 interface SendMessageResponse {
   taskResult: {
@@ -20,14 +22,6 @@ interface SendMessageResponse {
   messages: ChatMsg[];
 }
 
-interface SignupPayload {
-  email: string;
-  password: string;
-  nickname: string;
-  gender: "MALE" | "FEMALE";
-  birthDate: string;
-}
-
 export interface DeleteConversationResponse {
   conversationId: number;
 }
@@ -37,14 +31,14 @@ export interface EndConversationResponse {
 
 export const apiMutations = {
   auth: {
-    login: async (email: string, password: string): Promise<AuthResponse> => {
+    login: async (payload: LoginRequest): Promise<AuthResponse> => {
       return apiFetch<AuthResponse>("/api/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ payload }),
       });
     },
 
-    signup: async (payload: SignupPayload): Promise<AuthResponse> => {
+    signup: async (payload: SignupRequest): Promise<AuthResponse> => {
       return apiFetch<AuthResponse>("/api/auth/signup", {
         method: "POST",
         body: JSON.stringify(payload),

@@ -1,11 +1,10 @@
 import { create } from "zustand";
-import { Level } from "@/types/user";
 
 interface PreferenceState {
-  koreanLevel: Level | null;
+  koreanLevel: string | null;
   interests: string[];
 
-  setKoreanLevel: (level: Level) => void;
+  setKoreanLevel: (level: string) => void;
   setInterests: (list: string[]) => void;
 
   resetPreferences: () => void;

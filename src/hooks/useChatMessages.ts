@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ChatMsg } from "@/types/chatmessage";
+import { ChatMsg } from "@/types/messages";
 import { useMessageFeedback } from "./mutations/useMessageFeedback";
 import { useSendMessage } from "./mutations/useSendMessage";
 import { useChatQuery } from "./queries/useChatQuery";

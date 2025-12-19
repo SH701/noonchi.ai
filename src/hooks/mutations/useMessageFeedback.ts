@@ -1,7 +1,8 @@
 import { apiClient } from "@/lib/api/client";
 import { apiMutations } from "@/lib/api/mutations";
-import { ChatMsg } from "@/types/chatmessage";
-import { Feedback } from "@/types/feedback";
+
+import { ChatMsg, Feedback } from "@/types/messages";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useMessageFeedback(conversationId?: number) {
@@ -27,7 +28,9 @@ export function useMessageFeedback(conversationId?: number) {
           if (!old) return old;
 
           return old.map((msg) =>
-            msg.messageId === messageId ? { ...msg, feedback: feedbackData } : msg
+            msg.messageId === messageId
+              ? { ...msg, feedback: feedbackData }
+              : msg
           );
         }
       );

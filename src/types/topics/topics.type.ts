@@ -1,22 +1,22 @@
 export type CategoryType = "Career" | "Romance" | "Belonging" | "K-POP";
 
-export type Topic = {
+export interface Topic {
   id: number | string;
   label: CategoryType;
-};
+}
 
-export type TopicProps = {
+export interface TopicProps {
   topics: Topic[];
   active: CategoryType;
   onSelect: (key: CategoryType) => void;
   itemWidth?: number;
   gap?: number;
   visibleCount?: number;
-};
-export type Topics = {
+}
+export interface Topics {
   id: number;
   title: string;
   description: string;
   aiRole: string;
   myRole: string;
-};
+}

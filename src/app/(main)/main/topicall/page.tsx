@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import { CategoryType, Topics } from "@/types/topic";
+import { CategoryType, Topics } from "@/types/topics";
 import { topicsByCategory } from "@/data/topics";
 import { useRouter } from "next/navigation";
 import { Back } from "@/components/ui/button";

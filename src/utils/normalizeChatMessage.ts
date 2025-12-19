@@ -1,4 +1,5 @@
-import { ChatMsg } from "@/types/chatmessage";
+import { ChatMsg } from "@/types/messages";
+
 
 export function normalizeChatMessage(m: ChatMsg) {
   return {

@@ -12,7 +12,7 @@ import GuestCharge from "../modal/GuestCharge";
 
 import { topicsByCategory } from "@/data/topics";
 
-import { TOPIC_ENUMS } from "@/types/conversations/role-playing/roleplay.type";
+import { TOPIC_ENUMS } from "@/types/conversations";
 
 import { useCreateRoleplay } from "@/hooks/mutations/useRoleplay";
 import { useUser } from "@/hooks/queries/useUser";

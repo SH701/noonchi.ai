@@ -1,4 +1,4 @@
-export type ChatMsg = {
+export interface ChatMsg {
   messageId: string;
   conversationId: number;
   type: "USER" | "AI";
@@ -15,7 +15,23 @@ export type ChatMsg = {
   reactionReason?: string | null;
   recommendation?: string | null;
 
-  feedback?: any;
+  feedback?: Feedback;
   isLoading?: boolean;
   createdAt: string;
-};
+}
+export interface ImprovementPoint {
+  point: string;
+  tip: string;
+}
+
+export interface Feedback {
+  feedbackId: number;
+  conversationId: number;
+  politenessScore: number;
+  naturalnessScore: number;
+  pronunciationScore: number;
+  summary: string;
+  goodPoints: string;
+  improvementPoints: ImprovementPoint[];
+  overallEvaluation: string;
+}

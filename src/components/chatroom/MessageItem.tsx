@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import { MyAI } from "@/types/persona";
+import { MyAI } from "@/types/etc/persona.type";
 import { Info, User } from "lucide-react";
 
 import { LightBulbIcon } from "@heroicons/react/24/solid";

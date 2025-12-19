@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth/useAuth";
-import { ChatMsg } from "@/types/chatmessage";
+
 import { apiClient } from "@/lib/api/client";
+import { ChatMsg } from "@/types/messages";
 
 export function useChatQuery(conversationId?: string) {
   const accessToken = useAuthStore((s) => s.accessToken);

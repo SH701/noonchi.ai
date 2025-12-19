@@ -1,9 +1,9 @@
 import { apiFetch } from "./api";
 import { User } from "@/types/user/user.type";
-import { ChatMsg } from "@/types/chatmessage";
-import { Feedback } from "@/types/feedback";
-import { MyAI } from "@/types/persona";
+
+import { MyAI } from "@/types/etc/persona.type";
 import { normalizeChatMessage } from "@/utils/normalizeChatMessage";
+import { ChatMsg, Feedback } from "@/types/messages";
 
 export type ConversationDetail = {
   conversationId: number;

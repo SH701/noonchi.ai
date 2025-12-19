@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { MyAI } from "@/types/persona";
+import { MyAI } from "@/types/etc/persona.type";
 
 import MessageItem from "./MessageItem";
 

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 import ComingSoonModal from "@/components/modal/Comingsoon";
-import { CategoryType } from "@/types/topic";
+import { CategoryType } from "@/types/topics/topics.type";
 import { Interviewsection, TopicList } from "@/components/mainpage";
 import { useUser } from "@/hooks/queries/useUser";
 

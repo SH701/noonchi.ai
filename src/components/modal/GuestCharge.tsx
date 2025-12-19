@@ -3,7 +3,7 @@
 import { Info, Check, X } from "lucide-react";
 import Modal from "../ui/modal/Modal";
 import { Button } from "../ui/button";
-import { ModalProps } from "@/types/modal";
+import { ModalProps } from "@/types/etc";
 import { useRouter } from "next/navigation";
 
 export default function GuestCharge({ isOpen, onClose }: ModalProps) {
@@ -12,7 +12,7 @@ export default function GuestCharge({ isOpen, onClose }: ModalProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="w-[360px] bg-white rounded-3xl p-6 relative items-center flex flex-col"
+      className="w-90 bg-white rounded-3xl p-6 relative items-center flex flex-col"
     >
       <button
         onClick={onClose}
