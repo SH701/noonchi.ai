@@ -52,3 +52,12 @@ export const signup2Schema = z.object({
     message: "Please select a gender",
   }),
 });
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Please enter your email address")
+    .email("Please enter a valid email address"),
+  password: z
+    .string()
+    .min(1, "Please enter your password"),
+});

@@ -8,7 +8,7 @@ export type PerformLoginResult = {
 };
 
 export async function performLogin(email: string, password: string) {
-  const res = await apiMutations.auth.login(email, password);
+  const res = await apiMutations.auth.login({ email, password });
 
   return {
     accessToken: res.accessToken,

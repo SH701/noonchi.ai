@@ -1,51 +1,63 @@
-interface Props {
+"use client";
+
+import { TextInput } from "@/components/ui/form";
+import { Controller, FieldErrors, Control } from "react-hook-form";
+
+interface LoginData {
   email: string;
   password: string;
-  error: string;
-  setEmail: (value: string) => void;
-  setPassword: (value: string) => void;
-  handleLogin: () => void;
 }
 
 export default function LoginForm({
-  email,
-  password,
-  error,
-  setEmail,
-  setPassword,
-  handleLogin,
-}: Props) {
+  control,
+  errors,
+}: {
+  control: Control<LoginData>;
+  errors: FieldErrors<LoginData>;
+}) {
   return (
     <>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Email
         </label>
-        <input
-          type="email"
-          placeholder="example@gmail.com"
-          className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              label="email"
+              type="email"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
+        {errors.email && (
+          <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Password
         </label>
-        <input
-          type="password"
-          placeholder="••••••••"
-          className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              label="password"
+              type="password"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
+        {errors.password && (
+          <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+        )}
       </div>
-
-      {error && <p className="text-sm text-red-500 text-center">{error}</p>}
     </>
   );
 }

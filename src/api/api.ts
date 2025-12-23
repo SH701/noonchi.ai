@@ -1,5 +1,16 @@
 import { useAuthStore } from "@/store/auth/useAuth";
 
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public code?: string
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
 export async function apiFetch<T>(
   url: string,
   options: RequestInit = {}
@@ -19,9 +30,22 @@ export async function apiFetch<T>(
     if (res.status === 401) {
       useAuthStore.getState().clearTokens();
     }
-    const text = await res.text();
-    throw new Error(text || `API Error: ${res.status}`);
+
+    let errorMessage = `API Error: ${res.status}`;
+    let errorCode: string | undefined;
+
+    try {
+      const errorData = await res.json();
+      errorMessage = errorData.message || errorData.error || errorMessage;
+      errorCode = errorData.code;
+    } catch {
+      const text = await res.text();
+      if (text) errorMessage = text;
+    }
+
+    throw new ApiError(errorMessage, res.status, errorCode);
   }
+
   try {
     return res.json();
   } catch {

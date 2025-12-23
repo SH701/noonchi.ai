@@ -2,17 +2,15 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 interface Props {
-  email: string;
-  password: string;
   loading: boolean;
   handleLogin: () => void;
+  isValid: boolean;
 }
 
 export default function LoginAction({
-  email,
-  password,
   loading,
   handleLogin,
+  isValid,
 }: Props) {
   return (
     <>
@@ -20,7 +18,7 @@ export default function LoginAction({
         <Button
           variant="primary"
           onClick={handleLogin}
-          disabled={!email || !password || loading}
+          disabled={!isValid || loading}
           size="lg"
         >
           Sign in

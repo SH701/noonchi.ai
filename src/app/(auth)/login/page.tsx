@@ -2,11 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { performLogin } from "@/lib/service/login";
 import { useUserStore, useAuthStore } from "@/store";
 import { LoginAction, LoginForm, LoginHeader } from "@/components/auth";
 import { AuthLoading } from "@/components/ui/loading";
+import { loginSchema } from "@/types/auth";
+import { ApiError } from "@/api/api";
+
+type LoginData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,28 +21,42 @@ export default function LoginPage() {
   const setTokens = useAuthStore((s) => s.setTokens);
   const setUser = useUserStore((s) => s.setUser);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogin = async () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<LoginData>({
+    resolver: zodResolver(loginSchema),
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: LoginData) => {
     setError("");
     setLoading(true);
 
     try {
       const { accessToken, refreshToken, user } = await performLogin(
-        email,
-        password
+        data.email,
+        data.password
       );
 
       setTokens(accessToken, refreshToken);
-
       setUser(user);
 
       router.replace("/main");
-    } catch {
-      setError("Login failed");
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred. Please try again");
+      }
     } finally {
       setLoading(false);
     }
@@ -49,20 +70,13 @@ export default function LoginPage() {
 
       <div className="flex-1 flex items-start justify-center mt-10">
         <div className="w-full max-w-sm space-y-6">
-          <LoginForm
-            email={email}
-            password={password}
-            error={error}
-            setEmail={setEmail}
-            setPassword={setPassword}
-            handleLogin={handleLogin}
-          />
+          <LoginForm control={control} errors={errors} />
           <LoginAction
-            email={email}
-            password={password}
             loading={loading}
-            handleLogin={handleLogin}
+            handleLogin={handleSubmit(onSubmit)}
+            isValid={isValid}
           />
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         </div>
       </div>
     </div>
