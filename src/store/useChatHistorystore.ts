@@ -1,4 +1,4 @@
-import { FilterState, SortOrder } from "@/types/history";
+import { FilterState, SortOrder } from "@/types/conversations";
 import { create } from "zustand";
 
 interface ChatHistoryUIState {
