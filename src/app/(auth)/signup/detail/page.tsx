@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { AuthLoading } from "@/components/ui/loading";
 
@@ -10,44 +13,52 @@ import { useQueryClient } from "@tanstack/react-query";
 import { performSignup } from "@/lib/service/signup";
 import { useUserStore } from "@/store";
 import { SignupHeader, SignupTemplate, SignupForm2 } from "@/components/auth";
+import { signup2Schema } from "@/types/auth";
+
+type Step2FormData = z.infer<typeof signup2Schema>;
 
 export default function SignupStep2() {
   const router = useRouter();
   const setTokens = useAuthStore((s) => s.setTokens);
   const setUser = useUserStore((s) => s.setUser);
+  const queryClient = useQueryClient();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [gender, setGender] = useState<"MALE" | "FEMALE">("MALE");
-
   const [loading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<Step2FormData>({
+    resolver: zodResolver(signup2Schema),
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+      birthdate: "",
+      gender: "MALE",
+    },
+  });
 
   useEffect(() => {
     setEmail(sessionStorage.getItem("signupEmail") || "");
     setPassword(sessionStorage.getItem("signupPassword") || "");
   }, []);
 
-  const canSubmit = name.trim() !== "" && birthDate !== "";
-
-  const handleSignup = async () => {
-    if (!canSubmit) return;
-
+  const onSubmit = async (data: Step2FormData) => {
     try {
       setLoading(true);
 
       const { accessToken, refreshToken, user } = await performSignup({
         email,
         password,
-        nickname: name,
-        gender,
-        birthDate,
+        nickname: data.name,
+        gender: data.gender,
+        birthDate: data.birthdate,
       });
 
       setTokens(accessToken, refreshToken);
-
       setUser(user);
 
       await queryClient.invalidateQueries({ queryKey: ["userProfile"] });
@@ -75,21 +86,14 @@ export default function SignupStep2() {
         <Button
           variant="primary"
           size="lg"
-          disabled={!canSubmit}
-          onClick={handleSignup}
+          disabled={!isValid}
+          onClick={handleSubmit(onSubmit)}
         >
           Next
         </Button>
       }
     >
-      <SignupForm2
-        name={name}
-        setName={setName}
-        birthDate={birthDate}
-        setBirthDate={setBirthDate}
-        gender={gender}
-        setGender={setGender}
-      />
+      <SignupForm2 control={control} errors={errors} />
     </SignupTemplate>
   );
 }
