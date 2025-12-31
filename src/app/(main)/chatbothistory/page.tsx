@@ -2,17 +2,19 @@
 
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import {
-  useConversations,
-  useDeleteConversation,
-} from "@/hooks/queries/useConversations";
+import { useConversations, useDeleteConversation } from "@/hooks/queries";
 import { useChatHistoryStore } from "@/store/useChatHistorystore";
 
-import { EmptyState, Filter, SearchBar, Sort } from "@/components/bothistory";
+import {
+  HistorySection,
+  ConversationRow,
+  EmptyState,
+  Filter,
+  SearchBar,
+  Sort,
+} from "@/components/bothistory";
 
 import { useQueryClient } from "@tanstack/react-query";
-import ConversationRow from "@/components/bothistory/ConversationRow";
-import HistorySection from "@/components/bothistory/HistorySection";
 
 export default function ChatBothistoryPage() {
   const router = useRouter();

@@ -1,8 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useConversationFeedback } from "@/hooks/queries/useConversationFeedback";
-import { useDeleteConversation } from "@/hooks/queries/useConversations";
+import {
+  useConversationFeedback,
+  useDeleteConversation,
+} from "@/hooks/queries";
 
 export default function FeedbackSection({ id }: { id: number | string }) {
   const router = useRouter();

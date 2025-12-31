@@ -1,4 +1,3 @@
-import { useConversationDetail } from "@/hooks/queries/useConversationDetail";
 import { Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,11 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Unfinished from "../modal/Unfinished";
 import Sucess from "../modal/Sucess";
-import { useUser } from "@/hooks/queries/useUser";
+import { useUser, useConversationDetail } from "@/hooks/queries";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingModal from "./LoadingModal";
-import { useDeductCredit } from "@/hooks/mutations/useCredit";
-import { useConversationEnd } from "@/hooks/mutations/useConversationEnd";
+import { useDeductCredit, useConversationEnd } from "@/hooks/mutations";
 
 type Props = {
   name: string | undefined;

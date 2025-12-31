@@ -8,10 +8,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-import { isTokenExpired, getOrCreateDeviceId } from "@/utils/auth";
+import { isTokenExpired, getOrCreateDeviceId } from "@/utils";
 import { useAuthStore } from "@/store/auth/useAuth";
 import { Button } from "../ui/button";
-import { useGuest } from "@/hooks/mutations/useGuest";
+import { useGuest } from "@/hooks/mutations";
 import React from "react";
 import Loading from "@/components/ui/loading/AuthLoading";
 

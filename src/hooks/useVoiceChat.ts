@@ -12,7 +12,7 @@ export function useVoiceChat(
   const { startRecording, stopRecording } = useRecorder();
 
   const [micState, setMicState] = useState<MicState>("idle");
-  const [pendingAudioFile, setPendingAudioFile] = useState<Blob | null>(null);
+  const [, setPendingAudioFile] = useState<Blob | null>(null);
   const [pendingAudioUrl, setPendingAudioUrl] = useState<string | null>(null);
   const [sttText, setSttText] = useState("");
   const [showVoiceError, setShowVoiceError] = useState(false);
@@ -114,7 +114,9 @@ export function useVoiceChat(
     if (pendingAudioUrl) {
       try {
         URL.revokeObjectURL(pendingAudioUrl);
-      } catch {}
+      } catch {
+        /* empty */
+      }
     }
     setPendingAudioFile(null);
     setPendingAudioUrl(null);

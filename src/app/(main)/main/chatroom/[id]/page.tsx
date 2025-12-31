@@ -13,11 +13,10 @@ import {
 import { useParams } from "next/navigation";
 import { useAuthStore } from "@/store/auth/useAuth";
 import { AnimatePresence, motion } from "framer-motion";
-import { useConversationDetail } from "@/hooks/queries/useConversationDetail";
+import { useConversationDetail } from "@/hooks/queries/";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { ChatroomLoading } from "@/components/ui/loading";
-
 
 export default function ChatroomPage() {
   const { id } = useParams<{ id: string }>();

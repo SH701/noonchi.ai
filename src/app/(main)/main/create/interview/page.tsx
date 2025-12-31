@@ -5,15 +5,15 @@ import { useRouter } from "next/navigation";
 
 import { useQueryClient } from "@tanstack/react-query";
 import UserCharge from "@/components/modal/UserCharge";
-import { useUser } from "@/hooks/queries/useUser";
+import { useUser } from "@/hooks/queries";
 import GuestCharge from "@/components/modal/GuestCharge";
 
 import {
   useUploadFiles,
   useCreateInterview,
-} from "@/hooks/mutations/useInterview";
+  useDeductCredit,
+} from "@/hooks/mutations";
 import { INTERVIEW_STYLES, InterviewFormData } from "@/types/conversations";
-import { useDeductCredit } from "@/hooks/mutations/useCredit";
 import { ChatroomLoading } from "@/components/ui/loading";
 import { InterviewForm, InterviewHeader } from "@/components/createchatroom";
 

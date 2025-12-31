@@ -12,9 +12,9 @@ import { topicsByCategory } from "@/data/topics";
 
 import { TOPIC_ENUMS } from "@/types/conversations";
 
-import { useCreateRoleplay } from "@/hooks/mutations/useRoleplay";
+import { useCreateRoleplay, useDeductCredit } from "@/hooks/mutations";
 import { useUser } from "@/hooks/queries/useUser";
-import { useDeductCredit } from "@/hooks/mutations/useCredit";
+
 import { GuestCharge, UserCharge } from "@/components/modal";
 
 export default function RolePlay() {

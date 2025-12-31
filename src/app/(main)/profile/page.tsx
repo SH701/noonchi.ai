@@ -1,12 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useUser } from "@/hooks/queries/useUser";
-import {
-  ProfileImage,
-  ProfileMenuList,
-  StatsCard,
-} from "@/components/profile";
+import { useUser } from "@/hooks/queries";
+import { ProfileImage, ProfileMenuList, StatsCard } from "@/components/profile";
 import { apiMutations } from "@/api/mutations";
 
 export default function ProfilePage() {

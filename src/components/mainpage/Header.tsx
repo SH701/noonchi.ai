@@ -1,4 +1,4 @@
-import { useUser } from "@/hooks/queries/useUser";
+import { useUser } from "@/hooks/queries";
 import Image from "next/image";
 
 export default function Header() {

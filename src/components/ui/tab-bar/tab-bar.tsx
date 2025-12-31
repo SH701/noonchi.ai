@@ -17,7 +17,7 @@ export default function TabBar() {
   return (
     <div className="fixed bottom-0 left-0 w-full bg-transparent z-9999">
       <div
-        className={`w-full md:max-w-[375px] mx-auto bg-white rounded-t-2xl ${
+        className={`w-full md:max-w-93.75 mx-auto bg-white rounded-t-2xl ${
           isBottomSheetOpen
             ? ""
             : "shadow-[0_-4px_10px_0_rgba(0,0,0,0.08)] border border-gray-100"

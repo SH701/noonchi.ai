@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@/hooks/queries/useUser";
+import { useUser } from "@/hooks/queries";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useUser();

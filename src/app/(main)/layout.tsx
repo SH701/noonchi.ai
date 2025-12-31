@@ -1,7 +1,7 @@
 "use client";
 
 import TabBar from "@/components/ui/tab-bar/tab-bar";
-import { useUser } from "@/hooks/queries/useUser";
+import { useUser } from "@/hooks/queries";
 
 import { usePathname, useRouter } from "next/navigation";
 
@@ -35,7 +35,7 @@ export default function MainsLayout({
       {children}
       {!hideTabbar && (
         <div className="fixed bottom-0 left-0 w-full md:flex md:justify-center z-50">
-          <div className="w-full md:max-w-[375px] md:shadow-xl">
+          <div className="w-full md:max-w-93.75 md:shadow-xl">
             <TabBar />
           </div>
         </div>

@@ -1,15 +1,12 @@
 export type PresignedUrlResponse = {
   url: string;
 };
-
-
 export type UploadedFile = {
   fileUrl: string;
   fileName: string;
   fileType: string;
   fileSize: number;
 };
-
 export type InterviewFormData = {
   companyName: string;
   jobTitle: string;

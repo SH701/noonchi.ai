@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Back from "@/components/ui/button/Back";
-import { useChargeCredit } from "@/hooks/mutations/useCredit";
+import { useChargeCredit } from "@/hooks/mutations";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { Check } from "lucide-react";
