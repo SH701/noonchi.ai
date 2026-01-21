@@ -15,7 +15,7 @@ export default function Unfinished({
       description="To complete the dialogue, you must finish 3 tasks. Are you sure you want to quit?"
       isOpen={isOpen}
       onClose={onClose}
-      className="pt-20 bg-white rounded-2xl flex flex-col items-center justify-center gap-3 py-6 px-5 w-[334px] "
+      className="pt-20 bg-white rounded-2xl flex flex-col items-center justify-center gap-3 py-6 px-5 w-83.5 "
     >
       <Info className="text-red-500 size-10 absolute top-2" />
       <div className="flex flex-col gap-3 w-full mt-4 items-center">
