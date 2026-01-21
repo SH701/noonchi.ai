@@ -2,7 +2,7 @@
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
+import Slider, { Settings } from "react-slick";
 import { slides } from "@/data/onboarding";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +15,17 @@ import React from "react";
 
 import OnboardLoading from "./OnboardLoading";
 
+export const settings: Settings = {
+  dots: true,
+  infinite: false,
+  speed: 400,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  arrows: false,
+  draggable: false,
+  swipe: false,
+  dotsClass: "slick-dots custom-dots",
+};
 export default function Onboard() {
   const router = useRouter();
   const sliderRef = useRef<Slider>(null);
@@ -90,18 +101,12 @@ export default function Onboard() {
         <div className="grow">
           <Slider
             ref={sliderRef}
+            {...settings}
             afterChange={(i) => setCurrentSlide(i)}
-            className={
-              currentSlide === 1 || currentSlide === 2
-                ? "dots-top"
-                : "dots-hidden"
-            }
+            className="dots-top"
             appendDots={(dots) => {
-              if (currentSlide === 0 || currentSlide === 3) {
-                return <div style={{ display: "none" }} />;
-              }
               const dotsArray = React.Children.toArray(dots);
-              const filtered = dotsArray.slice(1, 3);
+              const filtered = dotsArray.slice(0, 2);
               return (
                 <div className="dots-wrapper">
                   <ul className="slick-dots custom-dots">{filtered}</ul>
@@ -122,15 +127,12 @@ export default function Onboard() {
                         : "relative h-100 flex items-center justify-center"
                     }
                   >
-                    {i !== slides.length - 1 && (
-                      <button
-                        onClick={handleSkip}
-                        className="absolute top-4 right-4 text-sm underline text-gray-500 z-50 cursor-pointer"
-                      >
-                        Skip
-                      </button>
-                    )}
-
+                    <button
+                      onClick={handleSkip}
+                      className="absolute top-4 right-4 text-sm underline text-gray-500 z-50 cursor-pointer"
+                    >
+                      Skip
+                    </button>
                     <Content />
                   </div>
                   {!isFormSlide && (

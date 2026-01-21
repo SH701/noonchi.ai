@@ -1,6 +1,6 @@
 "use client";
 
-import Onboard from "@/components/onboard/onboard";
+import Onboard from "@/components/onboard/Onboard";
 import { useAuthStore } from "@/store";
 
 import { useRouter } from "next/navigation";

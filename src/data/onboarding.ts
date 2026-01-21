@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 
-import Level from "@/components/onboard/level";
-import Taste from "@/components/onboard/taste";
+import Level from "@/components/onboard/Level";
+import Taste from "@/components/onboard/Taste";
 
 type Slide = {
   id: number;

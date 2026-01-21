@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { AuthLoading } from "@/components/ui/loading";
 
 import { useAuthStore } from "@/store/auth/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -81,8 +80,6 @@ export default function SignupStep2() {
       setLoading(false);
     }
   };
-
-  if (loading) return <AuthLoading />;
 
   return (
     <SignupTemplate

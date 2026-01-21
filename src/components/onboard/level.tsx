@@ -14,12 +14,12 @@ export default function Level() {
   const setKoreanLevel = usePreferenceStore((s) => s.setKoreanLevel);
 
   return (
-    <div className="px-4 pt-4 h-full flex flex-col">
+    <div className=" pt-4 h-full flex flex-col">
       <div className="flex-1 flex flex-col">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
           Please select your <br /> Korean level
         </h1>
-        <p className="text-gray-400 mb-8">
+        <p className="text-gray-400 mb-4.5">
           Tell us how comfortable you are <br /> chatting in Korean!
         </p>
 
@@ -28,19 +28,19 @@ export default function Level() {
             <div
               key={lvl}
               onClick={() => setKoreanLevel(lvl)}
-              className="flex items-center p-4 cursor-pointer transition-all border rounded-xl gap-4"
+              className="flex w-full items-center px-4 py-5 cursor-pointer transition-all border rounded-2xl gap-4 bg-white"
               style={{
-                borderColor: koreanLevel === lvl ? "#316CEC" : "#E5E7EB",
-                background: koreanLevel === lvl ? "#EFF6FF" : "#F9FAFB",
+                borderColor: koreanLevel === lvl ? "#527AFF" : "#E5E7EB",
+                background: koreanLevel === lvl ? "#DBEAFE" : "",
               }}
             >
               <div className="flex flex-col text-left">
-                <h2 className="font-semibold text-lg text-gray-900">
+                <span className="font-semibold text-lg">
                   {lvl.charAt(0) + lvl.slice(1).toLowerCase()}
-                </h2>
-                <p className="text-sm text-gray-500 leading-snug">
+                </span>
+                <span className="text-sm text-gray-500 leading-snug">
                   {levelDescription[lvl]}
-                </p>
+                </span>
               </div>
             </div>
           ))}

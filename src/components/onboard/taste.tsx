@@ -3,7 +3,7 @@
 import { usePreferenceStore } from "@/store/preference/usePreference";
 
 const INTEREST_OPTIONS = [
-  "💬 Daily",
+  "💬 Daily Conversation",
   "💼 Business",
   "✈️ Travel",
   "🎬 K-Drama",
@@ -21,7 +21,7 @@ export default function Taste() {
   const setInterests = usePreferenceStore((s) => s.setInterests);
 
   return (
-    <div className="px-4 pt-4 h-full flex flex-col">
+    <div className="pt-4 h-full flex flex-col">
       <h1 className="text-2xl font-semibold text-gray-900 mb-2">
         Please select your <br /> interests
       </h1>
@@ -39,7 +39,7 @@ export default function Taste() {
                 : [...interests, opt];
               setInterests(next);
             }}
-            className="flex items-center text-sm font-medium border px-4 py-2 rounded-full"
+            className="flex items-center text-sm font-medium border p-3 rounded-full cursor-pointer"
             style={{
               borderColor: interests.includes(opt) ? "#316CEC" : "#E5E7EB",
               background: interests.includes(opt) ? "#EFF6FF" : "#FFFFFF",

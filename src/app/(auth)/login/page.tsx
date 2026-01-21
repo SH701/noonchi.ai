@@ -9,7 +9,7 @@ import { z } from "zod";
 import { performLogin } from "@/lib/service/login";
 import { useUserStore, useAuthStore } from "@/store";
 import { LoginAction, LoginForm, LoginHeader } from "@/components/auth";
-import { AuthLoading } from "@/components/ui/loading";
+
 import { loginSchema } from "@/types/auth";
 import { ApiError } from "@/api/api";
 
@@ -44,7 +44,7 @@ export default function LoginPage() {
     try {
       const { accessToken, refreshToken, user } = await performLogin(
         data.email,
-        data.password
+        data.password,
       );
 
       setTokens(accessToken, refreshToken);
@@ -61,8 +61,6 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-
-  if (loading) return <AuthLoading />;
 
   return (
     <div className="min-h-screen flex flex-col bg-white px-4">
