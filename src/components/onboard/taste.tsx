@@ -16,7 +16,7 @@ const INTEREST_OPTIONS = [
   "👁️‍🗨️ Gathering",
 ] as const;
 
-export default function Third() {
+export default function Taste() {
   const interests = usePreferenceStore((s) => s.interests);
   const setInterests = usePreferenceStore((s) => s.setInterests);
 

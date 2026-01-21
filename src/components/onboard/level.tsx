@@ -1,13 +1,4 @@
-"use client";
-
 import { usePreferenceStore } from "@/store/preference/usePreference";
-import Image from "next/image";
-
-const levelImg = {
-  BEGINNER: "/circle/circle1.png",
-  INTERMEDIATE: "/circle/circle2.png",
-  ADVANCED: "/circle/circle3.png",
-};
 
 const levelDescription = {
   BEGINNER:
@@ -18,7 +9,7 @@ const levelDescription = {
     "I understand and use honorifics naturally depending on context or relationship.",
 } as const;
 
-export default function Second() {
+export default function Level() {
   const koreanLevel = usePreferenceStore((s) => s.koreanLevel);
   const setKoreanLevel = usePreferenceStore((s) => s.setKoreanLevel);
 
@@ -43,16 +34,6 @@ export default function Second() {
                 background: koreanLevel === lvl ? "#EFF6FF" : "#F9FAFB",
               }}
             >
-              <div className="shrink-0 w-12 h-12 rounded-full overflow-hidden">
-                <Image
-                  src={levelImg[lvl]}
-                  alt={lvl}
-                  width={48}
-                  height={48}
-                  className={koreanLevel === lvl ? "" : "opacity-60"}
-                />
-              </div>
-
               <div className="flex flex-col text-left">
                 <h2 className="font-semibold text-lg text-gray-900">
                   {lvl.charAt(0) + lvl.slice(1).toLowerCase()}

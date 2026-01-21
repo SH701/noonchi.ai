@@ -2,34 +2,23 @@
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Slider, { Settings } from "react-slick";
+import Slider from "react-slick";
 import { slides } from "@/data/onboarding";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 
 import { isTokenExpired, getOrCreateDeviceId } from "@/utils";
 import { useAuthStore } from "@/store/auth/useAuth";
 import { Button } from "../ui/button";
 import { useGuest } from "@/hooks/mutations";
 import React from "react";
-import Loading from "@/components/ui/loading/AuthLoading";
 
-export const settings: Settings = {
-  dots: true,
-  infinite: false,
-  speed: 400,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  arrows: false,
-  draggable: false,
-  swipe: false,
-  dotsClass: "slick-dots custom-dots",
-};
+import OnboardLoading from "./OnboardLoading";
 
 export default function Onboard() {
   const router = useRouter();
   const sliderRef = useRef<Slider>(null);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -49,12 +38,9 @@ export default function Onboard() {
         router.push("/main");
         return;
       }
-
       const deviceId = getOrCreateDeviceId();
       const newToken = await guestLogin(deviceId);
-
       setAccessToken(newToken.accessToken, null);
-
       router.push("/main");
     } catch (error) {
       console.error("인증 처리 중 오류:", error);
@@ -82,6 +68,11 @@ export default function Onboard() {
   };
 
   useEffect(() => {
+    const timer = setTimeout(() => setInitialLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     if (loading) {
       const timer = setTimeout(async () => {
         await handleOnboardingToMain();
@@ -90,17 +81,15 @@ export default function Onboard() {
     }
   }, [loading]);
 
-  if (loading) {
-    return <Loading />;
+  if (initialLoading || loading) {
+    return <OnboardLoading />;
   }
-
   return (
     <div className="h-screen w-full bg-white flex items-center justify-center overflow-hidden">
       <div className="w-full h-full flex flex-col mx-auto relative">
         <div className="grow">
           <Slider
             ref={sliderRef}
-            {...settings}
             afterChange={(i) => setCurrentSlide(i)}
             className={
               currentSlide === 1 || currentSlide === 2
@@ -121,8 +110,8 @@ export default function Onboard() {
             }}
           >
             {slides.map((slide, i) => {
-              const Icon = slide.icon;
-              const isFormSlide = slide.id === 2 || slide.id === 3;
+              const Content = slide.content;
+              const isFormSlide = slide.id === 1 || slide.id === 2;
 
               return (
                 <div key={slide.id} className="flex flex-col h-full">
@@ -136,12 +125,13 @@ export default function Onboard() {
                     {i !== slides.length - 1 && (
                       <button
                         onClick={handleSkip}
-                        className="absolute top-4 right-4 text-sm underline text-gray-500 z-50"
+                        className="absolute top-4 right-4 text-sm underline text-gray-500 z-50 cursor-pointer"
                       >
                         Skip
                       </button>
                     )}
-                    <Icon />
+
+                    <Content />
                   </div>
                   {!isFormSlide && (
                     <>
@@ -163,27 +153,12 @@ export default function Onboard() {
           </Slider>
         </div>
 
-        <div className="px-4">
+        <div className="px-4 pb-14">
           {currentSlide !== 3 && (
             <Button variant="primary" size="lg" onClick={handleNext}>
               Next
             </Button>
           )}
-        </div>
-        <div className="pb-6">
-          <p
-            className={`text-center text-sm text-gray-500 mt-6 ${
-              currentSlide === 0 ? "visible" : "invisible"
-            }`}
-          >
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="font-medium text-blue-500 hover:underline"
-            >
-              Log in
-            </Link>
-          </p>
         </div>
       </div>
     </div>
