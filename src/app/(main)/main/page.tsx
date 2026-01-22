@@ -6,7 +6,7 @@ export default function Main() {
       <div className="pt-6">
         <div className="flex flex-col gap-3">
           <span className="text-3xl font-medium">
-            Not sure how <br /> this mught sound?
+            Not sure how <br /> this might sound?
           </span>
           <span className="text-gray-600">
             I`ll help you understand how it sounds <br />

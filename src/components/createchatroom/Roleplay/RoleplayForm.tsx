@@ -1,15 +1,28 @@
 import { useState } from "react";
-
-import Image from "next/image";
 import FormInput from "../../ui/form/FormInput";
 import { Button } from "../../ui/button";
 
 interface RoleplayProps {
-  onSubmit: (data: { details: string }) => void;
+  onSubmit: (data: { details: string; tone: string }) => void;
   AiRole?: string;
   myRole?: string;
   mode: "topic" | "custom";
 }
+
+const TONE_OPTIONS = [
+  { value: "casual", label: "Casual", description: "(Friends, Siblings)" },
+  { value: "friendly", label: "Friendly", description: "(Close colleagues)" },
+  {
+    value: "professional",
+    label: "Professional",
+    description: "(Clients, Professors)",
+  },
+  {
+    value: "formal",
+    label: "Formal",
+    description: "(High-level executives, Public)",
+  },
+];
 
 export default function RoleplayForm({
   onSubmit,
@@ -20,6 +33,7 @@ export default function RoleplayForm({
   const [isAI, setIsAI] = useState(AiRole || "");
   const [me, setMe] = useState(myRole || "");
   const [details, setDetails] = useState("");
+  const [selectedTone, setSelectedTone] = useState("casual");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +43,7 @@ export default function RoleplayForm({
       return;
     }
 
-    onSubmit({ details });
+    onSubmit({ details, tone: selectedTone });
   };
 
   const inputStyle =
@@ -38,47 +52,56 @@ export default function RoleplayForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
       <FormInput
-        label="AI`s role"
-        value={isAI}
-        onChange={setIsAI}
-        className={inputStyle}
-        disabled={mode === "topic"}
-      />
-
-      <FormInput
         label="My role"
         value={me}
         onChange={setMe}
         className={inputStyle}
         disabled={mode === "topic"}
       />
+      <FormInput
+        label="AI's role"
+        value={isAI}
+        onChange={setIsAI}
+        className={inputStyle}
+        disabled={mode === "topic"}
+      />
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Level of closeness</label>
+        <div className="grid grid-cols-2 gap-2">
+          {TONE_OPTIONS.map((tone) => (
+            <button
+              key={tone.value}
+              type="button"
+              onClick={() => setSelectedTone(tone.value)}
+              className={`
+                py-3 px-4 rounded-lg border transition-all text-left
+                ${
+                  selectedTone === tone.value
+                    ? "border-blue-500 bg-blue-50 "
+                    : ""
+                }
+              `}
+            >
+              <div className="font-semibold text-sm">{tone.label}</div>
+              <div className="text-xs text-gray-500">{tone.description}</div>
+            </button>
+          ))}
+        </div>
+      </div>
 
       <textarea
         required
         value={details}
         onChange={(e) => setDetails(e.target.value)}
         placeholder="Include details like the reason for the interaction..."
-        className="w-83.75 py-4.5 px-4 h-30 rounded-lg border"
+        className="w-full py-4 px-4 h-30 rounded-lg border"
       />
 
-      <div className="flex items-center flex-col fixed bottom-8">
-        <div className="flex gap-2.5 px-4 py-2.5 bg-blue-100 rounded-lg">
-          <Image
-            src="/credits/interviewcredit.png"
-            alt="크레딧 소모"
-            width={16}
-            height={16}
-          />
-          <p className="text-blue-600 text-xs">
-            It costs 20 credits to run this chat
-          </p>
-        </div>
-
-        <div className="mt-2">
-          <Button variant="primary" size="lg" type="submit">
-            Start Chatting
-          </Button>
-        </div>
+      <div className="flex mt-auto pb-4">
+        <Button variant="primary" size="lg" type="submit">
+          Start Chatting
+        </Button>
       </div>
     </form>
   );

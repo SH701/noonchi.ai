@@ -15,7 +15,7 @@ export default function Roleplay() {
       <div>
         <div className="flex flex-col gap-3 pb-10">
           <span className="text-3xl font-medium">
-            DO you want to sound more natural in Korean?
+            Do you want to sound more natural in Korean?
           </span>
           <span className="text-gray-500">
             Let`s practice role-playing with me.

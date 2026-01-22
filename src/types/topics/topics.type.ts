@@ -18,6 +18,7 @@ export interface Topics {
   topic: string;
   img: string;
   title: string;
+  description: string;
   aiRole: string;
   myRole: string;
 }
