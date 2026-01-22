@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import TopicSlider from "@/components/mainpage/TopicSlider";
 import { CategoryType, Topics } from "@/types/topics";
 import { topicsByCategory } from "@/data/topics";
@@ -34,13 +32,6 @@ export default function TopicList({
 
   return (
     <div className="px-5">
-      <div className="flex justify-between">
-        <p className="text-xl text-gray-800 font-semibold pb-3">Topic</p>
-        <Link href="/main/topicall">
-          <p className="text-[13px] font-medium text-gray-400">View all</p>
-        </Link>
-      </div>
-
       <TopicSlider
         topics={[
           { id: 1, label: "Career" },
@@ -78,16 +69,6 @@ export default function TopicList({
                   {topic.description}
                 </p>
               </div>
-
-              <div className="w-9 h-4 bg-blue-100 px-1 rounded-md flex items-center gap-0.5">
-                <Image
-                  src="/credits/crediticon.png"
-                  alt=""
-                  width={10}
-                  height={10}
-                />
-                <p className="text-[10px] text-blue-600"> 30</p>
-              </div>
             </div>
           );
         })}
@@ -117,26 +98,13 @@ export default function TopicList({
                     <p className="text-2xl leading-none">credit</p>
                   </div>
 
-                  <div className="flex items-center bg-gray-100 rounded-4xl px-2.5 py-1.5 gap-2 mb-5">
-                    <Image
-                      src="/credits/crediticon.png"
-                      width={20}
-                      height={20}
-                      alt="크레딧"
-                    />
-                    <p className="text-gray-600 font-semibold">Chat</p>
-                    <p className="text-blue-600 font-semibold">20</p>
-                    <p className="text-gray-600 font-semibold">+ Report</p>
-                    <p className="text-blue-600 font-semibold">10</p>
-                  </div>
-
                   {selectedTopic && (
                     <Button
                       variant="primary"
                       size="lg"
                       onClick={() =>
                         router.push(
-                          `/main/create/roleplay?mode=topic&category=${category}&topicId=${selectedTopic.id}`
+                          `/main/create/roleplay?mode=topic&category=${category}&topicId=${selectedTopic.id}`,
                         )
                       }
                     >

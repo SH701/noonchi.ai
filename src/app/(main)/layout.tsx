@@ -1,45 +1,14 @@
-"use client";
-
-import TabBar from "@/components/ui/tab-bar/tab-bar";
-import { useUser } from "@/hooks/queries";
-
-import { usePathname, useRouter } from "next/navigation";
+import Header from "@/components/mainpage/Header";
 
 export default function MainsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const hide = [
-    "/main/create",
-    "/main/role",
-    "/main/honorific",
-    "/main/chatroom",
-  ];
-  const hideTabbar = hide.some(
-    (path) => pathname === path || pathname.startsWith(path + "/")
-  );
-
-  const { isError, error } = useUser();
-  if (isError) {
-    const status = Number(error.message);
-    if (status === 401 || status === 403) {
-      router.push("/login");
-      return null;
-    }
-  }
   return (
-    <div className="w-full min-h-screen flex flex-col ">
-      {children}
-      {!hideTabbar && (
-        <div className="fixed bottom-0 left-0 w-full md:flex md:justify-center z-50">
-          <div className="w-full md:max-w-93.75 md:shadow-xl">
-            <TabBar />
-          </div>
-        </div>
-      )}
+    <div className="w-full h-screen flex flex-col px-5">
+      <Header />
+      <div className="flex flex-col flex-1">{children}</div>
     </div>
   );
 }

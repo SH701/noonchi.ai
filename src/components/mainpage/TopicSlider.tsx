@@ -37,7 +37,7 @@ export default function TopicSlider({ topics, active, onSelect }: TopicProps) {
         {topics.map((t) => (
           <div key={t.label} className="shrink-0 mr-1">
             <Button
-              variant={active === t.label ? "destructive" : "outline"}
+              variant={active === t.label ? "primary" : "ghost"}
               size="sm"
               onClick={() => onSelect(t.label)}
             >

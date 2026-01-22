@@ -11,8 +11,8 @@ const buttonVariants = cva(
       variant: {
         primary: "bg-gray-800 text-white hover:bg-gray-900  p-4",
         secondary: " border bg-white text-gray-900 hover:bg-white/90",
-        ghost:
-          "bg-white/50 border rounded-xl text-gray-900 active:bg-blue-50/50 active:border-blue-600",
+        ghost: "bg-white/50  rounded-xl text-black/50 active:bg-blue-50/50 ",
+        outline: "border border-white rounded-lg bg-white/50 text-black",
       },
 
       size: {

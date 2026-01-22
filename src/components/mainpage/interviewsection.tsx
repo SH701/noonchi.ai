@@ -39,68 +39,31 @@ export default function InterviewSection() {
       >
         <div className="relative w-full flex items-center justify-center overflow-hidden">
           <div className="flex gap-4 px-4 justify-center">
-            {sliders.map((s, index) => {
-              const isCenter = index === 1;
-
-              if (isCenter) {
-                return (
-                  <motion.div
-                    key={s.id}
-                    layoutId="interview-card"
-                    onClick={handleImageClick}
-                    className="
+            <motion.div
+              layoutId="interview-card"
+              onClick={handleImageClick}
+              className="
                       relative w-[288px] h-86 rounded-xl overflow-hidden shadow-lg 
                       cursor-pointer
                     "
-                  >
-                    <Image
-                      src={s.img}
-                      alt="사진"
-                      fill
-                      className="object-cover"
-                    />
+            >
+              <Image
+                src="/etc/interview.png"
+                alt="사진"
+                fill
+                className="object-cover"
+              />
 
-                    <div className="absolute top-4 left-4 bg-black/20 px-2 py-1 rounded-md text-sm text-white">
-                      Career
-                    </div>
-                    <div className="absolute top-4 right-4 bg-black/20 px-2 py-1 rounded-md text-sm text-white">
-                      Best
-                    </div>
-                    <div className="absolute bottom-13 right-4">
-                      <Image
-                        src="/etc/Chat.png"
-                        alt="사진"
-                        width={32}
-                        height={32}
-                      />
-                    </div>
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <p className="text-[10px] font-semibold text-blue-400">
-                        60 Credit
-                      </p>
-                      <h3 className="text-white text-xl font-semibold pb-2">
-                        Interview Coach
-                      </h3>
-                      <p className="text-gray-300 text-xs">
-                        Real Korean interview questions <br /> from your resume.
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              }
+              <div className="absolute top-4 left-4 bg-black/20 px-2 py-1 rounded-md text-sm text-white">
+                Career
+              </div>
 
-              return (
-                <div
-                  key={s.id}
-                  className="
-                    relative w-[288px] h-86 rounded-xl overflow-hidden shadow-lg 
-                    opacity-40
-                  "
-                >
-                  <Image src={s.img} alt="사진" fill className="object-cover" />
-                </div>
-              );
-            })}
+              <div className="absolute bottom-4 left-4 right-4">
+                <p className="text-gray-300 text-xs">
+                  Real Korean interview questions <br /> from your resume.
+                </p>
+              </div>
+            </motion.div>
           </div>
         </div>
       </motion.div>

@@ -16,7 +16,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useConversationDetail } from "@/hooks/queries/";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useVoiceChat } from "@/hooks/useVoiceChat";
-import { ChatroomLoading } from "@/components/ui/loading";
 
 export default function ChatroomPage() {
   const { id } = useParams<{ id: string }>();
@@ -62,9 +61,9 @@ export default function ChatroomPage() {
   const isDataLoading = isConversationLoading || isMessagesLoading;
   const hasError = conversationError;
 
-  if ((isDataLoading && messages.length === 0) || !accessToken) {
-    return <ChatroomLoading />;
-  }
+  // if ((isDataLoading && messages.length === 0) || !accessToken) {
+  //   return <ChatroomLoading />;
+  // }
 
   if (hasError && messages.length === 0) {
     return (

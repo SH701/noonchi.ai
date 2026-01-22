@@ -1,31 +1,25 @@
-"use client";
-
-import { useState } from "react";
-
-import ComingSoonModal from "@/components/modal/Comingsoon";
-import { CategoryType } from "@/types/topics/topics.type";
-import { Interviewsection, TopicList } from "@/components/mainpage";
-import Header from "@/components/mainpage/Header";
+import { Button } from "@/components/ui/button";
 
 export default function Main() {
-  const [category, setCategory] = useState<CategoryType>("Career");
-  const [showComingSoon, setShowComingSoon] = useState(false);
-
   return (
-    <>
-      <Header />
-      <div className=" bg-[#F2F7FF] min-h-screen pb-40">
-        <Interviewsection />
-        <TopicList
-          category={category}
-          setCategory={setCategory}
-          setShowComingSoon={setShowComingSoon}
-        />
-        <ComingSoonModal
-          isOpen={showComingSoon}
-          onClose={() => setShowComingSoon(false)}
-        />
+    <div className="flex flex-col flex-1">
+      <div className="pt-6">
+        <div className="flex flex-col gap-3">
+          <span className="text-3xl font-medium">
+            Not sure how <br /> this mught sound?
+          </span>
+          <span className="text-gray-700">
+            I`ll help you understand how it sounds <br />
+            in Korean
+          </span>
+        </div>
       </div>
-    </>
+      <div className="mt-auto pb-13">
+        {/* onClick으로 ask 채팅 시작 */}
+        <Button variant="primary" size="lg">
+          Check how is sounds
+        </Button>
+      </div>
+    </div>
   );
 }
