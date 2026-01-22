@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import ComingSoonModal from "@/components/modal/Comingsoon";
 import { CategoryType } from "@/types/topics/topics.type";
-import { Interviewsection, TopicList } from "@/components/mainpage";
+import { TopicList } from "@/components/mainpage";
 
 export default function Roleplay() {
   const [category, setCategory] = useState<CategoryType>("Career");
@@ -12,8 +12,15 @@ export default function Roleplay() {
 
   return (
     <>
-      <div className="  min-h-screen">
-        <Interviewsection />
+      <div>
+        <div className="flex flex-col gap-3 pb-10">
+          <span className="text-3xl font-medium">
+            DO you want to sound more natural in Korean?
+          </span>
+          <span className="text-gray-500">
+            Let`s practice role-playing with me.
+          </span>
+        </div>
         <TopicList
           category={category}
           setCategory={setCategory}

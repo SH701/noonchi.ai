@@ -8,7 +8,7 @@ export default function Main() {
           <span className="text-3xl font-medium">
             Not sure how <br /> this mught sound?
           </span>
-          <span className="text-gray-700">
+          <span className="text-gray-600">
             I`ll help you understand how it sounds <br />
             in Korean
           </span>

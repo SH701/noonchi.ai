@@ -1,4 +1,4 @@
-export type CategoryType = "Career" | "Romance" | "Belonging" | "K-POP";
+export type CategoryType = "Career" | "Family" | "Belonging" | "K-POP";
 
 export interface Topic {
   id: number | string;
@@ -15,8 +15,9 @@ export interface TopicProps {
 }
 export interface Topics {
   id: number;
+  topic: string;
+  img: string;
   title: string;
-  description: string;
   aiRole: string;
   myRole: string;
 }

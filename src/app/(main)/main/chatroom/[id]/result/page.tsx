@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -43,7 +42,7 @@ export default function Result() {
     createFeedback(messageId, {
       onSuccess: (feedback) => {
         setMessages((prev) =>
-          prev.map((m) => (m.messageId === messageId ? { ...m, feedback } : m))
+          prev.map((m) => (m.messageId === messageId ? { ...m, feedback } : m)),
         );
         setFeedbackOpenId(messageId);
       },
@@ -96,13 +95,6 @@ export default function Result() {
         <div className="">
           <div className="px-4 pt-6 pb-4  w-full max-w-125">
             <div className="flex items-center gap-3 mb-3">
-              <Image
-                src="/characters/Noonchicoach.svg"
-                width={34}
-                height={34}
-                alt="Noonchi coach"
-                className="rounded-full"
-              />
               <h2 className="text-gray-900 text-xl font-semibold font-pretendard leading-[130%]">
                 Noonchi coach
               </h2>

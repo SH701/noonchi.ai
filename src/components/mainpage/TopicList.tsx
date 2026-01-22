@@ -31,11 +31,11 @@ export default function TopicList({
   const [selectedTopic, setSelectedTopic] = useState<Topics | null>(null);
 
   return (
-    <div className="px-5">
+    <div>
       <TopicSlider
         topics={[
           { id: 1, label: "Career" },
-          { id: 3, label: "Romance" },
+          { id: 3, label: "Family" },
           { id: 4, label: "Belonging" },
           { id: 5, label: "K-POP" },
         ]}
@@ -43,7 +43,7 @@ export default function TopicList({
         onSelect={(c) => setCategory(c)}
       />
 
-      <div className="grid grid-cols-2 gap-4 w-full py-4">
+      <div className="grid grid-cols-2 gap-4 w-full">
         <div
           className="flex items-center justify-center bg-white rounded-xl cursor-pointer hover:shadow-md transition-colors min-h-40"
           onClick={() => setShowComingSoon(true)}
@@ -61,13 +61,11 @@ export default function TopicList({
                 handleTopicClick();
               }}
             >
-              <div className="flex flex-col gap-2 mb-4">
+              <div className="flex flex-col gap-2 mb-4 bg-blur">
+                <span>{topic.topic}</span>
                 <h4 className="text-base font-semibold text-gray-900 mb-1.5">
                   {topic.title}
                 </h4>
-                <p className="text-[11px] text-gray-900 leading-4">
-                  {topic.description}
-                </p>
               </div>
             </div>
           );
