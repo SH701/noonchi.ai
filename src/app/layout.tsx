@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className="min-h-screen w-full">
         <QueryProvider>
           <div className="w-full min-h-screen md:flex md:justify-center">
-            <div className="w-full md:max-w-93.75 md:shadow-xl bg-white">
+            <div className="w-full md:max-w-93.75 md:shadow-xl bg-gradient-primary">
               {children}
             </div>
           </div>

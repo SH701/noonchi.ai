@@ -1,13 +1,12 @@
 "use client";
 
 import { TextInput } from "@/components/ui/form";
-import GenderToggle from "./GenderToggle";
+
 import { Controller, Control, FieldErrors } from "react-hook-form";
 
 interface SignupForm2Data {
   name: string;
   birthdate: string;
-  gender: "MALE" | "FEMALE";
 }
 
 export default function SignupForm2({
@@ -60,18 +59,6 @@ export default function SignupForm2({
           <p className="text-red-500 text-sm mt-1">
             {errors.birthdate?.message}
           </p>
-        )}
-      </div>
-      <div>
-        <Controller
-          name="gender"
-          control={control}
-          render={({ field }) => (
-            <GenderToggle gender={field.value} setGender={field.onChange} />
-          )}
-        />
-        {errors.gender && (
-          <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>
         )}
       </div>
     </div>

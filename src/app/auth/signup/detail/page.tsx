@@ -37,7 +37,6 @@ export default function SignupStep2() {
     defaultValues: {
       name: "",
       birthdate: "",
-      gender: "MALE",
     },
   });
 
@@ -54,7 +53,6 @@ export default function SignupStep2() {
         email,
         password,
         nickname: data.name,
-        gender: data.gender,
         birthDate: data.birthdate,
       });
 
@@ -91,7 +89,7 @@ export default function SignupStep2() {
           disabled={!isValid}
           onClick={handleSubmit(onSubmit)}
         >
-          Next
+          Get Started
         </Button>
       }
     >

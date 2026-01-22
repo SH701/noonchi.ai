@@ -12,7 +12,6 @@ export async function performSignup(payload: {
   email: string;
   password: string;
   nickname: string;
-  gender: "MALE" | "FEMALE";
   birthDate: string;
 }): Promise<PerformSignResult> {
   const res = await apiMutations.auth.signup(payload);

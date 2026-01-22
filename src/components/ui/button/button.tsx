@@ -5,22 +5,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]",
+  "inline-flex items-center justify-center rounded-full font-medium transition disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] cursor-pointer",
   {
     variants: {
       variant: {
-        primary: "bg-gray-800 text-white hover:bg-gray-900 rounded-full p-4",
-
-        secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
-
-        outline:
-          "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50",
-
-        selected: "bg-blue-50 text-blue-600 border border-blue-600",
-
-        ghost: "text-gray-600 hover:bg-gray-100",
-
-        destructive: "bg-gray-900 text-white border-gray-900",
+        primary: "bg-gray-800 text-white hover:bg-gray-900  p-4",
+        secondary: " border bg-white text-gray-900 hover:bg-white/90",
+        ghost:
+          "bg-white/50 border rounded-xl text-gray-900 active:bg-blue-50/50 active:border-blue-600",
       },
 
       size: {
@@ -28,7 +20,6 @@ const buttonVariants = cva(
         md: "w-[236px] h-12 text-sm",
         sm: "px-3 py-1 text-sm",
         fluid: "flex-1 py-3 text-sm",
-        icon: "w-9 h-9",
       },
     },
 

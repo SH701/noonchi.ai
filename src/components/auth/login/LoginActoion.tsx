@@ -7,11 +7,7 @@ interface Props {
   isValid: boolean;
 }
 
-export default function LoginAction({
-  loading,
-  handleLogin,
-  isValid,
-}: Props) {
+export default function LoginAction({ loading, handleLogin, isValid }: Props) {
   return (
     <>
       <div className="flex items-center justify-center">
@@ -21,14 +17,14 @@ export default function LoginAction({
           disabled={!isValid || loading}
           size="lg"
         >
-          Sign in
+          Log in
         </Button>
       </div>
 
       <p className="text-center text-sm text-gray-500">
         First time here?{" "}
         <Link
-          href="/signup"
+          href="/auth/signup"
           className="font-medium text-blue-500 hover:underline"
         >
           Create an account

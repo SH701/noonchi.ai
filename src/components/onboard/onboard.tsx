@@ -60,7 +60,7 @@ export default function Onboard() {
   };
 
   useEffect(() => {
-    if (currentSlide === 3) {
+    if (currentSlide === 1) {
       const timer = setTimeout(async () => {
         setLoading(true);
         await handleOnboardingToMain();
@@ -72,7 +72,7 @@ export default function Onboard() {
 
   const handleNext = () => {
     if (currentSlide === lastIndex) {
-      router.push("/login");
+      router.push("/auth/login");
     } else {
       sliderRef.current?.slickNext();
     }
@@ -96,7 +96,7 @@ export default function Onboard() {
     return <OnboardLoading />;
   }
   return (
-    <div className="h-screen w-full bg-white flex items-center justify-center overflow-hidden">
+    <div className="h-screen w-full  flex items-center justify-center overflow-hidden">
       <div className="w-full h-full flex flex-col mx-auto relative">
         <div className="grow">
           <Slider
@@ -114,7 +114,7 @@ export default function Onboard() {
               );
             }}
           >
-            {slides.map((slide, i) => {
+            {slides.map((slide) => {
               const Content = slide.content;
               const isFormSlide = slide.id === 1 || slide.id === 2;
 

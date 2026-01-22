@@ -5,7 +5,6 @@ export default function Header() {
   const { data: user } = useUser();
   return (
     <div className="w-full py-6 px-7 bg-[#F2F7FF] flex justify-between">
-      <Image src="/etc/mainLogo.png" width={112} height={24} alt="Main Logo" />
       <div className="bg-white px-2 py-1 rounded-4xl flex gap-1">
         <Image
           src="/credits/crediticon.png"

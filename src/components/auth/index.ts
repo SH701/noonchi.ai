@@ -1,4 +1,3 @@
-export { default as GenderToggle } from "./signup/GenderToggle";
 export { default as SignupButtonArea } from "./signup/SignupButtonArea";
 export { default as SignupForm1 } from "./signup/SignupForm1";
 export { default as SignupForm2 } from "./signup/SignupForm2";

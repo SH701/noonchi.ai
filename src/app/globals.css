@@ -5,8 +5,6 @@
 
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
-
 @layer base {
   .font-pretendard {
     font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
@@ -68,4 +66,21 @@ body {
   display: block !important;
   top: 20px;
   bottom: auto;
+}
+
+@theme inline {
+  --color-gradient-1: #acbcff;
+  --color-gradient-2: #e3edf4;
+  --color-gradient-3: #e2ddf6;
+  --color-gradient-4: #e5d2ff;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(
+    180deg,
+    #acbcff 0%,
+    #e3edf4 33%,
+    #e2ddf6 66%,
+    #e5d2ff 100%
+  ) !important;
 }

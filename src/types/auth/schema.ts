@@ -14,11 +14,9 @@ export const signupSchema = z
       })
       .regex(
         /^(?=.*[A-Za-z])(?=.*\d)/,
-        "Password must include at least one letter and one number"
+        "Password must include at least one letter and one number",
       ),
-    confirmpassword: z
-      .string()
-      .min(8, "Password must be at least 8 characters long"),
+    confirmpassword: z.string(),
     agree: z.boolean().refine((val) => val === true, {
       message: "You must agree to the terms",
     }),
@@ -34,7 +32,7 @@ export const signup2Schema = z.object({
     .max(16, "Nickname can be up to 16 characters long")
     .regex(
       /^[A-Za-z0-9가-힣]+$/,
-      "Nickname can only contain letters, numbers, and Korean characters"
+      "Nickname can only contain letters, numbers, and Korean characters",
     ),
   birthdate: z
     .string()
@@ -46,16 +44,10 @@ export const signup2Schema = z.object({
       },
       {
         message: "Birth year must be 1900 or later",
-      }
+      },
     ),
-  gender: z.enum(["MALE", "FEMALE"], {
-    message: "Please select a gender",
-  }),
 });
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Please enter your email address")
-    .email("Please enter a valid email address"),
+  email: z.string().email("Please enter a valid email address"),
   password: z.string().min(1, "Please enter your password"),
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, TextInput } from "@/components/ui/form";
+import { TextInput } from "@/components/ui/form";
 import { Controller, Control, FieldErrors } from "react-hook-form";
 
 type SignupForm1Data = {
@@ -30,6 +30,7 @@ export default function SignupForm1({
               placeholder="example@gmail.com"
               value={field.value}
               onChange={field.onChange}
+              onBlur={field.onBlur}
             />
           )}
         />
@@ -49,6 +50,7 @@ export default function SignupForm1({
               placeholder="••••••••"
               value={field.value}
               onChange={field.onChange}
+              onBlur={field.onBlur}
             />
           )}
         />
@@ -68,11 +70,14 @@ export default function SignupForm1({
               placeholder="••••••••"
               value={field.value}
               onChange={field.onChange}
+              onBlur={field.onBlur}
             />
           )}
         />
         {errors.confirmpassword && (
-          <p className="text-sm text-red-500 mt-1">{errors.confirmpassword.message}</p>
+          <p className="text-sm text-red-500 mt-1">
+            {errors.confirmpassword.message}
+          </p>
         )}
       </div>
 
@@ -85,8 +90,13 @@ export default function SignupForm1({
           name="agree"
           control={control}
           render={({ field }) => (
-            <label className="flex items-start space-x-3">
-              <Checkbox checked={field.value} onChange={field.onChange} />
+            <label className="flex items-start space-x-2">
+              <input
+                type="checkbox"
+                checked={field.value}
+                onChange={(e) => field.onChange(e.target.checked)}
+                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1"
+              />
               <span className="text-sm text-gray-700 leading-relaxed">
                 Agree with{" "}
                 <a href="#" className="text-black underline">

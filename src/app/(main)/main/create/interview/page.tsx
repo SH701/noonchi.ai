@@ -14,8 +14,9 @@ import {
   useDeductCredit,
 } from "@/hooks/mutations";
 import { INTERVIEW_STYLES, InterviewFormData } from "@/types/conversations";
-import { ChatroomLoading } from "@/components/ui/loading";
+
 import { InterviewForm, InterviewHeader } from "@/components/createchatroom";
+import ChatroomLoading from "@/components/ui/loading/ChatroomLoading";
 
 export default function Interview() {
   const router = useRouter();

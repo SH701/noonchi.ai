@@ -22,7 +22,7 @@ export default function LoginPage() {
   const setUser = useUserStore((s) => s.setUser);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
 
   const {
     control,
@@ -30,7 +30,7 @@ export default function LoginPage() {
     formState: { errors, isValid },
   } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       email: "",
       password: "",
@@ -38,7 +38,7 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginData) => {
-    setError("");
+    setServerErrors({});
     setLoading(true);
 
     try {
@@ -52,10 +52,12 @@ export default function LoginPage() {
 
       router.replace("/main");
     } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.message);
+      if (err instanceof ApiError && err.errors) {
+        setServerErrors(err.errors);
+      } else if (err instanceof ApiError) {
+        setServerErrors({ general: err.message });
       } else {
-        setError("An unexpected error occurred. Please try again");
+        setServerErrors({ general: "An unexpected error occurred" });
       }
     } finally {
       setLoading(false);
@@ -63,7 +65,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white px-4">
+    <div className="min-h-screen flex flex-col  px-4">
       <LoginHeader />
 
       <div className="flex-1 flex items-start justify-center mt-10">
@@ -74,7 +76,16 @@ export default function LoginPage() {
             handleLogin={handleSubmit(onSubmit)}
             isValid={isValid}
           />
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          {serverErrors.email && (
+            <p className="text-red-500 text-sm text-center">
+              {serverErrors.email}
+            </p>
+          )}
+          {serverErrors.password && (
+            <p className="text-red-500 text-sm text-center">
+              {serverErrors.password}
+            </p>
+          )}
         </div>
       </div>
     </div>

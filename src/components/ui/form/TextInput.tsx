@@ -4,6 +4,7 @@ interface TextInputProps {
   label?: string;
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   placeholder?: string;
   type?: string;
   required?: boolean;
@@ -14,6 +15,7 @@ export default function TextInput({
   label,
   value,
   onChange,
+  onBlur,
   placeholder,
   type = "text",
   required,
@@ -30,6 +32,7 @@ export default function TextInput({
         required={required}
         placeholder={placeholder}
         value={value}
+        onBlur={onBlur}
         onChange={(e) => onChange(e.target.value)}
         className={`
           w-full px-4 py-3 

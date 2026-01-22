@@ -32,7 +32,7 @@ export default function SignupStep1() {
   const onSubmit = (data: Step1FormData) => {
     sessionStorage.setItem("signupEmail", data.email);
     sessionStorage.setItem("signupPassword", data.password);
-    router.push("/signup/detail");
+    router.push("/auth/signup/detail");
   };
 
   return (

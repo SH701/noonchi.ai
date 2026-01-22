@@ -27,6 +27,7 @@ export default function LoginForm({
               type="email"
               value={field.value}
               onChange={field.onChange}
+              onBlur={field.onBlur}
               placeholder="example@naver.com"
             />
           )}
@@ -46,6 +47,7 @@ export default function LoginForm({
               type="password"
               value={field.value}
               onChange={field.onChange}
+              onBlur={field.onBlur}
               placeholder="••••••••"
             />
           )}
