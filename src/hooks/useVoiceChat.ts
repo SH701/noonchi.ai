@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useRecorder } from "@/hooks/useRecorder";
-import { useAuthStore } from "@/store/auth/useAuth";
 
 type MicState = "idle" | "recording" | "recorded";
 
 export function useVoiceChat(
   conversationId?: number,
-  sendMessage?: (content?: string, audioUrl?: string) => Promise<void> | void
+  sendMessage?: (content?: string, audioUrl?: string) => Promise<void> | void,
 ) {
-  const accessToken = useAuthStore((s) => s.accessToken);
   const { startRecording, stopRecording } = useRecorder();
 
   const [micState, setMicState] = useState<MicState>("idle");
@@ -46,7 +44,7 @@ export function useVoiceChat(
         setPendingAudioFile(blob);
         setPendingAudioUrl(localUrl);
 
-        if (!accessToken || !conversationId) {
+        if (!conversationId) {
           throw new Error("토큰 또는 대화 ID 없음");
         }
 
@@ -57,7 +55,6 @@ export function useVoiceChat(
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
             fileType: blobType,
@@ -87,7 +84,6 @@ export function useVoiceChat(
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ audioUrl }),
         });

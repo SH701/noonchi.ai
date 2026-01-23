@@ -7,13 +7,10 @@ import { slides } from "@/data/onboarding";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-import { isTokenExpired, getOrCreateDeviceId } from "@/utils";
-import { useAuthStore } from "@/store/auth/useAuth";
-import { Button } from "../ui/button";
-import { useGuest } from "@/hooks/mutations";
 import React from "react";
 
 import OnboardLoading from "./OnboardLoading";
+import { Button } from "../ui/button/button";
 
 export const settings: Settings = {
   dots: true,
@@ -30,43 +27,12 @@ export default function Onboard() {
   const router = useRouter();
   const sliderRef = useRef<Slider>(null);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-
-  const accessToken = useAuthStore((s) => s.accessToken);
-  const setAccessToken = useAuthStore((s) => s.setTokens);
-
-  const { mutateAsync: guestLogin } = useGuest();
 
   const handleSkip = () => {
     sliderRef.current?.slickGoTo(slides.length - 1);
   };
-
-  const handleOnboardingToMain = async () => {
-    try {
-      if (accessToken && !isTokenExpired(accessToken)) {
-        router.push("/main");
-        return;
-      }
-      const deviceId = getOrCreateDeviceId();
-      const newToken = await guestLogin(deviceId);
-      setAccessToken(newToken.accessToken, null);
-      router.push("/main");
-    } catch (error) {
-      alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
-    }
-  };
   const lastIndex = slides.length - 1;
-  useEffect(() => {
-    if (currentSlide === 2) {
-      const timer = setTimeout(async () => {
-        setLoading(true);
-        await handleOnboardingToMain();
-      }, 1500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [currentSlide]);
 
   const handleNext = () => {
     if (currentSlide === lastIndex) {
@@ -81,7 +47,7 @@ export default function Onboard() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (initialLoading || loading) {
+  if (initialLoading) {
     return <OnboardLoading />;
   }
   return (

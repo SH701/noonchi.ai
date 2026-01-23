@@ -1,3 +1,4 @@
+import { MyAI } from "../etc";
 import { Feedback } from "../messages";
 
 export interface ConversationResponse {
@@ -21,6 +22,24 @@ export interface Conversation {
   situation: string;
   createdAt: string;
   feedback?: Feedback | null;
+}
+
+export interface ConversationDetail {
+  conversationId: number;
+  userId: number;
+  aiPersona: MyAI;
+  status: "ACTIVE" | "ENDED";
+  situation: string;
+  chatNodeId: string;
+  createdAt: string;
+  endedAt: string | null;
+  interviewCompanyName?: string;
+  interviewJobTitle?: string;
+  interviewStyle: string;
+  taskCurrentLevel?: number;
+  taskCurrentName?: string;
+  taskAllCompleted?: boolean;
+  conversationType?: string;
 }
 
 export type FilterState = "done" | "in-progress" | null;

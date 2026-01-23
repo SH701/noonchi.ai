@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/next-auth/auth";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL;
 
@@ -30,7 +30,7 @@ function assertBase() {
   if (!BASE || !/^https?:\/\//.test(BASE)) {
     return NextResponse.json(
       { message: "API_URL is missing or invalid" },
-      { status: 500 }
+      { status: 500 },
     );
   }
   return null;
@@ -43,13 +43,18 @@ function buildUpstreamURL(req: NextRequest, upstreamPath: string): URL {
   return url;
 }
 
-function resolveAuthHeader(req: NextRequest): string | undefined {
-  let auth = req.headers.get("authorization") || undefined;
-  if (!auth) {
-    const token = req.cookies.get("accessToken")?.value;
-    if (token && token !== "null") auth = `Bearer ${token}`;
+async function resolveAuthHeader(
+  req: NextRequest,
+): Promise<string | undefined> {
+  const authHeader = req.headers.get("authorization");
+  if (authHeader) return authHeader;
+
+  const session = await auth();
+  if (session?.accessToken) {
+    return `Bearer ${session.accessToken}`;
   }
-  return auth;
+
+  return undefined;
 }
 
 function pickCookies(req: NextRequest): string | undefined {
@@ -69,7 +74,7 @@ async function fetchWithRetry(
   url: string,
   init: RequestInit,
   retries: number,
-  backoffBase: number
+  backoffBase: number,
 ): Promise<Response> {
   let attempt = 0;
   while (true) {
@@ -97,7 +102,7 @@ async function fetchWithRetry(
 export async function proxyJSON(
   req: NextRequest,
   upstreamPath: string,
-  opts?: JSONOpts
+  opts?: JSONOpts,
 ) {
   const envError = assertBase();
   if (envError) return envError;
@@ -144,8 +149,8 @@ export async function proxyJSON(
   }
 
   if (forwardAuth) {
-    const auth = resolveAuthHeader(req);
-    if (auth) headers.set("Authorization", auth);
+    const authHeader = await resolveAuthHeader(req);
+    if (authHeader) headers.set("Authorization", authHeader);
   }
   if (forwardCookies) {
     const cookie = pickCookies(req);
@@ -165,7 +170,7 @@ export async function proxyJSON(
       url.toString(),
       fetchInit,
       upstreamBody ? 0 : retries,
-      backoffBase
+      backoffBase,
     );
     clearTimeout(timer);
 
@@ -197,7 +202,7 @@ export async function proxyJSON(
     clearTimeout(timer);
     return NextResponse.json(
       { message: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

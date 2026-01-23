@@ -1,27 +1,9 @@
 import { apiFetch } from "./api";
 import { User } from "@/types/user/user.type";
 
-import { MyAI } from "@/types/etc/persona.type";
 import { normalizeChatMessage } from "@/utils/normalizeChatMessage";
 import { ChatMsg, Feedback } from "@/types/messages";
-
-export type ConversationDetail = {
-  conversationId: number;
-  userId: number;
-  aiPersona: MyAI;
-  status: "ACTIVE" | "ENDED";
-  situation: string;
-  chatNodeId: string;
-  createdAt: string;
-  endedAt: string | null;
-  interviewCompanyName?: string;
-  interviewJobTitle?: string;
-  interviewStyle: string;
-  taskCurrentLevel?: number;
-  taskCurrentName?: string;
-  taskAllCompleted?: boolean;
-  conversationType?: string;
-};
+import { ConversationDetail } from "@/types/conversations";
 
 export const apiClient = {
   users: {
@@ -42,7 +24,7 @@ export const apiClient = {
     getList: async (conversationId: string): Promise<ChatMsg[]> => {
       const data = await apiFetch<{ content?: ChatMsg[] } | ChatMsg[]>(
         `/api/messages?conversationId=${conversationId}&page=1&size=20`,
-        { cache: "no-store" }
+        { cache: "no-store" },
       );
 
       const list = Array.isArray(data) ? data : (data?.content ?? []);
@@ -50,7 +32,7 @@ export const apiClient = {
 
       return mapped.sort(
         (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       );
     },
 

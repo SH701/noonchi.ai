@@ -11,7 +11,7 @@ import {
   MessageList,
 } from "@/components/chatroom";
 import { useParams } from "next/navigation";
-import { useAuthStore } from "@/store/auth/useAuth";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { useConversationDetail } from "@/hooks/queries/";
 import { useChatMessages } from "@/hooks/useChatMessages";
@@ -19,7 +19,6 @@ import { useVoiceChat } from "@/hooks/useVoiceChat";
 
 export default function ChatroomPage() {
   const { id } = useParams<{ id: string }>();
-  const accessToken = useAuthStore((s) => s.accessToken);
 
   const [infoOpen, setInfoOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -58,7 +57,7 @@ export default function ChatroomPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const isDataLoading = isConversationLoading || isMessagesLoading;
+  // const isDataLoading = isConversationLoading || isMessagesLoading;
   const hasError = conversationError;
 
   // if ((isDataLoading && messages.length === 0) || !accessToken) {

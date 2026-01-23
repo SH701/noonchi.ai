@@ -4,9 +4,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 
-import { useAuthStore } from "@/store/auth/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { performSignup } from "@/lib/service/signup";
 
@@ -14,6 +13,7 @@ import { SignupHeader, SignupTemplate, SignupForm2 } from "@/components/auth";
 import { signup2Schema } from "@/types/auth";
 import { ApiError } from "@/api/api";
 import { useUserStore } from "@/store/user/useUsersStore";
+import { signIn } from "next-auth/react";
 
 type Step2FormData = z.infer<typeof signup2Schema>;
 
@@ -29,7 +29,6 @@ export default function SignupDetail({
   serverErrors,
 }: SignupDetailProps) {
   const router = useRouter();
-  const setTokens = useAuthStore((s) => s.setTokens);
   const setUser = useUserStore((s) => s.setUser);
   const queryClient = useQueryClient();
 
@@ -48,14 +47,19 @@ export default function SignupDetail({
 
   const onSubmit = async (data: Step2FormData) => {
     try {
-      const { accessToken, refreshToken, user } = await performSignup({
+      const { user } = await performSignup({
         email,
         password,
         nickname: data.name,
         birthDate: data.birthdate,
       });
 
-      setTokens(accessToken, refreshToken);
+      await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
       setUser(user);
 
       await queryClient.invalidateQueries({ queryKey: ["userProfile"] });

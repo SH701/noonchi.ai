@@ -5,24 +5,16 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { signIn } from "next-auth/react";
 
-import { performLogin } from "@/lib/service/login";
-import { useAuthStore } from "@/store/auth/useAuth";
-import { useUserStore } from "@/store/user/useUsersStore";
 import { LoginAction, LoginForm } from "@/components/auth";
-
 import { loginSchema } from "@/types/auth";
-import { ApiError } from "@/api/api";
 import { useModalActions } from "@/store/modal/useModalStore";
 
 type LoginData = z.infer<typeof loginSchema>;
 
 export default function LoginContent() {
   const router = useRouter();
-
-  const setTokens = useAuthStore((s) => s.setTokens);
-  const setUser = useUserStore((s) => s.setUser);
-
   const [loading, setLoading] = useState(false);
   const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
   const { closeModal } = useModalActions();
@@ -44,21 +36,25 @@ export default function LoginContent() {
     setLoading(true);
 
     try {
-      const { accessToken, refreshToken, user } = await performLogin(
-        data.email,
-        data.password,
-      );
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
 
-      setTokens(accessToken, refreshToken);
-      setUser(user);
+      if (result?.error) {
+        setServerErrors({
+          general: "Email or password incorrect!",
+        });
+        setLoading(false);
+        return;
+      }
+
       closeModal();
       router.replace("/main");
-    } catch (err) {
-      if (err instanceof ApiError && err.errors) {
-        setServerErrors(err.errors);
-      } else if (err instanceof ApiError) {
-        setServerErrors({ general: err.message });
-      }
+    } catch {
+      setServerErrors({ general: "Login Error!" });
+      setLoading(false);
     }
   };
 

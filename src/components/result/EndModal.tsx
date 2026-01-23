@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useAuthStore } from "@/store/auth/useAuth";
 import { useState } from "react";
 import LoadingModal from "../chatroom/LoadingModal";
-import { Button } from "../ui/button";
+import { Button } from "../ui/button/button";
 
 interface EndModalProps {
   isOpen: boolean;
@@ -20,30 +20,30 @@ export default function EndModal({
   conversationId,
 }: EndModalProps) {
   const router = useRouter();
-  const accessToken = useAuthStore((s) => s.accessToken);
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleEnd = async () => {
-    if (!conversationId || !accessToken) return;
-    setIsLoading(true);
-    try {
-      const res = await fetch(`/api/conversations/${conversationId}/end`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+  // const handleEnd = async () => {
+  //   if (!conversationId) return;
+  //   setIsLoading(true);
+  //   try {
+  //     const res = await fetch(`/api/conversations/${conversationId}/end`, {
+  //       method: "PUT",
+  //       headers: { Authorization: `Bearer ${accessToken}` },
+  //     });
 
-      if (!res.ok) {
-        console.error("Failed to end conversation:", res.status);
-        setIsLoading(false);
-        return;
-      }
+  //     if (!res.ok) {
+  //       console.error("Failed to end conversation:", res.status);
+  //       setIsLoading(false);
+  //       return;
+  //     }
 
-      router.push(`/main/chatroom/${conversationId}/result`);
-    } catch (error) {
-      console.error("Error ending conversation:", error);
-      setIsLoading(false);
-    }
-  };
+  //     router.push(`/main/chatroom/${conversationId}/result`);
+  //   } catch (error) {
+  //     console.error("Error ending conversation:", error);
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <>

@@ -1,10 +1,10 @@
-import { useAuthStore } from "@/store/auth/useAuth";
+import { axios } from "@/api/common";
+import { AxiosError } from "axios";
 
 export class ApiError extends Error {
   constructor(
     message: string,
     public status: number,
-
     public errors?: Record<string, string>,
   ) {
     super(message);
@@ -16,40 +16,24 @@ export async function apiFetch<T>(
   url: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const token = useAuthStore.getState().accessToken;
-
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options.headers || {}),
-    },
-  });
-
-  if (!res.ok) {
-    if (res.status === 401) {
-      useAuthStore.getState().clearTokens();
-    }
-
-    let errorMessage = `API Error: ${res.status}`;
-    let errors: Record<string, string> | undefined;
-
-    try {
-      const errorData = await res.json();
-      errorMessage = errorData.message || errorData.error || errorMessage;
-      errors = errorData.errors;
-    } catch {
-      const text = await res.text();
-      if (text) errorMessage = text;
-    }
-
-    throw new ApiError(errorMessage, res.status, errors);
-  }
-
   try {
-    return res.json();
-  } catch {
-    return {} as T;
+    const res = await axios({
+      url,
+      method: (options.method as string) || "GET",
+      data: options.body ? JSON.parse(options.body as string) : undefined,
+      headers: options.headers as Record<string, string>,
+    });
+
+    return res.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const status = error.response?.status || 500;
+      const errorData = error.response?.data;
+      const errorMessage =
+        errorData?.message || errorData?.error || `API Error: ${status}`;
+
+      throw new ApiError(errorMessage, status);
+    }
+    throw error;
   }
 }

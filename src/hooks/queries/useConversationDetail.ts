@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@/store/auth/useAuth";
-import { apiClient, ConversationDetail } from "@/api/client";
+
+import { apiClient } from "@/api/client";
+
+import { ConversationDetail } from "@/types/conversations";
 
 export function useConversationDetail(id?: string) {
-  const accessToken = useAuthStore((s) => s.accessToken);
-
   return useQuery<ConversationDetail>({
     queryKey: ["conversation", id],
-    enabled: !!accessToken && !!id,
+
     queryFn: async () => {
       try {
         const data = await apiClient.conversations.getDetail(id!);

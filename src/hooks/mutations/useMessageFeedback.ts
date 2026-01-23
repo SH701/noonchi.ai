@@ -26,13 +26,12 @@ export function useMessageFeedback(conversationId?: number) {
         ["messages", String(conversationId)],
         (old) => {
           if (!old) return old;
-
           return old.map((msg) =>
             msg.messageId === messageId
               ? { ...msg, feedback: feedbackData }
-              : msg
+              : msg,
           );
-        }
+        },
       );
     },
   });
