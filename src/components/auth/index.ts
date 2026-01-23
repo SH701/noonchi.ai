@@ -8,3 +8,4 @@ export { default as SignupDetail } from "./signup/SignupDetail";
 export { default as LoginAction } from "./login/LoginActoion";
 export { default as LoginForm } from "./login/LoginForm";
 export { default as LoginContent } from "./login/LoginContent";
+export { default as PreviewEnd } from "./PreviewEnd";

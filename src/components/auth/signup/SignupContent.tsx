@@ -13,6 +13,7 @@ import {
   SignupDetail,
 } from "@/components/auth";
 import { signupSchema } from "@/types/auth";
+import StepIndicator from "./StepIndicator";
 
 type Step1FormData = z.infer<typeof signupSchema>;
 
@@ -51,28 +52,35 @@ export default function SignupContent() {
         email={signupData.email}
         password={signupData.password}
         serverErrors={handleError}
+        step={step}
       />
     );
   }
 
   return (
-    <SignupTemplate
-      header={<SignupHeader title="Create Account" />}
-      footer={
-        <Button
-          variant="primary"
-          size="lg"
-          disabled={!isValid}
-          onClick={handleSubmit(onSubmit)}
-        >
-          Next
-        </Button>
-      }
-    >
-      <SignupForm1 control={control} errors={errors} />
-      {serverErrors.email && (
-        <p className="text-red-500 text-sm text-center">{serverErrors.email}</p>
-      )}
-    </SignupTemplate>
+    <div>
+      <StepIndicator currentStep={step} totalStep={2} />
+
+      <SignupTemplate
+        header={<SignupHeader title="Create Account" />}
+        footer={
+          <Button
+            variant="primary"
+            size="lg"
+            disabled={!isValid}
+            onClick={handleSubmit(onSubmit)}
+          >
+            Next
+          </Button>
+        }
+      >
+        <SignupForm1 control={control} errors={errors} />
+        {serverErrors.email && (
+          <p className="text-red-500 text-sm text-center">
+            {serverErrors.email}
+          </p>
+        )}
+      </SignupTemplate>
+    </div>
   );
 }

@@ -11,7 +11,7 @@ export default function ModalRender() {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -30,7 +30,7 @@ export default function ModalRender() {
               damping: 30,
               stiffness: 300,
             }}
-            className="absolute bottom-0 w-full bg-white rounded-t-[50px] p-4"
+            className="absolute bottom-0 w-full md:max-w-93.75 bg-white rounded-t-[50px] "
           >
             <X
               className="absolute top-4 right-8 text-gray-500 cursor-pointer"

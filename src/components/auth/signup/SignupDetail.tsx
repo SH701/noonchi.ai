@@ -14,6 +14,7 @@ import { signup2Schema } from "@/types/auth";
 import { ApiError } from "@/api/api";
 import { useUserStore } from "@/store/user/useUsersStore";
 import { signIn } from "next-auth/react";
+import StepIndicator from "./StepIndicator";
 
 type Step2FormData = z.infer<typeof signup2Schema>;
 
@@ -21,12 +22,14 @@ interface SignupDetailProps {
   email: string;
   password: string;
   serverErrors: (error: string) => void;
+  step: number;
 }
 
 export default function SignupDetail({
   email,
   password,
   serverErrors,
+  step,
 }: SignupDetailProps) {
   const router = useRouter();
   const setUser = useUserStore((s) => s.setUser);
@@ -79,20 +82,23 @@ export default function SignupDetail({
   };
 
   return (
-    <SignupTemplate
-      header={<SignupHeader title="Create account" />}
-      footer={
-        <Button
-          variant="primary"
-          size="lg"
-          disabled={!isValid}
-          onClick={handleSubmit(onSubmit)}
-        >
-          Get Started
-        </Button>
-      }
-    >
-      <SignupForm2 control={control} errors={errors} />
-    </SignupTemplate>
+    <div>
+      <StepIndicator currentStep={step} totalStep={2} />
+      <SignupTemplate
+        header={<SignupHeader title="Create account" />}
+        footer={
+          <Button
+            variant="primary"
+            size="lg"
+            disabled={!isValid}
+            onClick={handleSubmit(onSubmit)}
+          >
+            Get Started
+          </Button>
+        }
+      >
+        <SignupForm2 control={control} errors={errors} />
+      </SignupTemplate>
+    </div>
   );
 }
