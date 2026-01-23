@@ -4,8 +4,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { Metadata } from "next";
 
 import ModalRender from "@/components/modal/ModalRender";
-import { ClientProvider, QueryProvider } from "@/providers";
-import { SessionProvider } from "next-auth/react";
+import { ClientProvider, QueryProvider,AuthProvider } from "@/providers";
+
 
 export const metadata: Metadata = {
   title: "Noonchi.ai",
@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="ko">
       <head></head>
       <body className="min-h-screen w-full">
-        <SessionProvider>
+        <AuthProvider>
           <QueryProvider>
             <ClientProvider>
               <div className="w-full min-h-screen md:flex md:justify-center">
@@ -32,7 +32,7 @@ export default function RootLayout({
               <ModalRender />
             </ClientProvider>
           </QueryProvider>
-        </SessionProvider>
+        </AuthProvider>
       </body>
     </html>
   );

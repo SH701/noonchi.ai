@@ -3,10 +3,10 @@
 import Modal from "@/components/ui/modal/Modal";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useAuthStore } from "@/store/auth/useAuth";
-import { useState } from "react";
+
 import LoadingModal from "../chatroom/LoadingModal";
 import { Button } from "../ui/button/button";
+import { useEnd } from "@/hooks/mutations/useEnd";
 
 interface EndModalProps {
   isOpen: boolean;
@@ -21,29 +21,16 @@ export default function EndModal({
 }: EndModalProps) {
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  // const handleEnd = async () => {
-  //   if (!conversationId) return;
-  //   setIsLoading(true);
-  //   try {
-  //     const res = await fetch(`/api/conversations/${conversationId}/end`, {
-  //       method: "PUT",
-  //       headers: { Authorization: `Bearer ${accessToken}` },
-  //     });
-
-  //     if (!res.ok) {
-  //       console.error("Failed to end conversation:", res.status);
-  //       setIsLoading(false);
-  //       return;
-  //     }
-
-  //     router.push(`/main/chatroom/${conversationId}/result`);
-  //   } catch (error) {
-  //     console.error("Error ending conversation:", error);
-  //     setIsLoading(false);
-  //   }
-  // };
+  const { mutateAsync: endConversation, isPending } = useEnd();
+  const handleEnd = async () => {
+    if (!conversationId) return;
+    try {
+      await endConversation(conversationId);
+      router.push(`/main/chatroom/${conversationId}/result`);
+    } catch (error) {
+      console.error("Error ending conversation:", error);
+    }
+  };
 
   return (
     <>
@@ -60,20 +47,20 @@ and receive feedback?"
           variant="primary"
           size="md"
           onClick={handleEnd}
-          disabled={isLoading}
+          disabled={isPending}
         >
-          {isLoading ? "Loading..." : "Get Feedback"}
+          {isPending ? "Loading..." : "Get Feedback"}
         </Button>
         <Button
           variant="secondary"
           size="md"
           onClick={onClose}
-          disabled={isLoading}
+          disabled={isPending}
         >
           Keep conversation
         </Button>
       </Modal>
-      {isLoading && <LoadingModal open={true} />}
+      {isPending && <LoadingModal open={true} />}
     </>
   );
 }

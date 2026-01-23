@@ -99,21 +99,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       // 토큰 만료 시 갱신 시도
-      const refreshed = await refreshAccessToken(token.refreshToken);
-      if (refreshed) {
-        token.accessToken = refreshed.accessToken;
-        token.refreshToken = refreshed.refreshToken;
-        token.user = refreshed.user;
-        token.accessTokenExpires = Date.now() + ACCESS_TOKEN_EXPIRES;
-      } else {
-        token.error = "RefreshTokenError";
+      if (token.refreshToken && typeof token.refreshToken === "string") {
+        const refreshed = await refreshAccessToken(token.refreshToken);
+        if (refreshed) {
+          token.accessToken = refreshed.accessToken;
+          token.refreshToken = refreshed.refreshToken;
+          token.user = refreshed.user;
+          token.accessTokenExpires = Date.now() + ACCESS_TOKEN_EXPIRES;
+        } else {
+          token.error = "RefreshTokenError";
+        }
       }
-
       return token;
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken;
-      session.refreshToken = token.refreshToken;
+      session.accessToken = token.accessToken as string;
+      session.refreshToken = token.refreshToken as string;
       if (token.user) {
         session.user = {
           ...session.user,
