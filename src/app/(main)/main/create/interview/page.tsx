@@ -4,9 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useQueryClient } from "@tanstack/react-query";
-import UserCharge from "@/components/modal/UserCharge";
+
 import { useUser } from "@/hooks/queries";
-import GuestCharge from "@/components/modal/GuestCharge";
 
 import {
   useUploadFiles,
@@ -16,7 +15,6 @@ import {
 import { INTERVIEW_STYLES, InterviewFormData } from "@/types/conversations";
 
 import { InterviewForm, InterviewHeader } from "@/components/createchatroom";
-import ChatroomLoading from "@/components/ui/loading/ChatroomLoading";
 
 export default function Interview() {
   const router = useRouter();
@@ -39,7 +37,7 @@ export default function Interview() {
       const uploadedFiles = await uploadFiles.mutateAsync(data.files);
 
       try {
-        await deductCredit.mutateAsync(60);
+        await deductCredit.mutateAsync(0);
         queryClient.invalidateQueries({ queryKey: ["userProfile"] });
       } catch (error) {
         console.error("크레딧 차감 실패:", error);
@@ -62,7 +60,7 @@ export default function Interview() {
     }
   };
 
-  if (isLoading) return <ChatroomLoading />;
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col pt-14 relative bg-white w-full overflow-x-hidden">
@@ -75,13 +73,6 @@ export default function Interview() {
           />
         </div>
       </div>
-
-      {needCharge &&
-        (user?.role === "ROLE_USER" ? (
-          <UserCharge isOpen={true} onClose={() => setNeedCharge(false)} />
-        ) : (
-          <GuestCharge isOpen={true} onClose={() => setNeedCharge(false)} />
-        ))}
     </div>
   );
 }

@@ -49,7 +49,7 @@ export default function ChatroomHeader({
 
   const ConversationEnd = async () => {
     const creditAmount =
-      conversation?.conversationType === "INTERVIEW" ? 40 : 10;
+      conversation?.conversationType === "INTERVIEW" ? 0 : 0;
     setLoading(true);
 
     try {

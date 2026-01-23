@@ -1,19 +1,25 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { SignupForm1, SignupHeader, SignupTemplate } from "@/components/auth";
+import {
+  SignupForm1,
+  SignupHeader,
+  SignupTemplate,
+  SignupDetail,
+} from "@/components/auth";
 import { signupSchema } from "@/types/auth";
 
 type Step1FormData = z.infer<typeof signupSchema>;
 
-export default function SignupStep1() {
-  const router = useRouter();
-
+export default function SignupContent() {
+  const [step, setStep] = useState<1 | 2>(1);
+  const [signupData, setSignupData] = useState({ email: "", password: "" });
+  const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
   const {
     control,
     handleSubmit,
@@ -30,14 +36,28 @@ export default function SignupStep1() {
   });
 
   const onSubmit = (data: Step1FormData) => {
-    sessionStorage.setItem("signupEmail", data.email);
-    sessionStorage.setItem("signupPassword", data.password);
-    router.push("/auth/signup/detail");
+    setSignupData({ email: data.email, password: data.password });
+    setStep(2);
   };
+
+  const handleError = (error: string) => {
+    setServerErrors({ email: error });
+    setStep(1);
+  };
+
+  if (step === 2) {
+    return (
+      <SignupDetail
+        email={signupData.email}
+        password={signupData.password}
+        serverErrors={handleError}
+      />
+    );
+  }
 
   return (
     <SignupTemplate
-      header={<SignupHeader title="Create account" />}
+      header={<SignupHeader title="Create Account" />}
       footer={
         <Button
           variant="primary"
@@ -50,6 +70,9 @@ export default function SignupStep1() {
       }
     >
       <SignupForm1 control={control} errors={errors} />
+      {serverErrors.email && (
+        <p className="text-red-500 text-sm text-center">{serverErrors.email}</p>
+      )}
     </SignupTemplate>
   );
 }

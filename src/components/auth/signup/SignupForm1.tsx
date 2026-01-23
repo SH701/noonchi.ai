@@ -65,9 +65,8 @@ export default function SignupForm1({
           control={control}
           render={({ field }) => (
             <TextInput
-              label="Re-enter password"
               type="password"
-              placeholder="••••••••"
+              placeholder="Re-enter your password"
               value={field.value}
               onChange={field.onChange}
               onBlur={field.onBlur}
@@ -81,7 +80,7 @@ export default function SignupForm1({
         )}
       </div>
 
-      <p className="text-sm text-gray-500 leading-[140%]">
+      <p className="text-xs text-blue-500 ">
         8–16 characters, include letters & numbers
       </p>
 

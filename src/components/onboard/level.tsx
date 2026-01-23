@@ -1,4 +1,4 @@
-import { usePreferenceStore } from "@/store/preference/usePreference";
+import { usePreferenceStore } from "@/store/preference/usePreferenceStore";
 
 const levelDescription = {
   BEGINNER:

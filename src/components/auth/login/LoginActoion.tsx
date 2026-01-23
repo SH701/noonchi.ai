@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { useModalActions } from "@/store/modal/useModalStore";
+import SignupContent from "../signup/SignupContent";
 
 interface Props {
   loading: boolean;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function LoginAction({ loading, handleLogin, isValid }: Props) {
+  const { openModal } = useModalActions();
   return (
     <>
       <div className="flex items-center justify-center">
@@ -21,15 +23,15 @@ export default function LoginAction({ loading, handleLogin, isValid }: Props) {
         </Button>
       </div>
 
-      <p className="text-center text-sm text-gray-500">
+      <div className="text-center text-sm text-gray-500">
         First time here?{" "}
-        <Link
-          href="/auth/signup"
+        <button
           className="font-medium text-blue-500 hover:underline"
+          onClick={() => openModal(<SignupContent />)}
         >
           Create an account
-        </Link>
-      </p>
+        </button>
+      </div>
     </>
   );
 }

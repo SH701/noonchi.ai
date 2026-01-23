@@ -1,6 +1,5 @@
-import { useChatHistoryStore } from "@/store/useChatHistorystore";
+import { useChatHistoryStore } from "@/store/chathistory/useChatHistorystore";
 import { FilterState } from "@/types/conversations";
-
 
 export default function Filter() {
   const { selectedFilter, setFilter } = useChatHistoryStore();

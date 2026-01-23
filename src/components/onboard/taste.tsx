@@ -1,6 +1,6 @@
 "use client";
 
-import { usePreferenceStore } from "@/store/preference/usePreference";
+import { usePreferenceStore } from "@/store/preference/usePreferenceStore";
 
 const INTEREST_OPTIONS = [
   "💬 Daily Conversation",

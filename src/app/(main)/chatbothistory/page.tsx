@@ -3,7 +3,7 @@
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useConversations, useDeleteConversation } from "@/hooks/queries";
-import { useChatHistoryStore } from "@/store/useChatHistorystore";
+import { useChatHistoryStore } from "@/store/chathistory/useChatHistorystore";
 
 import {
   HistorySection,
@@ -33,7 +33,7 @@ export default function ChatBothistoryPage() {
 
   const handleOpenChat = useCallback(
     (id: string | number) => router.push(`/main/chatroom/${id}`),
-    [router]
+    [router],
   );
 
   const handleDeleteChat = useCallback(
@@ -49,12 +49,12 @@ export default function ChatBothistoryPage() {
         onError: (error) => console.error("❌ Delete error:", error),
       });
     },
-    [deleteMutation, queryClient, selectedFilter]
+    [deleteMutation, queryClient, selectedFilter],
   );
 
   const handleToggle = useCallback(
     (id: string | number) => toggleExpand(id),
-    [toggleExpand]
+    [toggleExpand],
   );
 
   const processedData = useMemo(() => {
@@ -63,7 +63,7 @@ export default function ChatBothistoryPage() {
     if (keyword.trim()) {
       const q = keyword.trim().toLowerCase();
       list = list.filter((c) =>
-        (c.aiPersona?.name ?? "").toLowerCase().includes(q)
+        (c.aiPersona?.name ?? "").toLowerCase().includes(q),
       );
     }
 

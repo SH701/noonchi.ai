@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,22 +9,29 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/auth/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { performSignup } from "@/lib/service/signup";
-import { useUserStore } from "@/store";
+
 import { SignupHeader, SignupTemplate, SignupForm2 } from "@/components/auth";
 import { signup2Schema } from "@/types/auth";
 import { ApiError } from "@/api/api";
+import { useUserStore } from "@/store/user/useUsersStore";
 
 type Step2FormData = z.infer<typeof signup2Schema>;
 
-export default function SignupStep2() {
+interface SignupDetailProps {
+  email: string;
+  password: string;
+  serverErrors: (error: string) => void;
+}
+
+export default function SignupDetail({
+  email,
+  password,
+  serverErrors,
+}: SignupDetailProps) {
   const router = useRouter();
   const setTokens = useAuthStore((s) => s.setTokens);
   const setUser = useUserStore((s) => s.setUser);
   const queryClient = useQueryClient();
-  const [error, setError] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -40,15 +46,8 @@ export default function SignupStep2() {
     },
   });
 
-  useEffect(() => {
-    setEmail(sessionStorage.getItem("signupEmail") || "");
-    setPassword(sessionStorage.getItem("signupPassword") || "");
-  }, []);
-
   const onSubmit = async (data: Step2FormData) => {
     try {
-      setLoading(true);
-
       const { accessToken, refreshToken, user } = await performSignup({
         email,
         password,
@@ -70,12 +69,8 @@ export default function SignupStep2() {
       }
     } catch (err) {
       if (err instanceof ApiError) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred. Please try again");
+        serverErrors(err.message);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -94,7 +89,6 @@ export default function SignupStep2() {
       }
     >
       <SignupForm2 control={control} errors={errors} />
-      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
     </SignupTemplate>
   );
 }

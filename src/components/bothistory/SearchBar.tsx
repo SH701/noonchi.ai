@@ -1,4 +1,4 @@
-import { useChatHistoryStore } from "@/store/useChatHistorystore";
+import { useChatHistoryStore } from "@/store/chathistory/useChatHistorystore";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -24,7 +24,9 @@ export default function SearchBar() {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") { /* empty */ }
+              if (e.key === "Enter") {
+                /* empty */
+              }
             }}
             className="border p-1 rounded overflow-hidden placeholder:pl-1 my-1"
             placeholder="Search..."

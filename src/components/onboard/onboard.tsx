@@ -37,7 +37,6 @@ export default function Onboard() {
   const setAccessToken = useAuthStore((s) => s.setTokens);
 
   const { mutateAsync: guestLogin } = useGuest();
-  const lastIndex = slides.length - 1;
 
   const handleSkip = () => {
     sliderRef.current?.slickGoTo(slides.length - 1);
@@ -54,13 +53,12 @@ export default function Onboard() {
       setAccessToken(newToken.accessToken, null);
       router.push("/main");
     } catch (error) {
-      console.error("인증 처리 중 오류:", error);
       alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
-
+  const lastIndex = slides.length - 1;
   useEffect(() => {
-    if (currentSlide === 1) {
+    if (currentSlide === 2) {
       const timer = setTimeout(async () => {
         setLoading(true);
         await handleOnboardingToMain();
@@ -72,25 +70,16 @@ export default function Onboard() {
 
   const handleNext = () => {
     if (currentSlide === lastIndex) {
-      router.push("/auth/login");
+      router.push("/preview");
     } else {
       sliderRef.current?.slickNext();
     }
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => setInitialLoading(false), 1500);
+    const timer = setTimeout(() => setInitialLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    if (loading) {
-      const timer = setTimeout(async () => {
-        await handleOnboardingToMain();
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [loading]);
 
   if (initialLoading || loading) {
     return <OnboardLoading />;

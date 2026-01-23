@@ -20,7 +20,7 @@ export const slides: Slide[] = [
   {
     id: 2,
     title: "Please select your Korean level",
-    desc: "Tell us how comfortable tou are chatting in Korean!",
+    desc: "Tell us how comfortable you are chatting in Korean!",
     content: Level,
   },
 ];

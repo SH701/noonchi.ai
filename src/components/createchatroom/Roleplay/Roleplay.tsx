@@ -14,8 +14,6 @@ import { TOPIC_ENUMS } from "@/types/conversations";
 import { useCreateRoleplay, useDeductCredit } from "@/hooks/mutations";
 import { useUser } from "@/hooks/queries/useUser";
 
-import { GuestCharge, UserCharge } from "@/components/modal";
-
 export default function RolePlay() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -39,7 +37,7 @@ export default function RolePlay() {
 
   const handleSubmit = async ({ details }: { details: string }) => {
     try {
-      await deductCredit.mutateAsync(20);
+      await deductCredit.mutateAsync(0);
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
 
       const conversationTopic = TOPIC_ENUMS[category][1];
@@ -92,13 +90,6 @@ export default function RolePlay() {
           </div>
         </div>
       </div>
-
-      {needCharge &&
-        (user?.role === "ROLE_USER" ? (
-          <UserCharge isOpen={true} onClose={() => setNeedCharge(false)} />
-        ) : (
-          <GuestCharge isOpen={true} onClose={() => setNeedCharge(false)} />
-        ))}
     </div>
   );
 }

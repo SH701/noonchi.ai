@@ -7,15 +7,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { performLogin } from "@/lib/service/login";
-import { useUserStore, useAuthStore } from "@/store";
-import { LoginAction, LoginForm, LoginHeader } from "@/components/auth";
+import { useAuthStore } from "@/store/auth/useAuth";
+import { useUserStore } from "@/store/user/useUsersStore";
+import { LoginAction, LoginForm } from "@/components/auth";
 
 import { loginSchema } from "@/types/auth";
 import { ApiError } from "@/api/api";
+import { useModalActions } from "@/store/modal/useModalStore";
 
 type LoginData = z.infer<typeof loginSchema>;
 
-export default function LoginPage() {
+export default function LoginContent() {
   const router = useRouter();
 
   const setTokens = useAuthStore((s) => s.setTokens);
@@ -23,7 +25,7 @@ export default function LoginPage() {
 
   const [loading, setLoading] = useState(false);
   const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
-
+  const { closeModal } = useModalActions();
   const {
     control,
     handleSubmit,
@@ -49,27 +51,24 @@ export default function LoginPage() {
 
       setTokens(accessToken, refreshToken);
       setUser(user);
-
+      closeModal();
       router.replace("/main");
     } catch (err) {
       if (err instanceof ApiError && err.errors) {
         setServerErrors(err.errors);
       } else if (err instanceof ApiError) {
         setServerErrors({ general: err.message });
-      } else {
-        setServerErrors({ general: "An unexpected error occurred" });
       }
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col  px-4">
-      <LoginHeader />
-
-      <div className="flex-1 flex items-start justify-center mt-10">
+    <div className=" flex flex-col  px-4 ">
+      <div className="flex-1 flex items-center justify-center  ">
         <div className="w-full max-w-sm space-y-6">
+          <p className=" mt-14 my-10 text-center text-2xl font-semibold ">
+            Welcome back
+          </p>
           <LoginForm control={control} errors={errors} />
           <LoginAction
             loading={loading}

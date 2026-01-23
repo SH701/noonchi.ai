@@ -35,8 +35,8 @@ export default function TextInput({
         onBlur={onBlur}
         onChange={(e) => onChange(e.target.value)}
         className={`
-          w-full px-4 py-3 
-          bg-gray-50 border border-gray-200 
+          w-full p-2.5
+           border border-gray-400 
           rounded-xl text-gray-900 placeholder-gray-400
           focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
           transition-colors
