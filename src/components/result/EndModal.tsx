@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "@/components/ui/modal/Modal";
+import Modal from "@/components/modal/Modal";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 

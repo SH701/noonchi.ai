@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 
-import ComingSoonModal from "@/components/modal/Comingsoon";
 import { CategoryType } from "@/types/topics/topics.type";
 import { TopicList } from "@/components/roleplay";
 
 export default function Roleplay() {
   const [category, setCategory] = useState<CategoryType>("Career");
-  const [showComingSoon, setShowComingSoon] = useState(false);
 
   return (
     <>
@@ -21,15 +19,7 @@ export default function Roleplay() {
             Let`s practice role-playing with me.
           </span>
         </div>
-        <TopicList
-          category={category}
-          setCategory={setCategory}
-          setShowComingSoon={setShowComingSoon}
-        />
-        <ComingSoonModal
-          isOpen={showComingSoon}
-          onClose={() => setShowComingSoon(false)}
-        />
+        <TopicList category={category} setCategory={setCategory} />
       </div>
     </>
   );

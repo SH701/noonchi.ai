@@ -1,3 +1,3 @@
-export { default as Comingsoon } from "./Comingsoon";
-export { default as Sucess } from "./Sucess";
-export { default as Unfinished } from "./Unfinished";
+export { default as ExitChatting } from "./ExitChatting";
+export { default as Modal } from "./Modal";
+export { default as ModalRender } from "./ModalRender";

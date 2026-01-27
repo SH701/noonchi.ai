@@ -17,7 +17,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/components/ui/toast/toast";
 
-export default function ChatBothistoryPage() {
+export default function BothistoryPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
 

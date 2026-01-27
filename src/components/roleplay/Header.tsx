@@ -57,7 +57,6 @@ export default function Header() {
     <div className="w-full py-8   flex justify-between cursor-pointer">
       <Menu onClick={toggleTab} />
       <Tab />
-
       <div
         className="relative flex items-center bg-white/30 rounded-full cursor-pointer"
         onClick={handleToggle}
@@ -86,7 +85,7 @@ export default function Header() {
           Role playing
         </span>
       </div>
-      <SquarePen />
+      {isRoleplay ? <div></div> : <SquarePen />}
     </div>
   );
 }

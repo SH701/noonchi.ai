@@ -8,14 +8,9 @@ import Image from "next/image";
 type TopicListProps = {
   category: CategoryType;
   setCategory: (c: CategoryType) => void;
-  setShowComingSoon: (state: boolean) => void;
 };
 
-export default function TopicList({
-  category,
-  setCategory,
-  setShowComingSoon,
-}: TopicListProps) {
+export default function TopicList({ category, setCategory }: TopicListProps) {
   const topics = topicsByCategory[category];
   const router = useRouter();
 
@@ -68,10 +63,7 @@ export default function TopicList({
           );
         })}
 
-        <div
-          className="flex items-end justify-start bg-white rounded-xl cursor-pointer hover:shadow-md transition-colors min-h-40 p-4"
-          onClick={() => setShowComingSoon(true)}
-        >
+        <div className="flex items-end justify-start bg-white rounded-xl cursor-pointer hover:shadow-md transition-colors min-h-40 p-4">
           <span className="text-gray-400 font-semibold">Coming soon</span>
         </div>
       </div>
