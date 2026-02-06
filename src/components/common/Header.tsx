@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 interface HeaderProps {
   leftIcon?: ReactNode;
-  center?: string | ReactNode;
+  center: string | ReactNode;
   rightIcon?: ReactNode;
   onLeftClick?: () => void;
   onRightClick?: () => void;

@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import z from "zod";
 import { AuthResponse } from "@/types/auth";
+import { User } from "@/types/user";
 
 async function refreshAccessToken(refreshToken: string) {
   try {
@@ -118,10 +119,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.accessToken = token.accessToken as string;
       session.refreshToken = token.refreshToken as string;
       if (token.user) {
-        session.user = {
-          ...session.user,
-          ...token.user,
-        };
+        const u = token.user as User;
+        (session.user as User).id = u.id;
+        session.user.email = u.email;
+        session.user.nickname = u.nickname;
+        session.user.birthDate = u.birthDate;
+        session.user.role = u.role;
+        session.user.provider = u.provider;
+        session.user.koreanLevel = u.koreanLevel;
+        session.user.sentenceCount = u.sentenceCount;
+        session.user.profileImageUrl = u.profileImageUrl;
+        session.user.creditPoint = u.creditPoint;
+        session.user.interests = u.interests;
       }
       return session;
     },

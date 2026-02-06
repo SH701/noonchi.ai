@@ -11,6 +11,3 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface GuestLoginRequest {
-  deviceId: string;
-}

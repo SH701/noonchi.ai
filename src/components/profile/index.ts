@@ -1,5 +1,10 @@
-export { default as ProfileImage } from "./ProfileImage";
+export { default as DeleteAccount } from "./DeleteAccount";
+export { default as Logout } from "./Logout";
 export { default as ProfileMenuList } from "./ProfileMenuList";
 export { default as StatsCard } from "./StatsCard";
 export { default as ProfileInfo } from "./ProfileInfo";
 export { default as ProfileHeader } from "./ProfileHeader";
+export { default as MyInfo } from "./myinfo/MyInfo";
+export { default as MyInterest } from "./myinterest/MyInterest";
+export { default as MyLanguage } from "./mylanguage/MyLanguage";
+export { default as MySubscription } from "./mysubscription/MySubscription";
