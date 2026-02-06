@@ -1,6 +1,6 @@
 "use client";
 
-import { Onboard } from "@/components/onboard";
+import Onboard from "@/components/onboard/Onboard";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
