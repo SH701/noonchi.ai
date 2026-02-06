@@ -1,8 +1,11 @@
 export const TOPIC_ENUMS = {
+  Popular: {
+    1: "after_work_escape_mode",
+  },
   Career: {
     1: "after_work_escape_mode",
   },
-  Romance: {
+  Family: {
     1: "could_you_soften_your_tone",
   },
   Belonging: {

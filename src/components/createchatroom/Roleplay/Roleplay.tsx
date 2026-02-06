@@ -3,8 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-import { useQueryClient } from "@tanstack/react-query";
-
 import RoleplayForm from "@/components/createchatroom/Roleplay/RoleplayForm";
 
 import { topicsByCategory } from "@/data";
@@ -16,7 +14,6 @@ import { useCreateRoleplay, useDeductCredit } from "@/hooks/mutations";
 export default function RolePlay() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const queryClient = useQueryClient();
 
   const mode = searchParams.get("mode") as "topic" | "custom";
   const category = searchParams.get(
@@ -34,9 +31,6 @@ export default function RolePlay() {
 
   const handleSubmit = async ({ details }: { details: string }) => {
     try {
-      await deductCredit.mutateAsync(0);
-      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
-
       const conversationTopic = TOPIC_ENUMS[category][1];
 
       const convo = await createRoleplay.mutateAsync({

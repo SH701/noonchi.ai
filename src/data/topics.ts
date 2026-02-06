@@ -46,7 +46,6 @@ export const CareerTopics = [
     myRole: "Employee",
   },
 ];
-
 export const FamliyTopics = [
   {
     id: 1,
@@ -188,8 +187,14 @@ export const KPopTopics = [
     myRole: "Idol fan",
   },
 ];
-
+export const PopularTopics = [
+  CareerTopics[0],
+  FamliyTopics[0],
+  BelongingTopics[0],
+  KPopTopics[0],
+];
 export const topicsByCategory = {
+  Popular: PopularTopics,
   Career: CareerTopics,
   Family: FamliyTopics,
   Belonging: BelongingTopics,
