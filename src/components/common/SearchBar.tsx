@@ -17,11 +17,11 @@ export default function SearchBar() {
             /* empty */
           }
         }}
-        className="w-full border p-1 rounded-full pr-8 overflow-hidden placeholder:pl-1"
-        placeholder="Search..."
+        className="w-full border border-white bg-white/70 p-3 rounded-full pl-10 overflow-hidden h-12"
+        placeholder="Search for chats"
         style={{ minWidth: 0 }}
       />
-      <MagnifyingGlassIcon className="w-5 h-5 absolute right-2 top-1/2 -translate-y-1/2" />
+      <MagnifyingGlassIcon className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2" />
     </div>
   );
 }

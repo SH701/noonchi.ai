@@ -80,7 +80,7 @@ export default function RoleplayForm({
               type="button"
               onClick={() => setSelectedTone(tone.value)}
               className={`
-                py-3 px-4 rounded-lg  transition-all text-left
+                py-3 px-4 rounded-lg  transition-all text-left cursor-pointer
                 ${selectedTone === tone.value ? " bg-white" : " bg-white/50"}
               `}
             >

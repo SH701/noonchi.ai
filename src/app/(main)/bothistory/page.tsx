@@ -15,7 +15,6 @@ import {
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/components/ui/toast/toast";
-import { SearchBar } from "@/components/common";
 
 export default function BothistoryPage() {
   const router = useRouter();
@@ -68,11 +67,6 @@ export default function BothistoryPage() {
 
   return (
     <div className="bg-gray-100 w-full flex flex-col pt-12">
-      <header className="flex justify-between items-center px-4">
-        <h1 className="text-xl font-bold">Chatbot History</h1>
-        <SearchBar />
-      </header>
-
       <section className="my-6 pl-6">
         <div className="flex items-center justify-between">
           <Filter />

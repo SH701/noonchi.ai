@@ -5,9 +5,8 @@ import { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { MyAI } from "@/types/etc/persona.type";
-import { Info, User } from "lucide-react";
+import { Info, RotateCcw, User, Volume2 } from "lucide-react";
 
-import { LightBulbIcon } from "@heroicons/react/24/solid";
 import {
   useMessageTTS,
   useMessageTranslate,
@@ -17,10 +16,8 @@ type MessageItemProps = {
   m: any;
   myAI: MyAI | null;
   isMine: boolean;
-
   feedbackOpenId: string | null;
   handleFeedbacks: (messageId: string) => void;
-  messageStatus?: "default" | "error";
   isFirstAIMessage?: boolean;
   isPending?: boolean;
 };
@@ -31,17 +28,12 @@ export default function MessageItem({
   isMine,
   feedbackOpenId,
   handleFeedbacks,
-  messageStatus = "default",
-  isPending = false,
 }: MessageItemProps) {
   const [translated, setTranslated] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [loadingFeedbacks, setLoadingFeedbacks] = useState<
     Record<string, boolean>
   >({});
-  const [recommandtion, setRecommandtion] = useState(false);
-  const [activeTab, setActiveTab] = useState("nuance");
-  const [recommendation] = useState(true);
 
   const { mutate: fetchTTS, isPending: loadingTTS } = useMessageTTS();
   const { mutate: fetchTranslate, isPending: loadingTranslate } =
@@ -53,46 +45,11 @@ export default function MessageItem({
     (m.naturalnessScore ?? -1) >= 0 &&
     (m.politenessScore + m.naturalnessScore) / 2 <= 80;
 
-  const isErrorOrFeedback =
-    messageStatus === "error" ||
-    (showFeedbackButton && m.feedback) ||
-    showFeedbackButton;
-
   const handleFeedbackClick = async () => {
     setLoadingFeedbacks((prev) => ({ ...prev, [m.messageId]: true }));
     await handleFeedbacks(m.messageId);
     setLoadingFeedbacks((prev) => ({ ...prev, [m.messageId]: false }));
   };
-  const hasValidScore =
-    m.politenessScore != null &&
-    m.naturalnessScore != null &&
-    m.politenessScore >= 0 &&
-    m.naturalnessScore >= 0;
-  const avgScore2 = hasValidScore
-    ? (m.politenessScore + m.naturalnessScore) / 2
-    : 100;
-  let scoreLabel = "None";
-  let scoreColor = "text-green-500";
-  let scoreIcon = "/chatroom/satisfied.png";
-  if (avgScore2 < 50) {
-    scoreLabel = "Serious";
-    scoreColor = "text-red-500";
-    scoreIcon = "/chatroom/dissatisfied.png";
-  } else if (avgScore2 < 80) {
-    scoreLabel = "Mild";
-    scoreColor = "text-yellow-500";
-    scoreIcon = "/chatroom/neutral.png";
-  }
-
-  const bubbleClass = clsx(
-    "relative z-30 p-4 rounded-2xl border  w-full",
-    isPending && "animate-pulse opacity-70",
-    isMine
-      ? isErrorOrFeedback
-        ? "bg-rose-100 text-black border-red-500"
-        : "bg-blue-500 text-white border border-transparent"
-      : "bg-white text-black border-gray-300"
-  );
 
   const handleTTsClick = (messageId: string) => {
     if (!messageId) return;
@@ -127,9 +84,7 @@ export default function MessageItem({
   const handleReactionReason = () => {
     setOpen((prev) => !prev);
   };
-  const handlerecommendation = () => {
-    setRecommandtion((prev) => !prev);
-  };
+
   if (m.isLoading && !isMine) {
     return (
       <div className="flex mb-4 gap-2 justify-start">
@@ -149,7 +104,7 @@ export default function MessageItem({
     <div
       className={clsx(
         "flex mb-4 gap-2",
-        isMine ? "justify-end " : "justify-start flex flex-col"
+        isMine ? " justify-end" : "justify-start flex flex-col",
       )}
     >
       {!isMine && (
@@ -162,186 +117,78 @@ export default function MessageItem({
       )}
 
       {/* 메시지 텍스트 + 부가 박스 */}
-      <div className={clsx("max-w-[75%]", isMine && "ml-auto")}>
+      <div className={clsx("w-61 ", isMine && "")}>
         {/* 메시지 박스 */}
-        <div className="relative flex items-cetner justify-center gap-3">
-          {showFeedbackButton && (
-            <button
-              onClick={handleFeedbackClick}
-              disabled={loadingFeedbacks[m.messageId]}
-              className=" cursor-pointer mb-4"
-            >
-              {loadingFeedbacks[m.messageId] ? (
-                <svg
-                  className="animate-spin w-3 h-3 text-gray-600"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8H4z"
-                  />
-                </svg>
-              ) : (
-                <Info className="text-red-500 size-4" />
-              )}
-            </button>
-          )}
 
-          {/* 유저 말풍선 박스 */}
-          {isMine && (
-            <div className="flex flex-col w-full">
-              <div className={bubbleClass}>
-                <p className="text-sm leading-[130%] whitespace-pre-wrap my-1 ">
-                  {m.content}
-                </p>
-              </div>
-              {!isPending && (
-                <div
-                  className={`flex items-center justify-end mt-1 ${scoreColor}`}
-                >
-                  <Image src={scoreIcon} alt="아이콘" width={16} height={16} />
-                  <span className="text-xs font-semibold">{scoreLabel}</span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* AI 말풍선 */}
-          {!isMine && (
-            <div className="flex flex-col gap-2 rounded-xl p-4 border border-gray-300 bg-white">
-              <p className="text-sm leading-[130%] whitespace-pre-wrap my-1">
-                {m.reactionEmoji}
-                {m.reactionDescription}
-                {m.content}
-              </p>
-
-              <div className="flex mt-2 pt-2 justify-between border-t border-gray-200">
-                <div className="flex gap-2 ">
-                  <button
-                    onClick={() => handleTTsClick(m.messageId)}
-                    disabled={loadingTTS}
-                  >
-                    <Image
-                      src="/message/volume_up.svg"
-                      width={20}
-                      height={20}
-                      alt="TTS"
-                    />
-                  </button>
-
-                  <button
-                    onClick={() => handleTranslateClick(m.messageId)}
-                    disabled={loadingTranslate}
-                  >
-                    <Image
-                      src="/message/language.svg"
-                      width={20}
-                      height={20}
-                      alt="Translate"
-                    />
-                  </button>
-                </div>
-                <Image
-                  src="/message/ai.png"
-                  width={20}
-                  height={20}
-                  alt="Translate"
-                  className="size-5 text-gray-600"
-                  onClick={() => handleReactionReason()}
+        {showFeedbackButton && (
+          <button
+            onClick={handleFeedbackClick}
+            disabled={loadingFeedbacks[m.messageId]}
+            className=" cursor-pointer mb-4"
+          >
+            {loadingFeedbacks[m.messageId] ? (
+              <svg
+                className="animate-spin w-3 h-3 text-gray-600"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
                 />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                />
+              </svg>
+            ) : (
+              <Info className="text-red-500 size-4" />
+            )}
+          </button>
+        )}
+
+        {/* 유저 말풍선 박스 */}
+        {isMine && (
+          <div className="flex flex-col gap-1">
+            <p className="text-end">나라고</p>
+            <div className="p-4 bg-white rounded-b-xl rounded-tl-xl">
+              <p className="text-sm whitespace-pre-wrap my-1 ">{m.content}</p>
+              <div className="pt-2.5 border-t border-gray-200 flex justify-between">
+                <button className="flex rounded-full border border-blue-500 px-2 py-1 gap-1">
+                  <Image
+                    src="/chatroom/warning.png"
+                    alt="feedback"
+                    width={20}
+                    height={20}
+                  />
+                  <span className="text-blue-500 text-sm">View feedback</span>
+                </button>
+                <RotateCcw size={20} />
               </div>
             </div>
-          )}
-        </div>
-
-        {/* 피드백 박스 */}
-        <div className="w-full z-50 translate-x-7.5 max-w-[88%]">
-          {isMine && feedbackOpenId === m.messageId && m.feedback && (
-            <div className="p-4 bg-gray-600 rounded-xl -mt-10 ">
-              <div className="text-white text-sm pb-3 border-b border-gray-500 mb-3 pt-4">
-                {m.feedback.appropriateExpression}
-              </div>
-
-              <div className="text-gray-300 text-sm mb-4">
-                {activeTab === "contents"
-                  ? m.feedback.contentsFeedback
-                  : m.feedback.nuanceFeedback}
-              </div>
-
-              <div className="flex gap-0 justify-end">
-                <button
-                  onClick={() => setActiveTab("contents")}
-                  className={`px-3 py-1 text-xs font-medium transition-colors rounded-l-full ${
-                    activeTab === "contents"
-                      ? "bg-white text-gray-800"
-                      : "bg-gray-500 text-gray-300 hover:bg-gray-400"
-                  }`}
-                >
-                  Contents
-                </button>
-                <button
-                  onClick={() => setActiveTab("nuance")}
-                  className={`px-3 py-1 text-xs font-medium transition-colors rounded-r-full ${
-                    activeTab === "nuance"
-                      ? "bg-white text-gray-800"
-                      : "bg-gray-500 text-gray-300 hover:bg-gray-400"
-                  }`}
-                >
-                  Nuance
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-        {open && (
-          <div className="px-3 pb-3 pt-6 bg-gray-600 rounded-xl  -mt-5">
-            <p className="text-gray-100 text-sm">{m.reactionReason}</p>
           </div>
         )}
-        {translated && (
-          <div className="px-3 pb-3 pt-6 bg-gray-600 rounded-xl  -mt-5">
-            <p className="text-gray-100 text-sm">{translated}</p>
-          </div>
-        )}
-      </div>
-      {recommendation && !isMine && (
-        <div className="max-w-[75%] ml-auto">
-          <div className="relative mb-4">
-            <div className="border-2 border-dashed border-gray-400 rounded-lg p-4 bg-white flex items-center justify-between gap-2">
-              <p className="text-gray-500 text-sm">Recommendation</p>
-              <div className="w-6 h-6 rounded-full border-2 border-gray-400 flex items-center justify-center border-dotted">
-                <LightBulbIcon
-                  className="size-4"
-                  onClick={() => handlerecommendation()}
-                />
-              </div>
-            </div>
-          </div>
-          {recommandtion && (
-            <div className="border-2 border-dashed border-gray-400 rounded-lg p-4 bg-white flex items-start justify-between gap-2 flex-col">
-              <p className="text-gray-500 text-sm wrap-break-word">
-                {m.recommendation}
-              </p>
-              <div className="flex gap-2 mt-2">
+
+        {/* AI 말풍선 */}
+        {!isMine && (
+          <div className="flex flex-col gap-2 rounded-xl p-4 border border-gray-300 bg-white">
+            <p className="text-sm leading-[130%] whitespace-pre-wrap my-1">
+              {m.reactionEmoji}
+              {m.reactionDescription}
+              {m.content}
+            </p>
+
+            <div className="flex mt-2 pt-2 justify-between border-t border-gray-200">
+              <div className="flex gap-2 ">
                 <button
                   onClick={() => handleTTsClick(m.messageId)}
                   disabled={loadingTTS}
                 >
-                  <Image
-                    src="/message/volume_up.svg"
-                    width={20}
-                    height={20}
-                    alt="TTS"
-                  />
+                  <Volume2 size={20} />
                 </button>
 
                 <button
@@ -356,10 +203,19 @@ export default function MessageItem({
                   />
                 </button>
               </div>
+              <button
+                onClick={() => handleReactionReason()}
+                className="border-gradient-primary rounded-full px-2 py-1"
+              >
+                👀{" "}
+                <span className="text-gradient-primary text-xs font-semibold">
+                  Really mean
+                </span>
+              </button>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

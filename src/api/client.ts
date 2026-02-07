@@ -3,7 +3,13 @@ import { User } from "@/types/user/user.type";
 
 import { normalizeChatMessage } from "@/utils/normalizeChatMessage";
 import { ChatMsg, Feedback } from "@/types/messages";
-import { ConversationDetail } from "@/types/conversations";
+import {
+  Conversation,
+  ConversationDetail,
+  FilterState,
+} from "@/types/conversations";
+import { filterMap } from "@/constants/filter";
+import { TopicRes } from "@/types/topics";
 
 export const apiClient = {
   users: {
@@ -11,8 +17,30 @@ export const apiClient = {
       return apiFetch<User>("/api/users/me");
     },
   },
-
+  topic: {
+    getTopic: async (
+      category: string,
+      favoritesOnly: boolean,
+    ): Promise<TopicRes[]> => {
+      return apiFetch<TopicRes[]>(
+        `/api/topics?category=${category}&favoritesOnly=${favoritesOnly}`,
+      );
+    },
+  },
   conversations: {
+    getConversations: async (filter: FilterState) => {
+      const status = filter ? filterMap[filter] : null;
+      const queryString = new URLSearchParams({
+        sortBy: "CREATED_AT_DESC",
+        page: "1",
+        size: "1000",
+        ...(status && { status }),
+      }).toString();
+      return apiFetch<{ content: Conversation[] }>(
+        `/api/conversations?${queryString}`,
+        { cache: "no-cache" },
+      );
+    },
     getDetail: async (id: string): Promise<ConversationDetail> => {
       return apiFetch<ConversationDetail>(`/api/conversations/${id}`, {
         cache: "no-store",
@@ -40,10 +68,17 @@ export const apiClient = {
       return apiFetch<Feedback>(`/api/messages/${messageId}/feedback`);
     },
   },
-  preview:{
-    getPreview:async(sessionId:string):Promise<void>=>{
+  preview: {
+    getPreview: async (sessionId: string): Promise<void> => {
       const data = await apiFetch<void>(
         `/api/preview/roleplay/${sessionId}/hints`,
+      );
+    },
+  },
+  language:{
+    getscenario:async(scenarioId:number,myRole:string,aiRole:string,deatil:string):Promise<void>=>{
+      return apiFetch<void>(
+        `/api/language/scenario-context/${scenarioId}+${myRole}+${aiRole}+${deatil}`
       )
     }
   }

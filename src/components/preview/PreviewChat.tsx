@@ -153,7 +153,7 @@ export default function PreviewChat() {
                           </span>
                         </button>
                       </div>
-                      {/* 장부가 아니라 '자기 자신'의 상태를 보고 보여줌 */}
+
                       {aiResponses[idx].isRevealed &&
                         aiResponses[idx].hiddenMeaning && (
                           <p className="text-xs text-gray-500 bg-gray-50 rounded-lg p-3 mt-1">

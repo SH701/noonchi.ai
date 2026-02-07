@@ -21,7 +21,7 @@ const renderToast = (message: string, type: ToastType, duration = 2000) => {
       <div
         onClick={() => sonnerToast.dismiss(id)}
         className={cn(
-          "flex items-center gap-2 rounded-xl bg-black/70 px-4 py-3 text-sm font-semibold text-white",
+          "flex items-center gap-2 rounded-xl bg-black/60 px-4 py-3 text-sm font-semibold text-white",
           STYLE_MAP[type],
         )}
       >

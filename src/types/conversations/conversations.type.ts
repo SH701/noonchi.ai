@@ -18,10 +18,15 @@ export interface Conversation {
     description: string;
     profileImageUrl: string;
   };
-  status: string;
+  conversationType: "Ask" | "Roleplay";
+  status: "ACTIVE" | "DONE";
+
   situation: string;
   createdAt: string;
   feedback?: Feedback | null;
+  interviewCompanyName: string;
+  interviewJobTitle: string;
+  interviewJobPosting: string;
 }
 
 export interface ConversationDetail {

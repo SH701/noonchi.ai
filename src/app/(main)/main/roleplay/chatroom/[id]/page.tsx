@@ -1,14 +1,8 @@
 "use client";
 
-import Image from "next/image";
-
 import { useEffect, useRef, useState } from "react";
 
-import {
-  ChatroomInfo,
-  ChatroomInput,
-  MessageList,
-} from "@/components/chatroom";
+import { ChatroomInput, MessageList } from "@/components/chatroom";
 import { useParams } from "next/navigation";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -19,9 +13,8 @@ import { useVoiceChat } from "@/hooks/useVoiceChat";
 export default function RolePlayChatRoom() {
   const { id } = useParams<{ id: string }>();
 
-  const [infoOpen, setInfoOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const { data: conversation, error: conversationError } =
@@ -73,7 +66,7 @@ export default function RolePlayChatRoom() {
   };
   return (
     <div className="min-h-screen  flex flex-col w-full">
-      <div className="flex px-4 py-4 overflow-y-auto">
+      <div className="flex flex-col  overflow-y-auto pb-32">
         <MessageList
           messages={messages}
           myAI={myAI}
@@ -92,20 +85,11 @@ export default function RolePlayChatRoom() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
             className="fixed bottom-34.75 left-1/2 -translate-x-1/2 -translate-y-3 z-40 flex flex-col items-center"
-          >
-            <Image
-              src="/etc/voice_error.png"
-              alt="Voice Error"
-              width={150}
-              height={60}
-            />
-          </motion.div>
+          ></motion.div>
         )}
       </AnimatePresence>
 
       <ChatroomInput
-        isTyping={isTyping}
-        setIsTyping={setIsTyping}
         message={message}
         setMessage={setMessage}
         isAIResponding={isAIResponding}
@@ -117,14 +101,6 @@ export default function RolePlayChatRoom() {
         handleResetAudio={handleResetAudio}
         handleSendAudio={handleSendAudio}
         sttText={sttText}
-      />
-
-      <ChatroomInfo
-        isOpen={infoOpen}
-        onClose={() => setInfoOpen(false)}
-        companyName={conversation?.interviewCompanyName ?? ""}
-        jobTitle={conversation?.interviewJobTitle ?? ""}
-        interviewStyle={conversation?.interviewStyle ?? ""}
       />
     </div>
   );

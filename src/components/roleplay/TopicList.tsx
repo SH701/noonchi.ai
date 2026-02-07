@@ -1,11 +1,15 @@
 "use client";
 
 import TopicSlider from "@/components/roleplay/TopicSlider";
-import { CategoryType, Topics } from "@/types/topics";
-import { topicsByCategory } from "@/data";
+import { CategoryType } from "@/types/topics";
 import { useRouter } from "next/navigation";
 import { Heart, Plus } from "lucide-react";
 import Image from "next/image";
+import {
+  useAddFavorite,
+  useRemoveFavorite,
+} from "@/hooks/mutations/useFavorite";
+import { useTopics } from "@/hooks/queries/useTopics";
 
 type TopicListProps = {
   category: CategoryType;
@@ -13,8 +17,18 @@ type TopicListProps = {
 };
 
 export default function TopicList({ category, setCategory }: TopicListProps) {
-  const topics = topicsByCategory[category];
+  const { data: topics = [] } = useTopics(category, false);
   const router = useRouter();
+  const { mutate: addFavorite } = useAddFavorite();
+  const { mutate: removeFavorite } = useRemoveFavorite();
+
+  const toggleFavorite = (topicId: number, isFavorite: boolean) => {
+    if (isFavorite) {
+      removeFavorite(topicId);
+    } else {
+      addFavorite(topicId);
+    }
+  };
 
   return (
     <div>
@@ -31,39 +45,34 @@ export default function TopicList({ category, setCategory }: TopicListProps) {
       />
 
       <div className="grid grid-cols-2 gap-4 w-full pb-10">
-        {topics.map((topic: Topics) => {
-          return (
-            <div
-              key={topic.id}
-              className="relative flex flex-col rounded-xl cursor-pointer hover:shadow-md transition-shadow w-41 h-41 overflow-hidden group"
-              onClick={() => {
-                if (topic.topic === "Career" && topic.id === 1) {
-                  router.push("/main/roleplay/create/interview");
-                } else {
-                  router.push(
-                    `/main/roleplay/create?category=${category}&topicId=${topic.id}`,
-                  );
-                }
+        {topics.map((topic) => (
+          <div
+            key={topic.topicId}
+            className="relative flex flex-col rounded-xl cursor-pointer hover:shadow-md transition-shadow w-41 h-41 overflow-hidden group"
+            onClick={() =>
+              router.push(
+                `/main/roleplay/create?category=${category}&topicId=${topic.topicId}`,
+              )
+            }
+          >
+            <Image src={topic.imageUrl} alt={topic.name} fill className="object-cover" />
+
+            <div className="flex flex-col justify-end px-4 py-2 text-white gap-1 absolute inset-x-0 bottom-0 h-auto bg-gray backdrop-blur-sm rounded-b-xl">
+              <span className="text-xs">{topic.category}</span>
+              <h4 className="text-sm font-semibold">{topic.name}</h4>
+            </div>
+
+            <button
+              className="absolute top-3 right-3 text-white opacity-80 hover:opacity-100 transition-opacity"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFavorite(topic.topicId, topic.isFavorite);
               }}
             >
-              <Image src={topic.img} alt="사진" fill className="object-cover" />
-
-              <div className=" flex flex-col justify-end px-4 py-2   text-white gap-1 absolute inset-x-0 bottom-0 h-auto bg-gray backdrop-blur-sm rounded-b-xl">
-                <span className="text-xs">{topic.topic}</span>
-                <h4 className="text-sm font-semibold ">{topic.title}</h4>
-              </div>
-
-              <button
-                className="absolute top-3 right-3 text-white opacity-80 hover:opacity-100 transition-opacity"
-                onClick={(e) => {
-                  e.stopPropagation(); // 찜 로직
-                }}
-              >
-                <Heart />
-              </button>
-            </div>
-          );
-        })}
+              <Heart fill={topic.isFavorite ? "currentColor" : "none"} />
+            </button>
+          </div>
+        ))}
 
         <button
           className="flex items-center justify-center size-10 bg-white rounded-full z-9999 absolute right-4 bottom-8"

@@ -24,9 +24,6 @@ interface SendMessageResponse {
   messages: ChatMsg[];
 }
 
-export interface DeleteConversationResponse {
-  conversationId: number;
-}
 export interface EndConversationResponse {
   conversationId: number;
 }
@@ -116,18 +113,13 @@ export const apiMutations = {
         body: JSON.stringify(data),
       });
     },
-    deleteConversation: async (
-      conversationId: string,
-    ): Promise<DeleteConversationResponse | null> => {
-      return apiFetch<DeleteConversationResponse | null>(
-        `/api/conversations/${conversationId}`,
-        {
-          method: "DELETE",
-        },
-      );
+    deleteConversation: async (conversationId: number): Promise<void> => {
+      return apiFetch<void>(`/api/conversations/${conversationId}`, {
+        method: "DELETE",
+      });
     },
     endConversation: async (
-      conversationId: string,
+      conversationId: number,
     ): Promise<EndConversationResponse> => {
       return apiFetch<EndConversationResponse>(
         `/api/conversations/${conversationId}/end`,
@@ -193,7 +185,6 @@ export const apiMutations = {
           },
         },
       );
-      console.log(process.env.NEXT_PUBLIC_PREVIEW_BASE_URL);
       return data;
     },
     send: async (
@@ -258,6 +249,18 @@ export const apiMutations = {
           },
         },
       );
+    },
+  },
+  topic: {
+    addfavorite: async (topicId: number): Promise<void> => {
+      return apiFetch<void>(`/api/topics/${topicId}/favorite`, {
+        method: "POST",
+      });
+    },
+    removefavorite: async (topicId: number): Promise<void> => {
+      return apiFetch<void>(`/api/topics/${topicId}/favorite`, {
+        method: "DELETE",
+      });
     },
   },
 };

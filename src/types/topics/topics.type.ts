@@ -24,3 +24,11 @@ export interface Topics {
   aiRole: string;
   myRole: string;
 }
+export interface TopicRes {
+  topicId: 0;
+  name: string;
+  category: string;
+  description: string;
+  imageUrl: string;
+  isFavorite: boolean;
+}

@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.imweb.me",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   experimental: {

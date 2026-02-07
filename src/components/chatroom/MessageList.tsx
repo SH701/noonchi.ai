@@ -18,7 +18,6 @@ export default function MessageList({
   myAI,
   feedbackOpenId,
   handleFeedbacks,
-  messageStatuses = {},
 }: MessageListProps) {
   return (
     <>
@@ -34,7 +33,6 @@ export default function MessageList({
             isPending={isPending}
             feedbackOpenId={feedbackOpenId}
             handleFeedbacks={handleFeedbacks}
-            messageStatus={messageStatuses[m.messageId] || "default"}
           />
         );
       })}

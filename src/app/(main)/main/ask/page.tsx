@@ -21,23 +21,7 @@ export default function Ask() {
           about to say or do.
         </span>
       </div>
-      <div className="mt-auto">
-        <ChatroomInput
-          isTyping={isTyping}
-          setIsTyping={setIsTyping}
-          message={message}
-          setMessage={setMessage}
-          isAIResponding={false}
-          sendMessage={handleSendText}
-          micState="idle"
-          pendingAudioUrl={null}
-          showVoiceError={false}
-          handleMicClick={() => {}}
-          handleResetAudio={() => {}}
-          handleSendAudio={() => {}}
-          sttText=""
-        />
-      </div>
+      <div className="mt-auto"></div>
     </div>
   );
 }
