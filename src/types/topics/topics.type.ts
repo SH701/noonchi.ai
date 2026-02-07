@@ -1,5 +1,5 @@
 export type CategoryType =
-  | "Popular"
+  | "Favorites"
   | "Career"
   | "Family"
   | "Belonging"

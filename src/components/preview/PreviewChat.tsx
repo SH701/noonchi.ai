@@ -45,7 +45,6 @@ export default function PreviewChat() {
 
     setUserMessages((prev) => [...prev, message]);
 
-    // 전송 시작할 때 빈 주머니(객체)를 배열에 미리 하나 추가합니다.
     setAiResponses((prev) => [
       ...prev,
       { content: "", hiddenMeaning: "", isRevealed: false },
@@ -55,7 +54,6 @@ export default function PreviewChat() {
       { sessionId: data.session_id, userMessage: message },
       {
         onSuccess: (res) => {
-          // 완료되면 마지막 주머니에 hiddenMeaning을 채워줍니다.
           setAiResponses((prev) => {
             const newResponses = [...prev];
             newResponses[newResponses.length - 1].hiddenMeaning =
@@ -83,7 +81,7 @@ export default function PreviewChat() {
 
   return (
     <div className="min-h-screen px-5 pb-30">
-      <Header leftIcon={<Menu />} center="RolePlay" rightIcon={<SquarePen />} />
+      <Header leftIcon={<Menu />} center="Preview" rightIcon={<SquarePen />} />
       {isPending ? (
         <div>loading</div>
       ) : (

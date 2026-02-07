@@ -6,10 +6,12 @@ import { ChatMsg, Feedback } from "@/types/messages";
 import {
   Conversation,
   ConversationDetail,
+  ConversationFeedback,
   FilterState,
 } from "@/types/conversations";
 import { filterMap } from "@/constants/filter";
 import { TopicRes } from "@/types/topics";
+import axios from "axios";
 
 export const apiClient = {
   users: {
@@ -22,9 +24,10 @@ export const apiClient = {
       category: string,
       favoritesOnly: boolean,
     ): Promise<TopicRes[]> => {
-      return apiFetch<TopicRes[]>(
-        `/api/topics?category=${category}&favoritesOnly=${favoritesOnly}`,
-      );
+      const params = new URLSearchParams();
+      if (category) params.set("category", category);
+      params.set("favoritesOnly", String(favoritesOnly));
+      return apiFetch<TopicRes[]>(`/api/topics?${params.toString()}`);
     },
   },
   conversations: {
@@ -46,6 +49,16 @@ export const apiClient = {
         cache: "no-store",
       });
     },
+    getConversationFeedback: async (
+      conversationId: string,
+    ): Promise<ConversationFeedback> => {
+      return apiFetch<ConversationFeedback>(
+        `/api/conversation/${conversationId}/feedback`,
+        {
+          cache: "no-cache",
+        },
+      );
+    },
   },
 
   messages: {
@@ -64,6 +77,11 @@ export const apiClient = {
 
     getFeedback: async (messageId: string): Promise<Feedback> => {
       return apiFetch<Feedback>(`/api/messages/${messageId}/feedback`);
+    },
+  },
+  preview: {
+    getHint: async (sessionId: string): Promise<void> => {
+      return axios.get(`/api/preview/${sessionId}/hints`);
     },
   },
 };

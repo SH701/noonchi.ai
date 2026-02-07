@@ -28,7 +28,7 @@ export default function Tab() {
 
   const handleProfileClick = () => router.push("/profile");
   const handleCoach = () => {
-    router.push("/main/coach");
+    router.push("/coach");
   };
   return (
     <AnimatePresence>

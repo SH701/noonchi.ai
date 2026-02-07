@@ -51,6 +51,22 @@ export interface ConversationDetail {
   conversationTopic: string;
 }
 
+export interface ConversationFeedback {
+  feedbackId: number;
+  conversationId: number;
+  politenessScore: number;
+  naturalnessScore: number;
+  pronunciationScore: number;
+  summary: string;
+  goodPoints: string;
+  improvementPoints: ImprovementPoint[];
+  overallEvaluation: string;
+}
+
 export type FilterState = "done" | "in-progress" | null;
 
 export type SortOrder = "asc" | "desc";
+export interface ImprovementPoint {
+  point: string;
+  tip: string;
+}

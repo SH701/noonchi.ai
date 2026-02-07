@@ -17,7 +17,9 @@ type TopicListProps = {
 };
 
 export default function TopicList({ category, setCategory }: TopicListProps) {
-  const { data: topics = [] } = useTopics(category, false);
+  const isLove = category === "Favorites";
+  const { data: topics = [] } = useTopics(isLove ? "" : category, isLove);
+
   const router = useRouter();
   const { mutate: addFavorite } = useAddFavorite();
   const { mutate: removeFavorite } = useRemoveFavorite();
@@ -34,7 +36,7 @@ export default function TopicList({ category, setCategory }: TopicListProps) {
     <div>
       <TopicSlider
         topics={[
-          { id: 1, label: "Popular" },
+          { id: 1, label: "Favorites" },
           { id: 2, label: "Career" },
           { id: 3, label: "Family" },
           { id: 4, label: "Belonging" },
@@ -55,7 +57,12 @@ export default function TopicList({ category, setCategory }: TopicListProps) {
               )
             }
           >
-            <Image src={topic.imageUrl} alt={topic.name} fill className="object-cover" />
+            <Image
+              src={topic.imageUrl}
+              alt={topic.name}
+              fill
+              className="object-cover"
+            />
 
             <div className="flex flex-col justify-end px-4 py-2 text-white gap-1 absolute inset-x-0 bottom-0 h-auto bg-gray backdrop-blur-sm rounded-b-xl">
               <span className="text-xs">{topic.category}</span>

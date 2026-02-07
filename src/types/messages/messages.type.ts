@@ -19,19 +19,15 @@ export interface ChatMsg {
   visualAction: string;
   situationDescription: string;
 }
-export interface ImprovementPoint {
-  point: string;
-  tip: string;
-}
+
 
 export interface Feedback {
   feedbackId: number;
-  conversationId: number;
+  messageId: number;
   politenessScore: number;
   naturalnessScore: number;
   pronunciationScore: number;
-  summary: string;
-  goodPoints: string;
-  improvementPoints: ImprovementPoint[];
-  overallEvaluation: string;
+  appropriateExpression: string;
+  contentsFeedback: string;
+  nuanceFeedback: string;
 }

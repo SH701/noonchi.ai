@@ -8,19 +8,17 @@ export default function AskHistoryTab() {
         <span className="text-sm font-medium mb-2">Ask </span>
         <span className="text-xs text-gray-600">Edit</span>
       </div>
-      {data.map((convo) => (
-        <>
-          {/* ask 채팅 완료후 타입 ask로 바꿔야함 */}
-          {convo.conversationType === "ROLE_PLAYING" && (
-            <div key={convo.conversationId} className=" overflow-y-auto mb-5">
-              <div className="flex flex-col">
-                <span>{convo.status}</span>
-                <span>{convo.createdAt}</span>
-              </div>
+      {/* ask 채팅 완료후 타입 ask로 바꿔야함 */}
+      {data
+        .filter((convo) => convo.conversationType === "ROLE_PLAYING")
+        .map((convo) => (
+          <div key={convo.conversationId} className=" overflow-y-auto mb-5">
+            <div className="flex flex-col">
+              <span>{convo.status}</span>
+              <span>{convo.createdAt}</span>
             </div>
-          )}
-        </>
-      ))}
+          </div>
+        ))}
     </div>
   );
 }
