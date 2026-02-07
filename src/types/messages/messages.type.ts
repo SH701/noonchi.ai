@@ -1,23 +1,23 @@
 export interface ChatMsg {
-  messageId: string;
+  messageId: number;
   conversationId: number;
   type: "USER" | "AI";
   content: string;
   translatedContent?: string | null;
   audioUrl?: string | null;
-
   politenessScore?: number | null;
   naturalnessScore?: number | null;
   pronunciationScore?: number | null;
-
   reactionEmoji?: string | null;
   reactionDescription?: string | null;
   reactionReason?: string | null;
   recommendation?: string | null;
-
   feedback?: Feedback;
   isLoading?: boolean;
   createdAt: string;
+  hiddenMeaning: string;
+  visualAction: string;
+  situationDescription: string;
 }
 export interface ImprovementPoint {
   point: string;

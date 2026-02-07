@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { ChatroomInput, MessageList } from "@/components/chatroom";
 import { useParams } from "next/navigation";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { useConversationDetail } from "@/hooks/queries/";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useVoiceChat } from "@/hooks/useVoiceChat";
@@ -75,19 +74,6 @@ export default function RolePlayChatRoom() {
         />
         <div ref={bottomRef} />
       </div>
-
-      <AnimatePresence>
-        {showVoiceError && (
-          <motion.div
-            key="voice-error"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="fixed bottom-34.75 left-1/2 -translate-x-1/2 -translate-y-3 z-40 flex flex-col items-center"
-          ></motion.div>
-        )}
-      </AnimatePresence>
 
       <ChatroomInput
         message={message}

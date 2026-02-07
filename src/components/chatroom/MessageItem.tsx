@@ -16,8 +16,8 @@ type MessageItemProps = {
   m: any;
   myAI: MyAI | null;
   isMine: boolean;
-  feedbackOpenId: string | null;
-  handleFeedbacks: (messageId: string) => void;
+  feedbackOpenId: number | null;
+  handleFeedbacks: (messageId: number) => void;
   isFirstAIMessage?: boolean;
   isPending?: boolean;
 };
@@ -116,10 +116,8 @@ export default function MessageItem({
         </div>
       )}
 
-      {/* 메시지 텍스트 + 부가 박스 */}
-      <div className={clsx("w-61 ", isMine && "")}>
-        {/* 메시지 박스 */}
-
+      {/* 메시지 박스 */}
+      <div className="w-61">
         {showFeedbackButton && (
           <button
             onClick={handleFeedbackClick}
@@ -185,14 +183,14 @@ export default function MessageItem({
             <div className="flex mt-2 pt-2 justify-between border-t border-gray-200">
               <div className="flex gap-2 ">
                 <button
-                  onClick={() => handleTTsClick(m.messageId)}
+                  onClick={() => handleTTsClick(String(m.messageId))}
                   disabled={loadingTTS}
                 >
                   <Volume2 size={20} />
                 </button>
 
                 <button
-                  onClick={() => handleTranslateClick(m.messageId)}
+                  onClick={() => handleTranslateClick(String(m.messageId))}
                   disabled={loadingTranslate}
                 >
                   <Image

@@ -18,7 +18,7 @@ export interface Conversation {
     description: string;
     profileImageUrl: string;
   };
-  conversationType: "Ask" | "Roleplay";
+  conversationType: "ASK" | "ROLE_PLAYING";
   status: "ACTIVE" | "DONE";
 
   situation: string;
@@ -27,6 +27,8 @@ export interface Conversation {
   interviewCompanyName: string;
   interviewJobTitle: string;
   interviewJobPosting: string;
+  conversationTrack: string;
+  conversationTopic: string;
 }
 
 export interface ConversationDetail {
@@ -45,6 +47,8 @@ export interface ConversationDetail {
   taskCurrentName?: string;
   taskAllCompleted?: boolean;
   conversationType?: string;
+  conversationTrack: string;
+  conversationTopic: string;
 }
 
 export type FilterState = "done" | "in-progress" | null;

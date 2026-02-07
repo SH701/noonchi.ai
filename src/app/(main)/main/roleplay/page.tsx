@@ -4,12 +4,9 @@ import { useState } from "react";
 
 import { CategoryType } from "@/types/topics/topics.type";
 import { TopicList } from "@/components/roleplay";
-import { Button } from "@/components/ui/button/button";
-import { useChargeCredit } from "@/hooks/mutations/useCredit";
 
 export default function Roleplay() {
   const [category, setCategory] = useState<CategoryType>("Career");
-  const { mutate: chargeCredit, isPending } = useChargeCredit();
 
   return (
     <>
@@ -23,14 +20,6 @@ export default function Roleplay() {
           </span>
         </div>
         <TopicList category={category} setCategory={setCategory} />
-        <Button
-          variant="primary"
-          size="lg"
-          disabled={isPending}
-          onClick={() => chargeCredit(500)}
-        >
-          {isPending ? "Charging..." : "Charge 500 Credits"}
-        </Button>
       </div>
     </>
   );

@@ -8,8 +8,8 @@ import MessageItem from "./MessageItem";
 type MessageListProps = {
   messages: any[];
   myAI: MyAI | null;
-  feedbackOpenId: string | null;
-  handleFeedbacks: (messageId: string) => void;
+  feedbackOpenId: number | null;
+  handleFeedbacks: (messageId: number) => void;
   messageStatuses?: Record<string, "default" | "error">;
 };
 
@@ -23,7 +23,7 @@ export default function MessageList({
     <>
       {messages.map((m) => {
         const isMine = m.type === "USER";
-        const isPending = String(m.messageId).startsWith("temp-");
+        const isPending = m.messageId < 0;
         return (
           <MessageItem
             key={m.messageId}

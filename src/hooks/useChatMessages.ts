@@ -10,7 +10,7 @@ export function useChatMessages(conversationId?: number) {
   const queryClient = useQueryClient();
 
   const { data: serverMessages = [], isLoading: isMessagesLoading } =
-    useChatQuery(conversationId ? String(conversationId) : undefined);
+    useChatQuery(conversationId);
 
   const { mutateAsync: sendMutation, isPending } = useSendMessage();
   const { mutate: createFeedback } = useMessageFeedback(conversationId ?? 0);
@@ -18,24 +18,28 @@ export function useChatMessages(conversationId?: number) {
   const messages = useMemo(() => {
     if (optimisticMessages.length === 0) return serverMessages;
 
-    const optimisticIds = new Set(optimisticMessages.map(m => m.messageId));
-    const merged = [...serverMessages.filter(m => !optimisticIds.has(m.messageId)), ...optimisticMessages];
+    const optimisticIds = new Set(optimisticMessages.map((m) => m.messageId));
+    const merged = [
+      ...serverMessages.filter((m) => !optimisticIds.has(m.messageId)),
+      ...optimisticMessages,
+    ];
 
     return merged.sort(
-      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     );
   }, [serverMessages, optimisticMessages]);
 
   const isAIResponding = useMemo(
     () => messages.some((m) => m.isLoading && m.type === "AI"),
-    [messages]
+    [messages],
   );
 
   const sendMessage = async (content?: string, audioUrl?: string) => {
     if (!conversationId) return;
     if (!content && !audioUrl) return;
 
-    const tempId = "temp-" + Date.now();
+    const tempId = -Date.now();
 
     const optimistic: ChatMsg = {
       messageId: tempId,
@@ -44,16 +48,22 @@ export function useChatMessages(conversationId?: number) {
       content: content ?? "[Voice Message]",
       audioUrl: audioUrl ?? null,
       createdAt: new Date().toISOString(),
+      hiddenMeaning: "",
+      visualAction: "",
+      situationDescription: "",
     };
 
     const loadingBubble: ChatMsg = {
-      messageId: "ai-loading",
+      messageId: tempId - 1,
       conversationId,
       type: "AI",
       content: "",
       audioUrl: null,
       createdAt: new Date().toISOString(),
       isLoading: true,
+      hiddenMeaning: "",
+      visualAction: "",
+      situationDescription: "",
     };
 
     setOptimisticMessages([optimistic, loadingBubble]);
@@ -66,7 +76,7 @@ export function useChatMessages(conversationId?: number) {
 
       // 서버에서 최신 메시지 목록 다시 가져오기
       queryClient.invalidateQueries({
-        queryKey: ["messages", String(conversationId)]
+        queryKey: ["messages", conversationId],
       });
     } catch (err) {
       console.error("sendMessage error", err);
@@ -74,9 +84,9 @@ export function useChatMessages(conversationId?: number) {
     }
   };
 
-  const [feedbackOpenId, setFeedbackOpenId] = useState<string | null>(null);
+  const [feedbackOpenId, setFeedbackOpenId] = useState<number | null>(null);
 
-  const handleFeedbacks = (messageId: string) => {
+  const handleFeedbacks = (messageId: number) => {
     if (feedbackOpenId === messageId) {
       setFeedbackOpenId(null);
       return;
@@ -88,7 +98,7 @@ export function useChatMessages(conversationId?: number) {
       return;
     }
 
-    createFeedback(messageId, {
+    createFeedback(String(messageId), {
       onSuccess: () => {
         setFeedbackOpenId(messageId);
       },

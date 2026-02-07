@@ -8,7 +8,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTabStore } from "@/store/tab/useTabStore";
 import { SearchBar } from "../common";
 import { Users } from "lucide-react";
-import HistoryTab from "./HistoryTab";
+import RoleplayHistoryTab from "./RoleplayHistoryTab";
+import AskHistoryTab from "./AskHistoryTab";
 
 const slideVariants = {
   hidden: { width: 0 },
@@ -36,7 +37,7 @@ export default function Tab() {
           <div className="fixed inset-0 z-40 bg-black/60" onClick={closeTab} />
           <motion.div
             key="tab"
-            className="absolute left-0 top-0 z-50 h-full w-[75%] bg-gradient-primary pt-5 px-5"
+            className="absolute left-0 top-0 z-50 h-full w-[75%] bg-gradient-primary pt-15 "
             variants={slideVariants}
             initial="hidden"
             animate="visible"
@@ -51,20 +52,23 @@ export default function Tab() {
               exit="hidden"
               transition={{ duration: 0.15 }}
             >
-              <div className="flex flex-col gap-5 mb-5">
-                <SearchBar />
-                <button
-                  className="flex gap-2 cursor-pointer"
-                  onClick={handleCoach}
-                >
-                  <Users />
-                  <span className="text-sm pt-1">Live 1:1 Coaching</span>
-                </button>
+              <div className="px-5">
+                <div className="flex flex-col gap-5 mb-5">
+                  <SearchBar />
+                  <button
+                    className="flex gap-2 cursor-pointer"
+                    onClick={handleCoach}
+                  >
+                    <Users />
+                    <span className="text-sm pt-1">Live 1:1 Coaching</span>
+                  </button>
+                </div>
+                <RoleplayHistoryTab />
+                <AskHistoryTab />
               </div>
-              <HistoryTab />
               <button
                 onClick={handleProfileClick}
-                className="mt-auto flex w-full gap-4 bg-gray-700 p-4"
+                className="flex mt-auto gap-4 bg-gray-700 p-4"
               >
                 {session?.user.profileImageUrl ? (
                   <Image

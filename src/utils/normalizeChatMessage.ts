@@ -18,5 +18,8 @@ export function normalizeChatMessage(m: ChatMsg) {
     reactionDescription: m.reactionDescription,
     reactionReason: m.reactionReason,
     recommendation: m.recommendation,
+    hiddenMeaning: m.hiddenMeaning ?? "",
+    visualAction: m.visualAction ?? "",
+    situationDescription: m.situationDescription ?? "",
   };
 }

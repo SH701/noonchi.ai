@@ -23,11 +23,11 @@ export function useMessageFeedback(conversationId?: number) {
       if (!conversationId) return;
 
       queryClient.setQueryData<ChatMsg[]>(
-        ["messages", String(conversationId)],
+        ["messages", conversationId],
         (old) => {
           if (!old) return old;
           return old.map((msg) =>
-            msg.messageId === messageId
+            String(msg.messageId) === messageId
               ? { ...msg, feedback: feedbackData }
               : msg,
           );

@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button/button";
 
 export default function Result() {
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: number }>();
   const router = useRouter();
   const { data: conversation } = useConversationDetail(id);
   const conversationId = conversation?.conversationId ?? 0;
@@ -70,7 +70,7 @@ export default function Result() {
   if (messagesLoading || feedbackLoading) {
     return <p className="p-6">Loading...</p>;
   }
-
+  console.log(initialMessages);
   if (messagesError) {
     return (
       <p className="p-6 text-red-500">

@@ -49,15 +49,13 @@ export const apiClient = {
   },
 
   messages: {
-    getList: async (conversationId: string): Promise<ChatMsg[]> => {
+    getList: async (conversationId: number): Promise<ChatMsg[]> => {
       const data = await apiFetch<{ content?: ChatMsg[] } | ChatMsg[]>(
         `/api/messages?conversationId=${conversationId}&page=1&size=20`,
         { cache: "no-store" },
       );
-
       const list = Array.isArray(data) ? data : (data?.content ?? []);
       const mapped = list.map((m) => normalizeChatMessage(m));
-
       return mapped.sort(
         (a, b) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
@@ -68,18 +66,4 @@ export const apiClient = {
       return apiFetch<Feedback>(`/api/messages/${messageId}/feedback`);
     },
   },
-  preview: {
-    getPreview: async (sessionId: string): Promise<void> => {
-      const data = await apiFetch<void>(
-        `/api/preview/roleplay/${sessionId}/hints`,
-      );
-    },
-  },
-  language:{
-    getscenario:async(scenarioId:number,myRole:string,aiRole:string,deatil:string):Promise<void>=>{
-      return apiFetch<void>(
-        `/api/language/scenario-context/${scenarioId}+${myRole}+${aiRole}+${deatil}`
-      )
-    }
-  }
 };
