@@ -1,11 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { usePreviewSend, usePreviewStart } from "@/hooks/mutations/";
+import {
+  usePreviewRemove,
+  usePreviewSend,
+  usePreviewStart,
+} from "@/hooks/mutations/";
 import { ChatInput, Header } from "../common";
 import { Earth, Menu, RotateCcw, SquarePen, Volume2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
 
 interface AiMessage {
   content: string;
@@ -19,8 +24,9 @@ export default function PreviewChat() {
   const [userMessages, setUserMessages] = useState<string[]>([]);
   const [aiResponses, setAiResponses] = useState<AiMessage[]>([]);
   const [isPreviewEnded, setIsPreviewEnded] = useState(false);
+  const [showHintPanel, setShowHintPanel] = useState(false);
   const router = useRouter();
-
+  const { data: hintData } = usePreviewHint(data?.session_id);
   const handleChunk = useCallback((chunk: string) => {
     setAiResponses((prev) => {
       const newResponses = [...prev];
@@ -32,6 +38,7 @@ export default function PreviewChat() {
   }, []);
 
   const { mutate: sendMessage } = usePreviewSend(handleChunk);
+  const { mutate: removePreview } = usePreviewRemove();
   const started = useRef(false);
 
   useEffect(() => {
@@ -76,8 +83,11 @@ export default function PreviewChat() {
   };
 
   useEffect(() => {
-    if (isPreviewEnded) router.push("/preview/end");
-  }, [isPreviewEnded, router]);
+    if (isPreviewEnded && data?.session_id) {
+      removePreview(data.session_id);
+      router.push("/preview/end");
+    }
+  }, [isPreviewEnded, data?.session_id, router, removePreview]);
 
   return (
     <div className="min-h-screen px-5 pb-30">
@@ -133,7 +143,7 @@ export default function PreviewChat() {
                       {data?.scenario.ai_role}
                     </span>
                     <div className="flex flex-col gap-2 rounded-tr-xl rounded-b-xl p-4 border border-gray-300 bg-white mb-8">
-                      <p className="text-sm whitespace-pre-wrap my-1">
+                      <p className="text-sm  my-1">
                         {aiResponses[idx].content || "..."}
                       </p>
                       <div className="flex justify-between pt-3 border-t border-gray-200">
@@ -166,10 +176,23 @@ export default function PreviewChat() {
           ))}
         </>
       )}
+      {showHintPanel && hintData && (
+        <div className="fixed bottom-34 left-5 right-5 z-50 flex flex-col gap-2">
+          {hintData.hints.map((h, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl bg-gray-100 px-4 py-3 shadow-sm"
+            >
+              <p className="text-sm text-gray-700">{h}</p>
+            </div>
+          ))}
+        </div>
+      )}
       <ChatInput
         message={message}
         setMessage={setMessage}
         onSend={handleSend}
+        onHintClick={() => setShowHintPanel((prev) => !prev)}
       />
     </div>
   );

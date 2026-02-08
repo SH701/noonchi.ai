@@ -9,6 +9,7 @@ interface ChatInputProps {
   setMessage: (v: string) => void;
   onSend: () => void;
   onMicClick?: () => void;
+  onHintClick?: () => void;
   disabled?: boolean;
   placeholder?: string;
   showSituation?: boolean;
@@ -20,6 +21,7 @@ export default function ChatInput({
   setMessage,
   onSend,
   onMicClick,
+  onHintClick,
   disabled = false,
   placeholder = "Type your answer...",
   showSituation = true,
@@ -66,7 +68,7 @@ export default function ChatInput({
               </button>
             )}
             {showHint && (
-              <button className="flex border rounded-full px-2 h-6.5">
+              <button onClick={onHintClick} className="flex border rounded-full px-2 h-6.5">
                 <Lightbulb className="py-1" />
                 <p>hint</p>
               </button>

@@ -242,7 +242,7 @@ export const apiMutations = {
     },
     remove: async (sessionId: string): Promise<void> => {
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_PREVIEW_BASE_URL}/api/preview/roleplay/${sessionId}`,
+        `${process.env.NEXT_PUBLIC_PREVIEW_BASE_URL}/preview/roleplay/${sessionId}`,
         {
           headers: {
             "x-api-key": process.env.NEXT_PUBLIC_X_API_KEY || "",

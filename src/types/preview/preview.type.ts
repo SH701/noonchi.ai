@@ -16,6 +16,11 @@ export interface Preview {
   max_turns: number;
 }
 
+export interface PreviewHint {
+  hints: string[];
+  explanations: string[];
+}
+
 export interface PreviewSendResponse {
   session_id: string;
   ai_message: string;

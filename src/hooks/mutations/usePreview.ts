@@ -26,3 +26,8 @@ export function usePreviewSend(onChunk?: (chunk: string) => void) {
     },
   });
 }
+export function usePreviewRemove() {
+  return useMutation({
+    mutationFn: (sessionId: string) => apiMutations.preview.remove(sessionId),
+  });
+}

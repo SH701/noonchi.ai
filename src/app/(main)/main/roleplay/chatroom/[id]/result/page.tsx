@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button/button";
 
 export default function Result() {
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
-  const { id } = useParams<{ id: number }>();
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { data: conversation } = useConversationDetail(id);
   const conversationId = conversation?.conversationId ?? 0;

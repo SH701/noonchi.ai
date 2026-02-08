@@ -11,6 +11,7 @@ import {
 } from "@/types/conversations";
 import { filterMap } from "@/constants/filter";
 import { TopicRes } from "@/types/topics";
+import { PreviewHint } from "@/types/preview/preview.type";
 import axios from "axios";
 
 export const apiClient = {
@@ -80,8 +81,16 @@ export const apiClient = {
     },
   },
   preview: {
-    getHint: async (sessionId: string): Promise<void> => {
-      return axios.get(`/api/preview/${sessionId}/hints`);
+    getHint: async (sessionId: string): Promise<PreviewHint> => {
+      const res = await axios.get<PreviewHint>(
+        `${process.env.NEXT_PUBLIC_PREVIEW_BASE_URL}/preview/roleplay/${sessionId}/hints`,
+        {
+          headers: {
+            "X-API-KEY": process.env.NEXT_PUBLIC_X_API_KEY,
+          },
+        },
+      );
+      return res.data;
     },
   },
 };
