@@ -11,7 +11,10 @@ import {
   useMessageTTS,
   useMessageTranslate,
 } from "@/hooks/mutations/messages/useMessageFeedback";
+import NotTTS from "../modal/NotTTS";
 
+import { usePathname } from "next/navigation";
+import { useRoleplayHint } from "@/hooks/queries/useRoleplayHint";
 
 type MessageItemProps = {
   m: any;
@@ -31,22 +34,30 @@ export default function MessageItem({
   handleFeedbacks,
 }: MessageItemProps) {
   const [open, setOpen] = useState(false);
-  
-  const { mutate: TTS, isPending: loadingTTS } = useMessageTTS();
+  const [ttsOpen, setTtsOpen] = useState(false);
+  const [showHintPanel, setShowHintPanel] = useState(false);
   const {
     data: translateText,
     mutate: translate,
     isPending: loadingTranslate,
   } = useMessageTranslate();
-
+  const { mutate: tts, isPending: loadingTTS } = useMessageTTS();
+  const pathname = usePathname();
+  const roomId = pathname.split("/").pop();
+  const { data: hintData } = useRoleplayHint(Number(roomId));
   const handleTTsClick = (messageId: string) => {
     if (!messageId) return;
-    TTS(messageId);
+    tts(messageId, {
+      onError: () => setTtsOpen(true),
+    });
   };
 
   const handleTranslateClick = (messageId: string) => {
     if (!messageId) return;
-    translate(messageId);
+    setOpen((prev) => !prev);
+    if (open) {
+      translate(messageId);
+    }
   };
 
   const handleReactionReason = () => {
@@ -150,10 +161,18 @@ export default function MessageItem({
                 </span>
               </button>
             </div>
-            {translateText && <span>{translateText}</span>}
+            {translateText && open && <span>{translateText}</span>}
           </div>
         )}
       </div>
+      <NotTTS isOpen={ttsOpen} onClose={() => setTtsOpen(false)} />
+      {showHintPanel && hintData && (
+        <div className="fixed bottom-34 left-5 right-5 z-50 flex flex-col gap-2">
+          <div className="rounded-2xl bg-gray-100 px-4 py-3 shadow-sm">
+            <p className="text-sm text-gray-700">{hintData}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

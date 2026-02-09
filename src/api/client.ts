@@ -34,7 +34,7 @@ export const apiClient = {
   conversations: {
     getConversations: async (filter: FilterState) => {
       const status = filter ? filterMap[filter] : null;
-      const queryString = new URLSearchParams({ 
+      const queryString = new URLSearchParams({
         sortBy: "CREATED_AT_DESC",
         page: "1",
         size: "1000",
@@ -91,6 +91,11 @@ export const apiClient = {
         },
       );
       return res.data;
+    },
+  },
+  language: {
+    getHint: async (conversationId: number): Promise<string> => {
+      return apiFetch<string>(`/api/language/hint`);
     },
   },
 };

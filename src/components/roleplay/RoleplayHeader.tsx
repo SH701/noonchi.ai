@@ -10,9 +10,10 @@ import Header from "../common/Header";
 import { useConversationEnd } from "@/hooks/mutations";
 
 export default function RoleplayHeader() {
-  const { toggleTab, closeTab } = useTabStore();
+  const { toggleTab } = useTabStore();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const toggleBtnRef = useRef<HTMLDivElement>(null);
   const askRef = useRef<HTMLSpanElement>(null);
   const roleRef = useRef<HTMLSpanElement>(null);
   const pathname = usePathname();
@@ -32,18 +33,24 @@ export default function RoleplayHeader() {
   useEffect(() => {
     if (!open) return;
     const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
+        dropdownRef.current?.contains(target) ||
+        toggleBtnRef.current?.contains(target)
+      )
+        return;
+      setOpen(false);
+    };
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEsc);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEsc);
     };
-  }, [open, closeTab]);
+  }, [open]);
 
   const getActiveStyles = () => {
     const activeRef = isAsk ? askRef : roleRef;
@@ -61,7 +68,9 @@ export default function RoleplayHeader() {
       router.push("/main/ask");
     }
   };
-
+  const handleOpen = () => {
+    setOpen((prev) => !prev);
+  };
   const handleEnd = () => {
     try {
       conversationEnd(Number(roomId));
@@ -69,6 +78,12 @@ export default function RoleplayHeader() {
     } catch (error) {
       console.error("처리 중 오류 발생:", error);
     }
+  };
+  const handleAsk = () => {
+    router.push("/main/ask");
+  };
+  const handleRoleplay = () => {
+    router.push("/main");
   };
   const ToggleSwitch = (
     <div
@@ -106,7 +121,15 @@ export default function RoleplayHeader() {
       <Header
         leftIcon={<Menu onClick={toggleTab} />}
         center={ToggleSwitch}
-        rightIcon={isChatRoom ? <SquarePen /> : ""}
+        rightIcon={
+          isChatRoom || isAsk ? (
+            <div ref={toggleBtnRef}>
+              <SquarePen onClick={handleOpen} />
+            </div>
+          ) : (
+            ""
+          )
+        }
       />
       <Tab />
       {open && (
@@ -114,11 +137,17 @@ export default function RoleplayHeader() {
           ref={dropdownRef}
           className="p-3 rounded-xl bg-white flex flex-col gap-1 absolute right-5 top-16 z-50"
         >
-          <button className="p-2 flex gap-2">
+          <button
+            className="p-2 flex gap-2"
+            onClick={isAsk ? handleAsk : handleRoleplay}
+          >
             <Sparkles />
             New Chat
           </button>
-          <button className="p-2 flex gap-2" onClick={handleEnd}>
+          <button
+            className="p-2 flex gap-2"
+            onClick={!isAsk ? handleEnd : handleOpen}
+          >
             <MessageCircle />
             Get Reports
           </button>
