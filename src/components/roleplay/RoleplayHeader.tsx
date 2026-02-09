@@ -8,7 +8,6 @@ import { useTabStore } from "@/store/tab/useTabStore";
 import Tab from "../tab/Tab";
 import Header from "../common/Header";
 import { useConversationEnd } from "@/hooks/mutations";
-import { useConversationFeedback } from "@/hooks/queries";
 
 export default function RoleplayHeader() {
   const { toggleTab, closeTab } = useTabStore();
@@ -23,7 +22,7 @@ export default function RoleplayHeader() {
   const { mutate: conversationEnd } = useConversationEnd();
 
   const roomId = pathname.split("/").pop();
-  const { data } = useConversationFeedback(String(roomId));
+
   useEffect(() => {
     requestAnimationFrame(() => {
       forceUpdate((n) => n + 1);
@@ -68,7 +67,7 @@ export default function RoleplayHeader() {
   const handleEnd = () => {
     try {
       conversationEnd(Number(roomId));
-      
+
       router.push(`/main/roleplay/chatroom/${roomId}/result`);
     } catch (error) {
       console.error("처리 중 오류 발생:", error);
@@ -87,20 +86,20 @@ export default function RoleplayHeader() {
         style={{ left: 4 }}
       />
       <span
-        ref={askRef}
-        className={`relative z-10 px-3 py-1 text-sm font-medium transition-colors ${
-          !isRoleplay ? "text-gray-800" : "text-gray-400"
-        }`}
-      >
-        Ask
-      </span>
-      <span
         ref={roleRef}
         className={`relative z-10 px-3 py-1 text-sm font-medium transition-colors ${
           isRoleplay ? "text-gray-800" : "text-gray-400"
         }`}
       >
         Role playing
+      </span>
+      <span
+        ref={askRef}
+        className={`relative z-10 px-3 py-1 text-sm font-medium transition-colors ${
+          !isRoleplay ? "text-gray-800" : "text-gray-400"
+        }`}
+      >
+        Ask
       </span>
     </div>
   );

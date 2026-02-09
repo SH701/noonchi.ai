@@ -4,9 +4,9 @@ import { useState } from "react";
 import { ChatInput } from "../common";
 import { Button } from "@/components/ui/button/button";
 import { useAsk } from "@/hooks/mutations/conversation/useAsk";
+import { useAskMessages } from "@/hooks/mutations/messages/useAskMessages";
 import { Earth, Lightbulb, Volume2 } from "lucide-react";
 import { useMessageTranslate, useMessageTTS } from "@/hooks/mutations";
-
 
 type Step = "askTarget" | "closeness" | "situation";
 
@@ -31,9 +31,11 @@ export default function AskInfo() {
   const [askTarget, setAskTarget] = useState("");
   const [closeness, setCloseness] = useState("");
   const { data: res, mutate: createAsk } = useAsk();
+  const { sendMessage } = useAskMessages(res?.conversationId);
   const { mutate: TTS } = useMessageTTS();
   const { mutate: translate } = useMessageTranslate();
- 
+  const [situationSent, setSituationSent] = useState(false);
+
   const currentStepIdx = STEPS.indexOf(step);
 
   const handleSendTarget = () => {
@@ -51,11 +53,24 @@ export default function AskInfo() {
 
   const handleSendSituation = () => {
     if (!message.trim()) return;
-    createAsk({
-      askTarget,
-      closeness,
-      situation: message.trim(),
-    });
+    createAsk(
+      {
+        askTarget,
+        closeness,
+        situation: message.trim(),
+      },
+      {
+        onSuccess: () => {
+          setSituationSent(true);
+        },
+      },
+    );
+    setMessage("");
+  };
+
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    sendMessage(message.trim());
     setMessage("");
   };
   const handleTTS = () => {
@@ -66,6 +81,7 @@ export default function AskInfo() {
     if (!res?.messageId) return;
     translate(String(res.messageId));
   };
+
   return (
     <div className="flex flex-col flex-1 overflow-y-auto pb-32">
       {/* askTarget */}
@@ -140,7 +156,7 @@ export default function AskInfo() {
           <ChatInput
             message={message}
             setMessage={setMessage}
-            onSend={handleSendSituation}
+            onSend={situationSent ? handleSendMessage : handleSendSituation}
             placeholder="Type your answer..."
           />
         </div>

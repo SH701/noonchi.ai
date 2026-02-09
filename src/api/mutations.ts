@@ -88,6 +88,16 @@ export const apiMutations = {
         body: JSON.stringify({ conversationId, content, audioUrl }),
       });
     },
+    asksend: async (
+      conversationId: number,
+      content?: string,
+      audioUrl?: string,
+    ): Promise<ChatMsg> => {
+      return apiFetch<ChatMsg>(`/api/messages/ask`, {
+        method: "POST",
+        body: JSON.stringify({ conversationId, content, audioUrl }),
+      });
+    },
     tts: async (messageId: number): Promise<string> => {
       return apiFetch<string>(`/api/messages/${messageId}/tts`, {
         method: "PUT",
@@ -275,10 +285,15 @@ export const apiMutations = {
     },
   },
   language: {
-    createcontext: async (scenarioId: number): Promise<TopicScenario> => {
+    createcontext: async (
+      scenarioId: number,
+      myRole?: string,
+      aiRole?: string,
+      detail?: string,
+    ): Promise<TopicScenario> => {
       return apiFetch<TopicScenario>(`/api/language/scenario-context`, {
         method: "POST",
-        body: JSON.stringify(scenarioId),
+        body: JSON.stringify({ scenarioId, myRole, aiRole, detail }),
       });
     },
   },

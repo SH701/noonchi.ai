@@ -5,6 +5,7 @@ interface TextareaProps {
   placeholder?: string;
   required?: boolean;
   className?: string;
+  onClick: () => void;
 }
 
 export default function Textarea({
@@ -14,6 +15,7 @@ export default function Textarea({
   placeholder,
   required,
   className,
+  onClick,
 }: TextareaProps) {
   return (
     <div className="flex flex-col space-y-2 w-full">
@@ -27,6 +29,7 @@ export default function Textarea({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        onClick={onClick}
         className={`
           w-full p-2.5 h-30
            border border-gray-400 bg-white

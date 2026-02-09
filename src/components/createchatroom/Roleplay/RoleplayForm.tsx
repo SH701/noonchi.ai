@@ -8,9 +8,9 @@ import { useCreateContext } from "@/hooks/mutations/language/useCreateContext";
 
 interface RoleplayProps {
   onSubmit: (data: {
-    myRole: string;
-    aiRole: string;
-    situation: string;
+    myRole: string | undefined;
+    aiRole: string | undefined;
+    situation: string | undefined;
     tone: string;
   }) => void;
   AiRole?: string;
@@ -26,14 +26,14 @@ export default function RoleplayForm({
   mode,
   topicId,
 }: RoleplayProps) {
-  const [details, setDetails] = useState("");
+  const [details, setDetails] = useState<string | undefined>(undefined);
   const [selectedTone, setSelectedTone] = useState("casual");
-  const { mutate: createContext } = useCreateContext(topicId);
-  const [displayMe, setDisplayMe] = useState(
-    mode === "topic" ? myRole || "" : "",
+  const { data: hint, mutate: createContext } = useCreateContext(topicId);
+  const [displayMe, setDisplayMe] = useState<string | undefined>(
+    myRole || undefined,
   );
-  const [displayAI, setDisplayAI] = useState(
-    mode === "topic" ? AiRole || "" : "",
+  const [displayAI, setDisplayAI] = useState<string | undefined>(
+    AiRole || undefined,
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -46,13 +46,17 @@ export default function RoleplayForm({
     });
   };
 
-  const handleHintMe = () => {
-    setDisplayMe(myRole || "");
+  const handleMeHint = () => {
     createContext();
+    setDisplayMe(hint?.myRole);
   };
-
-  const handleHintAi = () => {
-    setDisplayAI(AiRole || "");
+  const handleAIHint = () => {
+    createContext();
+    setDisplayAI(hint?.aiRole);
+  };
+  const handleDetailHint = () => {
+    createContext();
+    setDetails(hint?.detail);
   };
 
   return (
@@ -60,21 +64,21 @@ export default function RoleplayForm({
       <TextInput
         label="My role"
         required
-        value={displayMe}
+        value={displayMe || ""}
         onChange={setDisplayMe}
         placeholder="Write your role"
         disabled={mode === "topic"}
-        onClick={handleHintMe}
+        onClick={handleMeHint}
       />
 
       <TextInput
         label="AI's role"
         required
-        value={displayAI}
+        value={displayAI || ""}
         onChange={setDisplayAI}
         placeholder="Write ai role"
         disabled={mode === "topic"}
-        onClick={handleHintAi}
+        onClick={handleAIHint}
       />
 
       <div className="space-y-2">
@@ -99,10 +103,11 @@ export default function RoleplayForm({
 
       <Textarea
         label="Detail"
-        value={details}
+        value={details || ""}
         required
         onChange={setDetails}
         placeholder="Include details like the reason for the interaction..."
+        onClick={handleDetailHint}
       />
 
       <div className="flex mt-auto pb-4">
