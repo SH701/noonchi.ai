@@ -8,7 +8,7 @@ export default function ExitChatting({ isOpen, onClose }: ModalProps) {
       isOpen={isOpen}
       onClose={onClose}
       title={`There isn't enough conversasion yet \n to genereate a report`}
-      description="A little more conversation will help"
+      description="You need at least 5 exchanges to generate a report"
     >
       <div className="flex flex-col gap-3 items-center justify-center">
         <Button variant="primary" size="md" onClick={onClose}>

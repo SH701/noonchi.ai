@@ -10,26 +10,24 @@ import { useConversationDetail } from "@/hooks/queries/";
 import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { ChatInput } from "@/components/common";
 import { useRoleplayMessages } from "@/hooks/mutations/messages/useRoleplayMessages";
+import { useRoleplayHint } from "@/hooks/queries/useRoleplayHint";
 
 export default function RolePlayChatroomPage() {
   const { id } = useParams<{ id: string }>();
-
+  const [showHintPanel, setShowHintPanel] = useState(false);
   const [message, setMessage] = useState("");
+  const [situationOpen, setSituationOpen] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const { data: conversation, error: conversationError } =
-    useConversationDetail(id);
+    useConversationDetail(Number(id));
 
   const conversationId = conversation?.conversationId;
 
-  const {
-    messages,
-    sendMessage,
-    feedbackOpenId,
-    handleFeedbacks,
-  } = useRoleplayMessages(conversationId);
+  const { messages, sendMessage } = useRoleplayMessages(conversationId);
 
+  const { data: hintData } = useRoleplayHint(conversationId);
   const {
     micState,
     pendingAudioUrl,
@@ -64,14 +62,19 @@ export default function RolePlayChatroomPage() {
     await sendMessage(message);
     setMessage("");
   };
+  const handleHint = () => {
+    setShowHintPanel((prev) => !prev);
+  };
+  const handleSituation = () => {
+    setSituationOpen((prev) => !prev);
+  };
   return (
     <div className="min-h-screen  flex flex-col w-full">
       <div className="flex flex-col  overflow-y-auto pb-32">
         <MessageList
           messages={messages}
           myAI={myAI}
-          feedbackOpenId={feedbackOpenId}
-          handleFeedbacks={handleFeedbacks}
+          showsituation={situationOpen}
         />
         <div ref={bottomRef} />
       </div>
@@ -80,9 +83,25 @@ export default function RolePlayChatroomPage() {
         message={message}
         setMessage={setMessage}
         showHint={true}
+        onHintClick={handleHint}
+        onSituationClick={handleSituation}
         showSituation={true}
         onSend={handleSendText}
+        isHintActive={showHintPanel}
+        isSituationActive={situationOpen}
       />
+      {showHintPanel && hintData && (
+        <div className="fixed bottom-34 left-5 right-5 z-[60] flex flex-col gap-2">
+          {hintData.map((h, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl bg-gray-100 px-4 py-3 shadow-sm"
+            >
+              <p className="text-sm text-gray-700">{h}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

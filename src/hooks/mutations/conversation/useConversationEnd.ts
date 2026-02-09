@@ -1,8 +1,9 @@
 import { apiMutations } from "@/api/mutations";
 import { useMutation } from "@tanstack/react-query";
 
-export const useConversationEnd = () => {
+export const useConversationEnd = (conversationId: number) => {
   return useMutation({
-    mutationFn: apiMutations.conversations.endConversation,
+    mutationFn: () =>
+      apiMutations.conversations.endConversation(conversationId),
   });
 };

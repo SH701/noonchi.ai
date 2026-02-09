@@ -40,7 +40,7 @@ export default function Tab() {
           />
           <motion.div
             key="tab"
-            className="absolute left-0 top-0 z-9999 h-full w-[75%] bg-gradient-primary pt-15 "
+            className="fixed left-0 top-0 z-9999 h-full w-[75%] bg-gradient-primary pt-15" // absolute를 fixed로 변경하여 화면 고정
             variants={slideVariants}
             initial="hidden"
             animate="visible"
@@ -55,8 +55,9 @@ export default function Tab() {
               exit="hidden"
               transition={{ duration: 0.15 }}
             >
-              <div className="px-5">
-                <div className="flex flex-col gap-5 mb-5">
+              <div className="flex flex-col flex-1 px-5 min-h-0">
+                <div className="flex flex-col gap-5 mb-5 shrink-0">
+                  {" "}
                   <SearchBar />
                   <button
                     className="flex gap-2 cursor-pointer"
@@ -66,12 +67,16 @@ export default function Tab() {
                     <span className="text-sm pt-1">Live 1:1 Coaching</span>
                   </button>
                 </div>
-                <RoleplayHistoryTab />
-                <AskHistoryTab />
+
+                <div className="flex-1  min-h-0 pb-5 custom-scrollbar">
+                  <RoleplayHistoryTab />
+                  <AskHistoryTab />
+                </div>
               </div>
+
               <button
                 onClick={handleProfileClick}
-                className="flex mt-auto gap-4 bg-gray-700 p-4"
+                className="flex shrink-0 gap-4 bg-gray-700 p-4"
               >
                 {session?.user.profileImageUrl ? (
                   <Image
@@ -79,13 +84,14 @@ export default function Tab() {
                     alt="profile"
                     width={48}
                     height={48}
-                    className="rounded-full"
+                    className="rounded-full shrink-0"
                   />
                 ) : (
-                  <div className="size-12 rounded-full bg-gray-400" />
+                  <div className="size-12 rounded-full bg-gray-400 shrink-0" />
                 )}
-
-                <span className="text-white pt-3">{session?.user.name}</span>
+                <span className="text-white pt-3 truncate">
+                  {session?.user.name}
+                </span>
               </button>
             </motion.div>
           </motion.div>

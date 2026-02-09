@@ -8,16 +8,16 @@ import MessageItem from "./MessageItem";
 type MessageListProps = {
   messages: any[];
   myAI: MyAI | null;
-  feedbackOpenId: number | null;
-  handleFeedbacks: (messageId: number) => void;
+
   messageStatuses?: Record<string, "default" | "error">;
+  showsituation?: boolean;
 };
 
 export default function MessageList({
   messages,
   myAI,
-  feedbackOpenId,
-  handleFeedbacks,
+
+  showsituation,
 }: MessageListProps) {
   return (
     <>
@@ -31,8 +31,8 @@ export default function MessageList({
             myAI={myAI}
             isMine={isMine}
             isPending={isPending}
-            feedbackOpenId={feedbackOpenId}
-            handleFeedbacks={handleFeedbacks}
+   
+            showsituation={showsituation}
           />
         );
       })}

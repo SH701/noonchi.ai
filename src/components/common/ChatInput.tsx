@@ -10,11 +10,13 @@ interface ChatInputProps {
   onSend: () => void;
   onMicClick?: () => void;
   onHintClick?: () => void;
+  onSituationClick?: () => void;
   disabled?: boolean;
   placeholder?: string;
   showSituation?: boolean;
   showHint?: boolean;
   isHintActive?: boolean;
+  isSituationActive?: boolean;
 }
 
 export default function ChatInput({
@@ -23,11 +25,13 @@ export default function ChatInput({
   onSend,
   onMicClick,
   onHintClick,
+  onSituationClick,
   disabled = false,
   placeholder = "Type your answer...",
   showSituation = false,
   showHint = false,
   isHintActive = false,
+  isSituationActive = false,
 }: ChatInputProps) {
   const textRef = useRef<HTMLTextAreaElement>(null);
 
@@ -64,8 +68,13 @@ export default function ChatInput({
         <div className="flex gap-1 w-full items-end justify-between">
           <div className="flex gap-1">
             {showSituation && (
-              <button className="flex border rounded-full px-2 h-6.5">
-                <Asterisk />
+              <button
+                className={`flex border rounded-full px-2 h-6.5 ${isSituationActive ? "border-amber-500 text-amber-500" : ""}`}
+                onClick={onSituationClick}
+              >
+                <Asterisk
+                  className={`py-1 ${isSituationActive ? "text-amber-500" : ""}`}
+                />
                 <p>situation</p>
               </button>
             )}

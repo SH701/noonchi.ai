@@ -45,13 +45,16 @@ export const apiClient = {
         { cache: "no-cache" },
       );
     },
-    getDetail: async (id: string): Promise<ConversationDetail> => {
-      return apiFetch<ConversationDetail>(`/api/conversations/${id}`, {
-        cache: "no-store",
-      });
+    getDetail: async (conversationId: number): Promise<ConversationDetail> => {
+      return apiFetch<ConversationDetail>(
+        `/api/conversations/${conversationId}`,
+        {
+          cache: "no-store",
+        },
+      );
     },
     getConversationFeedback: async (
-      conversationId: string,
+      conversationId: number,
     ): Promise<ConversationFeedback> => {
       return apiFetch<ConversationFeedback>(
         `/api/conversations/${conversationId}/feedback`,
@@ -75,7 +78,6 @@ export const apiClient = {
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       );
     },
-
     getFeedback: async (messageId: string): Promise<Feedback> => {
       return apiFetch<Feedback>(`/api/messages/${messageId}/feedback`);
     },
@@ -94,8 +96,10 @@ export const apiClient = {
     },
   },
   language: {
-    getHint: async (conversationId: number): Promise<string> => {
-      return apiFetch<string>(`/api/language/hint`);
+    getHint: async (conversationId: number): Promise<string[]> => {
+      return apiFetch<string[]>(
+        `/api/language/hint?conversationId=${conversationId}`,
+      );
     },
   },
 };

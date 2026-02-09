@@ -4,5 +4,7 @@ export const useTopics = (category: string, favoritesOnly: boolean) => {
   return useQuery({
     queryKey: ["topics", category, favoritesOnly],
     queryFn: () => apiClient.topic.getTopic(category, favoritesOnly),
+
+    enabled: !!category,
   });
 };

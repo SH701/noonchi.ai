@@ -10,7 +10,6 @@ import {
 } from "@/hooks/queries";
 
 import { MessageList } from "@/components/chatroom";
-import { useMessageFeedback } from "@/hooks/mutations";
 
 import { ResultTab, Point, Part } from "@/components/result";
 import { ChatMsg } from "@/types/messages";
@@ -20,35 +19,12 @@ export default function Result() {
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { data: conversation } = useConversationDetail(id);
-  const conversationId = conversation?.conversationId ?? 0;
+  const { data: conversation } = useConversationDetail(Number(id));
+
   const myAI = conversation?.aiPersona ?? null;
   const [messages, setMessages] = useState<ChatMsg[]>([]);
-  const [feedbackOpenId, setFeedbackOpenId] = useState<number | null>(null);
+
   const [isInitialized, setIsInitialized] = useState(false);
-  const { mutate: createFeedback } = useMessageFeedback(conversationId);
-
-  const handleFeedbacks = (messageId: number) => {
-    if (feedbackOpenId === messageId) {
-      setFeedbackOpenId(null);
-      return;
-    }
-
-    const targetMessage = messages.find((m) => m.messageId === messageId);
-    if (targetMessage?.feedback) {
-      setFeedbackOpenId(messageId);
-      return;
-    }
-
-    createFeedback(String(messageId), {
-      onSuccess: (feedback) => {
-        setMessages((prev) =>
-          prev.map((m) => (m.messageId === messageId ? { ...m, feedback } : m)),
-        );
-        setFeedbackOpenId(messageId);
-      },
-    });
-  };
 
   const {
     data: initialMessages = [],
@@ -116,12 +92,7 @@ export default function Result() {
           <div className="px-4 pb-6">
             <ResultTab tab={tab} setTab={setTab} />
             {tab === "transcript" ? (
-              <MessageList
-                messages={messages}
-                myAI={myAI}
-                feedbackOpenId={feedbackOpenId}
-                handleFeedbacks={handleFeedbacks}
-              />
+              <MessageList messages={messages} myAI={myAI} />
             ) : (
               <div className="space-y-4 pb-2">
                 <Part title="Conversation Summary" desc={feedback.summary} />
@@ -157,7 +128,6 @@ export default function Result() {
         >
           Complete
         </Button>
-        
       </div>
     </div>
   );

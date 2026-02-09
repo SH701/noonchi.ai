@@ -2,23 +2,33 @@ import { useConversations } from "@/hooks/queries";
 
 export default function AskHistoryTab() {
   const { data } = useConversations();
+
   return (
-    <div>
-      <div className="flex justify-between mb-3 mt-5">
-        <span className="text-sm font-medium mb-2">Ask </span>
-        <span className="text-xs text-gray-600">Edit</span>
+    <div className="flex flex-col h-full overflow-hidden px-4">
+      <div className="flex justify-between mb-3 mt-5 shrink-0">
+        <span className="text-sm font-medium mb-2">Ask</span>
+        <span className="text-xs text-gray-600 cursor-pointer">Edit</span>
       </div>
-      {/* ask 채팅 완료후 타입 ask로 바꿔야함 */}
-      {data
-        .filter((convo) => convo.conversationType === "ASK")
-        .map((convo) => (
-          <div key={convo.conversationId} className=" overflow-y-auto mb-5">
-            <div className="flex flex-col">
-              <span>{convo.status}</span>
-              <span>{convo.createdAt}</span>
+
+      <div className="flex-1 overflow-y-auto min-h-0 pr-2 custom-scrollbar">
+        {data
+          ?.filter((convo) => convo.conversationType === "ASK")
+          .map((convo) => (
+            <div
+              key={convo.conversationId}
+              className="mb-5 p-3 bg-white/10 rounded-lg"
+            >
+              <div className="flex flex-col">
+                <span className="text-sm font-bold text-blue-400">
+                  {convo.status}
+                </span>
+                <span className="text-xs text-gray-400">
+                  {new Date(convo.createdAt).toLocaleString()}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+      </div>
     </div>
   );
 }

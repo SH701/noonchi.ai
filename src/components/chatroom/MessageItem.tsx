@@ -5,46 +5,51 @@ import { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { MyAI } from "@/types/etc/persona.type";
-import { RotateCcw, User, Volume2 } from "lucide-react";
+import { RotateCcw, Volume2 } from "lucide-react";
 
 import {
+  useMessageFeedback,
   useMessageTTS,
   useMessageTranslate,
 } from "@/hooks/mutations/messages/useMessageFeedback";
 import NotTTS from "../modal/NotTTS";
-
-import { usePathname } from "next/navigation";
-import { useRoleplayHint } from "@/hooks/queries/useRoleplayHint";
+import { Spinner } from "../ui/spinner";
 
 type MessageItemProps = {
   m: any;
   myAI: MyAI | null;
   isMine: boolean;
-  feedbackOpenId: number | null;
-  handleFeedbacks: (messageId: number) => void;
+
   isFirstAIMessage?: boolean;
   isPending?: boolean;
+  showsituation?: boolean;
 };
 
 export default function MessageItem({
   m,
   myAI,
   isMine,
-  feedbackOpenId,
-  handleFeedbacks,
+
+  showsituation,
 }: MessageItemProps) {
-  const [open, setOpen] = useState(false);
+  const [translateOpen, setTranslateOpen] = useState(false);
   const [ttsOpen, setTtsOpen] = useState(false);
-  const [showHintPanel, setShowHintPanel] = useState(false);
+  const [meanOpen, setMeanOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
   const {
     data: translateText,
     mutate: translate,
     isPending: loadingTranslate,
   } = useMessageTranslate();
   const { mutate: tts, isPending: loadingTTS } = useMessageTTS();
-  const pathname = usePathname();
-  const roomId = pathname.split("/").pop();
-  const { data: hintData } = useRoleplayHint(Number(roomId));
+  const { data: feedbackData, isLoading } = useMessageFeedback(
+    feedbackOpen ? String(m.messageId) : undefined,
+  );
+
+  const handleFeedback = () => {
+    setFeedbackOpen((prev) => !prev);
+  };
   const handleTTsClick = (messageId: string) => {
     if (!messageId) return;
     tts(messageId, {
@@ -54,14 +59,13 @@ export default function MessageItem({
 
   const handleTranslateClick = (messageId: string) => {
     if (!messageId) return;
-    setOpen((prev) => !prev);
-    if (open) {
+    if (!translateOpen) {
       translate(messageId);
     }
+    setTranslateOpen((prev) => !prev);
   };
-
-  const handleReactionReason = () => {
-    setOpen((prev) => !prev);
+  const handleHiddenMean = () => {
+    setMeanOpen((prev) => !prev);
   };
 
   if (m.isLoading && !isMine) {
@@ -104,9 +108,19 @@ export default function MessageItem({
           <div className="flex flex-col gap-1">
             <p className="text-end">{myAI?.userRole}</p>
             <div className="p-4 bg-white rounded-b-xl rounded-tl-xl">
+              {showsituation && m.visualAction && (
+                <div className="mb-2 p-3 bg-blue-50 border border-blue-100 rounded-lg shadow-sm animate-in fade-in duration-300">
+                  <p className="text-sm text-blue-800 italic">
+                    {m.visualAction}
+                  </p>
+                </div>
+              )}
               <p className="text-sm whitespace-pre-wrap my-1 ">{m.content}</p>
               <div className="pt-2.5 border-t border-gray-200 flex justify-between">
-                <button className="flex rounded-full border border-blue-500 px-2 py-1 gap-1">
+                <button
+                  className="flex rounded-full border border-blue-500 px-2 py-1 gap-1"
+                  onClick={handleFeedback}
+                >
                   <Image
                     src="/chatroom/warning.png"
                     alt="feedback"
@@ -117,6 +131,7 @@ export default function MessageItem({
                 </button>
                 <RotateCcw size={20} />
               </div>
+              {feedbackOpen && <span>{feedbackData?.nuanceFeedback}</span>}
             </div>
           </div>
         )}
@@ -124,9 +139,12 @@ export default function MessageItem({
         {/* AI 말풍선 */}
         {!isMine && (
           <div className="flex flex-col gap-2 rounded-xl p-4 border border-gray-300 bg-white">
+            {showsituation && m.visualAction && (
+              <div className="mb-2 p-3 bg-blue-50 border border-blue-100 rounded-lg shadow-sm animate-in fade-in duration-300">
+                <p className="text-sm text-blue-800 italic">{m.visualAction}</p>
+              </div>
+            )}
             <p className="text-sm leading-[130%] whitespace-pre-wrap my-1">
-              {m.reactionEmoji}
-              {m.reactionDescription}
               {m.content}
             </p>
 
@@ -143,17 +161,21 @@ export default function MessageItem({
                   onClick={() => handleTranslateClick(String(m.messageId))}
                   disabled={loadingTranslate}
                 >
-                  <Image
-                    src="/message/language.svg"
-                    width={20}
-                    height={20}
-                    alt="Translate"
-                  />
+                  {loadingTranslate ? (
+                    <Spinner className="size-5" />
+                  ) : (
+                    <Image
+                      src="/message/language.svg"
+                      width={20}
+                      height={20}
+                      alt="Translate"
+                    />
+                  )}
                 </button>
               </div>
               <button
-                onClick={() => handleReactionReason()}
                 className="border-gradient-primary rounded-full px-2 py-1"
+                onClick={handleHiddenMean}
               >
                 👀{" "}
                 <span className="text-gradient-primary text-xs font-semibold">
@@ -161,18 +183,12 @@ export default function MessageItem({
                 </span>
               </button>
             </div>
-            {translateText && open && <span>{translateText}</span>}
+            {translateText && translateOpen && <span>{translateText}</span>}
+            {m.hiddenMeaning && meanOpen && <span>{m.hiddenMeaning}</span>}
           </div>
         )}
       </div>
       <NotTTS isOpen={ttsOpen} onClose={() => setTtsOpen(false)} />
-      {showHintPanel && hintData && (
-        <div className="fixed bottom-34 left-5 right-5 z-50 flex flex-col gap-2">
-          <div className="rounded-2xl bg-gray-100 px-4 py-3 shadow-sm">
-            <p className="text-sm text-gray-700">{hintData}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

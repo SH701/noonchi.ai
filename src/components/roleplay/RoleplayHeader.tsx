@@ -8,6 +8,8 @@ import { useTabStore } from "@/store/tab/useTabStore";
 import Tab from "../tab/Tab";
 import Header from "../common/Header";
 import { useConversationEnd } from "@/hooks/mutations";
+import { useConversationDetail } from "@/hooks/queries";
+import { ExitChatting } from "../modal";
 
 export default function RoleplayHeader() {
   const { toggleTab } = useTabStore();
@@ -20,10 +22,20 @@ export default function RoleplayHeader() {
   const router = useRouter();
   const [, forceUpdate] = useState(0);
   const isAsk = pathname.startsWith("/main/ask");
-  const { mutate: conversationEnd } = useConversationEnd();
-  const isChatRoom = pathname.startsWith("/main/roleplay/chatroom");
-  const roomId = pathname.split("/").pop();
 
+  const isChatRoom = pathname.startsWith("/main/roleplay/chatroom/");
+
+  const paths = pathname.split("/");
+  const roomIdStr = paths.find((p) => /^\d+$/.test(p));
+  const roomId = roomIdStr ? Number(roomIdStr) : null;
+  const isValidRoom = isChatRoom && roomId && !isNaN(Number(roomId));
+  const { data: detailData } = useConversationDetail(Number(roomId), {
+    // 이 옵션이 없으면 조건과 상관없이 무한 호출됩니다!
+    enabled: !!isValidRoom,
+  });
+  const { mutate: conversationEnd } = useConversationEnd(Number(roomId));
+  const canGetReport = detailData?.canGetReport;
+  const [showExitModal, setShowExitModal] = useState(false);
   useEffect(() => {
     requestAnimationFrame(() => {
       forceUpdate((n) => n + 1);
@@ -72,12 +84,17 @@ export default function RoleplayHeader() {
     setOpen((prev) => !prev);
   };
   const handleEnd = () => {
-    try {
-      conversationEnd(Number(roomId));
-      router.push(`/main/roleplay/chatroom/${roomId}/result`);
-    } catch (error) {
-      console.error("처리 중 오류 발생:", error);
+    if (canGetReport === true) {
+      try {
+        conversationEnd();
+        router.push(`/main/roleplay/chatroom/${roomId}/result`);
+      } catch (error) {
+        console.error("처리 중 오류 발생:", error);
+      }
+    } else {
+      setShowExitModal(true);
     }
+    setOpen(false);
   };
   const handleAsk = () => {
     router.push("/main/ask");
@@ -152,6 +169,13 @@ export default function RoleplayHeader() {
             Get Reports
           </button>
         </div>
+      )}
+
+      {showExitModal && (
+        <ExitChatting
+          onClose={() => setShowExitModal(false)}
+          isOpen={showExitModal}
+        />
       )}
     </>
   );

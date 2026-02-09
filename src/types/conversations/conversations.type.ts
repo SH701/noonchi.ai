@@ -54,6 +54,7 @@ export interface ConversationDetail {
   conversationType?: string;
   conversationTrack: string;
   conversationTopic: string;
+  canGetReport: boolean;
 }
 
 export interface ConversationFeedback {
