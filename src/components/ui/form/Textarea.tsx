@@ -18,7 +18,9 @@ export default function Textarea({
   return (
     <div className="flex flex-col space-y-2 w-full">
       {label && (
-        <label className="text-sm font-semibold text-gray-700">{label}</label>
+        <label className="text-sm font-semibold text-gray-700 flex gap-1">
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
       )}
       <textarea
         required={required}

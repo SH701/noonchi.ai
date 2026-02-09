@@ -10,7 +10,7 @@ import { Info, RotateCcw, User, Volume2 } from "lucide-react";
 import {
   useMessageTTS,
   useMessageTranslate,
-} from "@/hooks/mutations/useMessageFeedback";
+} from "@/hooks/mutations/messages/useMessageFeedback";
 
 type MessageItemProps = {
   m: any;

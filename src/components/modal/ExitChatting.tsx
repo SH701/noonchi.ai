@@ -9,12 +9,6 @@ export default function ExitChatting({ isOpen, onClose }: ModalProps) {
       onClose={onClose}
       title={`There isn't enough conversasion yet \n to genereate a report`}
       description="A little more conversation will help"
-      image={{
-        src: "/chatroom/exitchatting.png",
-        alt: "exitchatting",
-        width: 52,
-        height: 52,
-      }}
     >
       <div className="flex flex-col gap-3 items-center justify-center">
         <Button variant="primary" size="md" onClick={onClose}>

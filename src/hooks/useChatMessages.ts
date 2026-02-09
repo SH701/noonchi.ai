@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ChatMsg } from "@/types/messages";
-import { useMessageFeedback } from "./mutations/useMessageFeedback";
-import { useSendMessage } from "./mutations/useSendMessage";
+import { useMessageFeedback } from "./mutations/messages/useMessageFeedback";
+import { useSendMessage } from "./mutations/messages/useSendMessage";
 import { useChatQuery } from "./queries/useChatQuery";
 import { useQueryClient } from "@tanstack/react-query";
 

@@ -15,15 +15,7 @@ export interface TopicProps {
   active: CategoryType;
   onSelect: (key: CategoryType) => void;
 }
-export interface Topics {
-  id: number;
-  topic: string;
-  img: string;
-  title: string;
-  description: string;
-  aiRole: string;
-  myRole: string;
-}
+
 export interface TopicRes {
   topicId: 0;
   name: string;
@@ -31,4 +23,10 @@ export interface TopicRes {
   description: string;
   imageUrl: string;
   isFavorite: boolean;
+}
+export interface TopicScenario {
+  scenarioId: number;
+  myRole: string;
+  aiRole: string;
+  detail: string;
 }

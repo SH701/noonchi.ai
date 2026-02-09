@@ -7,6 +7,8 @@ export interface Preview {
     description: string;
     ai_role: string;
   };
+  ai_name: string;
+  my_name: string;
   ai_message: string;
   ai_hidden_meaning: string;
   visual_action: string;

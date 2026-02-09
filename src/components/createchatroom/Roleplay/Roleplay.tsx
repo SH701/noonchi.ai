@@ -23,10 +23,14 @@ export default function RolePlay() {
   const category = searchParams.get("category") ?? "";
   const topicId = Number(searchParams.get("topicId"));
 
-  const { data: topics = [] } = useTopics(category, false);
+  const { data: topics = [], isLoading } = useTopics(category, false);
   const topic = topics.find((t) => t.topicId === topicId);
 
   const createRoleplay = useCreateRoleplay();
+
+  if (isLoading || !topic) {
+    return <div>loading...</div>;
+  }
 
   const handleSubmit = async ({
     myRole,
@@ -55,7 +59,7 @@ export default function RolePlay() {
         <div className="w-full max-w-93.75 ">
           <div className="relative w-full aspect-square max-w-83.75 mx-auto">
             <Image
-              src={topic?.imageUrl || "/default-image.jpg"}
+              src={topic.imageUrl}
               alt="topic's photo"
               fill
               className="object-cover rounded-3xl"
@@ -73,10 +77,7 @@ export default function RolePlay() {
           </div>
           <div>
             <p className="font-semibold pb-5 pt-8">Conversation Context</p>
-            <RoleplayForm
-              onSubmit={handleSubmit}
-              mode={mode}
-            />
+            <RoleplayForm onSubmit={handleSubmit} mode={mode} />
           </div>
         </div>
       </div>

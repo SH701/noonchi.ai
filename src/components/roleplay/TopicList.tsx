@@ -8,7 +8,7 @@ import Image from "next/image";
 import {
   useAddFavorite,
   useRemoveFavorite,
-} from "@/hooks/mutations/useFavorite";
+} from "@/hooks/mutations/topics/useFavorite";
 import { useTopics } from "@/hooks/queries/useTopics";
 
 type TopicListProps = {

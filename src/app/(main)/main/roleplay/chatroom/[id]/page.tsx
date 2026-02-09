@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { useConversationDetail } from "@/hooks/queries/";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { useVoiceChat } from "@/hooks/useVoiceChat";
+import { ChatInput } from "@/components/common";
 
 export default function RolePlayChatRoom() {
   const { id } = useParams<{ id: string }>();
@@ -75,18 +76,12 @@ export default function RolePlayChatRoom() {
         <div ref={bottomRef} />
       </div>
 
-      <ChatroomInput
+      <ChatInput
         message={message}
         setMessage={setMessage}
-        isAIResponding={isAIResponding}
-        sendMessage={handleSendText}
-        micState={micState}
-        pendingAudioUrl={pendingAudioUrl}
-        showVoiceError={showVoiceError}
-        handleMicClick={handleMicClick}
-        handleResetAudio={handleResetAudio}
-        handleSendAudio={handleSendAudio}
-        sttText={sttText}
+        showHint={true}
+        showSituation={true}
+        onSend={handleSendText}
       />
     </div>
   );

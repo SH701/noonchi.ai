@@ -73,6 +73,9 @@ body {
   --color-gradient-2: #e3edf4;
   --color-gradient-3: #e2ddf6;
   --color-gradient-4: #e5d2ff;
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1280px;
 }
 
 .bg-gradient-primary {

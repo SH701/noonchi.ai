@@ -35,7 +35,9 @@ export default function LiveCoach() {
               className="w-14 h-14 shrink-0"
             />
             <div className="flex flex-col">
-              <span className="pb-1 font-medium leading-6">{c.name}</span>
+              <a href={c.link} className="pb-1 font-medium leading-6 underline">
+                {c.name}
+              </a>
               <span className="pb-3 text-sm text-gray-600">{c.position}</span>
               <div className="flex gap-2">
                 {c.career.map((tag) => (

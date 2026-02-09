@@ -7,16 +7,19 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTabStore } from "@/store/tab/useTabStore";
 import Tab from "../tab/Tab";
 import Header from "../common/Header";
+import { useConversationEnd } from "@/hooks/mutations";
 
 export default function RoleplayHeader() {
-  const { isOpen, toggleTab, closeTab } = useTabStore();
+  const { toggleTab, closeTab } = useTabStore();
   const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const askRef = useRef<HTMLSpanElement>(null);
   const roleRef = useRef<HTMLSpanElement>(null);
   const pathname = usePathname();
   const router = useRouter();
   const [, forceUpdate] = useState(0);
   const isRoleplay = pathname.startsWith("/main/roleplay");
+  // const {} = useConversationEnd() ToDo: 대화 종료
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -25,18 +28,20 @@ export default function RoleplayHeader() {
   }, [pathname]);
 
   useEffect(() => {
-    const sideClick = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        closeTab();
+    if (!open) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setOpen(false);
       }
     };
-    if (isOpen) {
-      document.addEventListener("keydown", sideClick);
-    }
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("keydown", sideClick);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, closeTab]);
+  }, [open, closeTab]);
 
   const getActiveStyles = () => {
     const activeRef = isRoleplay ? roleRef : askRef;
@@ -100,7 +105,10 @@ export default function RoleplayHeader() {
       />
       <Tab />
       {open && (
-        <div className="p-3 rounded-xl bg-white flex flex-col gap-1 absolute right-5 top-16 z-50">
+        <div
+          ref={dropdownRef}
+          className="p-3 rounded-xl bg-white flex flex-col gap-1 absolute right-5 top-16 z-50"
+        >
           <button className="p-2 flex gap-2">
             <Sparkles />
             New Chat

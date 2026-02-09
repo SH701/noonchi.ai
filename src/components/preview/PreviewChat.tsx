@@ -23,7 +23,6 @@ export default function PreviewChat() {
   const [message, setMessage] = useState("");
   const [userMessages, setUserMessages] = useState<string[]>([]);
   const [aiResponses, setAiResponses] = useState<AiMessage[]>([]);
-  const [isPreviewEnded, setIsPreviewEnded] = useState(false);
   const [showHintPanel, setShowHintPanel] = useState(false);
   const router = useRouter();
   const { data: hintData } = usePreviewHint(data?.session_id);
@@ -67,7 +66,16 @@ export default function PreviewChat() {
               res.ai_hidden_meaning;
             return newResponses;
           });
-          setIsPreviewEnded(res.is_preview_ended);
+          if (res.is_preview_ended) {
+            removePreview(data.session_id);
+            router.push("/preview/end");
+          }
+        },
+        onError: (error) => {
+          if (error.message.includes("429")) {
+            removePreview(data.session_id);
+            router.push("/preview/end");
+          }
         },
       },
     );
@@ -82,13 +90,6 @@ export default function PreviewChat() {
     );
   };
 
-  useEffect(() => {
-    if (isPreviewEnded && data?.session_id) {
-      removePreview(data.session_id);
-      router.push("/preview/end");
-    }
-  }, [isPreviewEnded, data?.session_id, router, removePreview]);
-
   return (
     <div className="min-h-screen px-5 pb-30">
       <Header leftIcon={<Menu />} center="Preview" rightIcon={<SquarePen />} />
@@ -98,10 +99,12 @@ export default function PreviewChat() {
         <>
           {/* 첫 AI 메세지  */}
           <div className="flex gap-2 mb-1">
-            <div className="size-8 rounded-full shrink-0 bg-gray-300" />
+            <div className="size-8 rounded-full shrink-0 bg-gray-300 flex items-center justify-center">
+              <span>{data?.ai_name[0]}</span>
+            </div>
             <div className="flex flex-col gap-2">
               <span className="text-sm font-medium text-gray-600">
-                {data?.scenario.ai_role}
+                {data?.ai_name}
               </span>
               <div className="flex flex-col gap-2 rounded-tr-xl rounded-b-xl p-4 border border-gray-300 bg-white mb-8">
                 <p className="text-sm whitespace-pre-wrap my-1">
@@ -113,8 +116,9 @@ export default function PreviewChat() {
 
           {/* 대화 히스토리 */}
           {userMessages.map((userMsg, idx) => (
-            <div key={idx}>
-              <div className="flex justify-end mb-8">
+            <div key={idx} className="justify-end">
+              <div className="flex justify-end mb-8 flex-col items-end gap-2">
+                <span>{data?.my_name}</span>
                 <div className="flex flex-col gap-2 rounded-tl-xl rounded-b-xl p-4 border border-gray-300 bg-white w-61">
                   <p className="text-sm whitespace-pre-wrap my-1">{userMsg}</p>
                   <div className="pt-2.5 border-t border-gray-200 flex justify-between">
@@ -140,7 +144,7 @@ export default function PreviewChat() {
                   <div className="size-8 rounded-full shrink-0 bg-gray-300" />
                   <div className="flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-600">
-                      {data?.scenario.ai_role}
+                      {data?.ai_name}
                     </span>
                     <div className="flex flex-col gap-2 rounded-tr-xl rounded-b-xl p-4 border border-gray-300 bg-white mb-8">
                       <p className="text-sm  my-1">
@@ -193,6 +197,9 @@ export default function PreviewChat() {
         setMessage={setMessage}
         onSend={handleSend}
         onHintClick={() => setShowHintPanel((prev) => !prev)}
+        showHint={true}
+        showSituation={true}
+        isHintActive={showHintPanel}
       />
     </div>
   );

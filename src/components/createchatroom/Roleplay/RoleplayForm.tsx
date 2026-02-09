@@ -55,6 +55,7 @@ export default function RoleplayForm({
     <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
       <TextInput
         label="My role"
+        required
         value={displayMe}
         onChange={setDisplayMe}
         placeholder="Write your role"
@@ -64,6 +65,7 @@ export default function RoleplayForm({
 
       <TextInput
         label="AI's role"
+        required
         value={displayAI}
         onChange={setDisplayAI}
         placeholder="Write ai role"
@@ -92,7 +94,9 @@ export default function RoleplayForm({
       </div>
 
       <Textarea
+        label="Detail"
         value={details}
+        required
         onChange={setDetails}
         placeholder="Include details like the reason for the interaction..."
       />

@@ -34,10 +34,13 @@ export default function Tab() {
     <AnimatePresence>
       {isOpen && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/60" onClick={closeTab} />
+          <div
+            className="fixed inset-0 z-9998 bg-black/60"
+            onClick={closeTab}
+          />
           <motion.div
             key="tab"
-            className="absolute left-0 top-0 z-50 h-full w-[75%] bg-gradient-primary pt-15 "
+            className="absolute left-0 top-0 z-9999 h-full w-[75%] bg-gradient-primary pt-15 "
             variants={slideVariants}
             initial="hidden"
             animate="visible"

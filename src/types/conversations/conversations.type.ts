@@ -19,8 +19,8 @@ export interface Conversation {
     profileImageUrl: string;
   };
   conversationType: "ASK" | "ROLE_PLAYING";
+  chatModelId: string;
   status: "ACTIVE" | "DONE";
-
   situation: string;
   createdAt: string;
   feedback?: Feedback | null;
@@ -29,6 +29,11 @@ export interface Conversation {
   interviewJobPosting: string;
   conversationTrack: string;
   conversationTopic: string;
+  taskCurrentLevel: number;
+  taskCurrentName: string;
+  taskAllCompleted: string;
+  closeness: string;
+  askTarget: string;
 }
 
 export interface ConversationDetail {

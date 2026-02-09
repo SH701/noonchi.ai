@@ -14,6 +14,7 @@ import { ChatMsg } from "@/types/messages";
 import { Preview, PreviewSendResponse } from "@/types/preview/preview.type";
 import axios from "axios";
 import { AskAPiRequest } from "@/types/conversations/ask/ask.type";
+import { TopicScenario } from "@/types/topics";
 
 interface SendMessageResponse {
   taskResult: {
@@ -267,6 +268,13 @@ export const apiMutations = {
     removefavorite: async (topicId: number): Promise<void> => {
       return apiFetch<void>(`/api/topics/${topicId}/favorite`, {
         method: "DELETE",
+      });
+    },
+  },
+  language: {
+    createcontext: async (): Promise<TopicScenario> => {
+      return apiFetch<TopicScenario>(`/api/language/scenario-context`, {
+        method: "POST",
       });
     },
   },
