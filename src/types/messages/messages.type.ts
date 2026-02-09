@@ -1,7 +1,7 @@
 export interface ChatMsg {
   messageId: number;
   conversationId: number;
-  type: "USER" | "AI";
+  type: "USER" | "AI" | "SYSTEM";
   content: string;
   translatedContent?: string | null;
   audioUrl?: string | null;
@@ -21,7 +21,6 @@ export interface ChatMsg {
   askApproachTip?: string;
   askCulturalInsight?: string;
 }
-
 
 export interface Feedback {
   feedbackId: number;

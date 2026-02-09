@@ -11,7 +11,7 @@ import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { ChatInput } from "@/components/common";
 import { useRoleplayMessages } from "@/hooks/mutations/messages/useRoleplayMessages";
 
-export default function RolePlayChatRoom() {
+export default function RolePlayChatroomPage() {
   const { id } = useParams<{ id: string }>();
 
   const [message, setMessage] = useState("");

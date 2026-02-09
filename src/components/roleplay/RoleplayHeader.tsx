@@ -18,9 +18,9 @@ export default function RoleplayHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const [, forceUpdate] = useState(0);
-  const isRoleplay = pathname.startsWith("/main/roleplay");
+  const isAsk = pathname.startsWith("/main/ask");
   const { mutate: conversationEnd } = useConversationEnd();
-
+  const isChatRoom = pathname.startsWith("/main/roleplay/chatroom");
   const roomId = pathname.split("/").pop();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function RoleplayHeader() {
   }, [open, closeTab]);
 
   const getActiveStyles = () => {
-    const activeRef = isRoleplay ? roleRef : askRef;
+    const activeRef = isAsk ? askRef : roleRef;
     if (!activeRef.current) return { width: 40, x: 0 };
     return {
       width: activeRef.current.offsetWidth,
@@ -55,19 +55,16 @@ export default function RoleplayHeader() {
   };
 
   const handleToggle = () => {
-    if (!isRoleplay) {
-      router.push("/main/roleplay");
+    if (isAsk) {
+      router.push("/main");
     } else {
       router.push("/main/ask");
     }
   };
-  const handleExit = () => {
-    setOpen(!open);
-  };
+
   const handleEnd = () => {
     try {
       conversationEnd(Number(roomId));
-
       router.push(`/main/roleplay/chatroom/${roomId}/result`);
     } catch (error) {
       console.error("처리 중 오류 발생:", error);
@@ -88,7 +85,7 @@ export default function RoleplayHeader() {
       <span
         ref={roleRef}
         className={`relative z-10 px-3 py-1 text-sm font-medium transition-colors ${
-          isRoleplay ? "text-gray-800" : "text-gray-400"
+          isAsk ? "text-gray-400" : "text-gray-800"
         }`}
       >
         Role playing
@@ -96,7 +93,7 @@ export default function RoleplayHeader() {
       <span
         ref={askRef}
         className={`relative z-10 px-3 py-1 text-sm font-medium transition-colors ${
-          !isRoleplay ? "text-gray-800" : "text-gray-400"
+          !isAsk ? "text-gray-400" : "text-gray-800"
         }`}
       >
         Ask
@@ -109,7 +106,7 @@ export default function RoleplayHeader() {
       <Header
         leftIcon={<Menu onClick={toggleTab} />}
         center={ToggleSwitch}
-        rightIcon={isRoleplay ? <SquarePen onClick={handleExit} /> : undefined}
+        rightIcon={isChatRoom ? <SquarePen /> : ""}
       />
       <Tab />
       {open && (

@@ -1,7 +1,8 @@
 import { useConversations } from "@/hooks/queries";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
+import { useTopics } from "@/hooks/queries/useTopics";
 export default function RoleplayHistoryTab() {
   const router = useRouter();
   const { data } = useConversations();
@@ -23,7 +24,7 @@ export default function RoleplayHistoryTab() {
               key={convo.conversationId}
               className="size-30 border flex gap-2 shrink-0 relative"
             >
-              {/* topic의 이미지 들어가야함 */}
+              
 
               <div className="flex flex-col justify-end px-4 py-2 text-white gap-1 absolute inset-x-0 bottom-0 h-auto bg-gray backdrop-blur-sm rounded-b-xl">
                 <span className="text-xs">{convo.conversationTrack}</span>

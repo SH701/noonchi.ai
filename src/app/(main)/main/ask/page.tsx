@@ -1,5 +1,5 @@
-import AskInfo from "@/components/ask/AskInfo";
+import AskChat from "@/components/ask/AskChat";
 
 export default function Ask() {
-  return <AskInfo />;
+  return <AskChat />;
 }

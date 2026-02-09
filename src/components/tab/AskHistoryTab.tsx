@@ -10,7 +10,7 @@ export default function AskHistoryTab() {
       </div>
       {/* ask 채팅 완료후 타입 ask로 바꿔야함 */}
       {data
-        .filter((convo) => convo.conversationType === "ROLE_PLAYING")
+        .filter((convo) => convo.conversationType === "ASK")
         .map((convo) => (
           <div key={convo.conversationId} className=" overflow-y-auto mb-5">
             <div className="flex flex-col">

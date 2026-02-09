@@ -10,9 +10,9 @@ import { toast } from "@/components/ui/toast/toast";
 import { useTopics } from "@/hooks/queries/useTopics";
 
 interface SubmitProps {
-  myRole: string;
-  aiRole: string;
-  situation: string;
+  myRole: string | undefined;
+  aiRole: string | undefined;
+  situation: string | undefined;
   tone: string;
 }
 
@@ -38,6 +38,7 @@ export default function RolePlay() {
     situation,
     tone,
   }: SubmitProps) => {
+    if (!myRole || !aiRole || !situation) return;
     try {
       const requestData = {
         conversationTopicId: topicId,
