@@ -1,7 +1,6 @@
 import { apiFetch } from "./api";
 
 import { AuthResponse, LoginRequest, SignupRequest } from "@/types/auth";
-import { normalizeChatMessage } from "@/utils/normalizeChatMessage";
 
 import {
   InterviewFormData,
@@ -16,16 +15,6 @@ import axios from "axios";
 import { AskAPiRequest } from "@/types/conversations/ask/ask.type";
 import { TopicScenario } from "@/types/topics";
 import { AskRes } from "@/types/ask/ask.type";
-
-interface SendMessageResponse {
-  taskResult: {
-    isTaskCompleted: boolean;
-    isTaskAllCompleted: boolean;
-    resultTaskLevel: number;
-    resultTaskName: string;
-  };
-  messages: ChatMsg[];
-}
 
 export interface EndConversationResponse {
   conversationId: number;
@@ -58,26 +47,6 @@ export const apiMutations = {
   },
 
   messages: {
-    send: async (params: {
-      conversationId?: number;
-      content?: string;
-      audioUrl?: string;
-    }): Promise<{
-      taskResult: SendMessageResponse["taskResult"];
-      messages: ChatMsg[];
-    }> => {
-      const data = await apiFetch<SendMessageResponse>("/api/messages", {
-        method: "POST",
-        body: JSON.stringify(params),
-      });
-
-      const normalized = data.messages.map((m) => normalizeChatMessage(m));
-
-      return {
-        taskResult: data.taskResult,
-        messages: normalized,
-      };
-    },
     roleplaysend: async (
       conversationId: number,
       content?: string,
