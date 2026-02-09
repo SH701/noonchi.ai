@@ -36,7 +36,7 @@ export default function Result() {
     data: feedback,
     error: feedbackError,
     isLoading: feedbackLoading,
-  } = useConversationFeedback(id);
+  } = useConversationFeedback(Number(id));
   useEffect(() => {
     if (!isInitialized && initialMessages && initialMessages.length > 0) {
       setMessages(initialMessages);

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { apiMutations } from "@/api";
 import { ChatMsg } from "@/types/messages";
-import { useMessageFeedback } from "./useMessageFeedback";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useChatQuery } from "@/hooks/queries/useChatQuery";
 
@@ -23,8 +23,6 @@ export function useAskMessages(conversationId?: number) {
         params.audioUrl,
       ),
   });
-
-  const { mutate: createFeedback } = useMessageFeedback(conversationId ?? 0);
 
   const messages = useMemo(() => {
     if (optimisticMessages.length === 0) return serverMessages;
@@ -96,33 +94,11 @@ export function useAskMessages(conversationId?: number) {
     }
   };
 
-  const [feedbackOpenId, setFeedbackOpenId] = useState<number | null>(null);
-
-  const handleFeedbacks = (messageId: number) => {
-    if (feedbackOpenId === messageId) {
-      setFeedbackOpenId(null);
-      return;
-    }
-
-    const targetMessage = messages.find((m) => m.messageId === messageId);
-    if (targetMessage?.feedback) {
-      setFeedbackOpenId(messageId);
-      return;
-    }
-
-    createFeedback(String(messageId), {
-      onSuccess: () => {
-        setFeedbackOpenId(messageId);
-      },
-    });
-  };
-
   return {
     messages,
     sendMessage,
     isAIResponding,
-    feedbackOpenId,
-    handleFeedbacks,
+
     isSending: isPending,
   };
 }

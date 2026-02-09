@@ -57,6 +57,7 @@ export default function InterviewForm({ onSubmit }: InterviewFormProps) {
         onChange={setJobPosting}
         placeholder="You can paste the job description to generate more tailored interview questions."
         onClick={() => handleSubmit}
+        disabled={false}
       />
 
       <FileUpload onFilesChange={setFiles} />
