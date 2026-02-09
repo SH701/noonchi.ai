@@ -18,6 +18,8 @@ export interface ChatMsg {
   hiddenMeaning: string;
   visualAction: string;
   situationDescription: string;
+  askApproachTip?: string;
+  askCulturalInsight?: string;
 }
 
 

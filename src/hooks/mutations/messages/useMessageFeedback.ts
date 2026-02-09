@@ -21,7 +21,6 @@ export function useMessageFeedback(conversationId?: number) {
 
     onSuccess: (feedbackData: Feedback, messageId: string) => {
       if (!conversationId) return;
-
       queryClient.setQueryData<ChatMsg[]>(
         ["messages", conversationId],
         (old) => {
@@ -39,28 +38,14 @@ export function useMessageFeedback(conversationId?: number) {
 
 export function useMessageTTS() {
   return useMutation({
-    mutationFn: async (messageId: string) => {
-      try {
-        const audioUrl = await apiMutations.messages.tts(messageId);
-        return audioUrl;
-      } catch (error) {
-        console.error("Failed to fetch TTS audio:", error);
-        throw error;
-      }
-    },
+    mutationFn: (messageId: string) =>
+      apiMutations.messages.tts(Number(messageId)),
   });
 }
 
 export function useMessageTranslate() {
   return useMutation({
-    mutationFn: async (messageId: string) => {
-      try {
-        const translatedText = await apiMutations.messages.translate(messageId);
-        return translatedText;
-      } catch (error) {
-        console.error("Failed to fetch translation:", error);
-        throw error;
-      }
-    },
+    mutationFn: (messageId: string) =>
+      apiMutations.messages.translate(Number(messageId)),
   });
 }

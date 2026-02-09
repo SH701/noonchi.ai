@@ -54,7 +54,7 @@ export const apiClient = {
       conversationId: string,
     ): Promise<ConversationFeedback> => {
       return apiFetch<ConversationFeedback>(
-        `/api/conversation/${conversationId}/feedback`,
+        `/api/conversations/${conversationId}/feedback`,
         {
           cache: "no-cache",
         },

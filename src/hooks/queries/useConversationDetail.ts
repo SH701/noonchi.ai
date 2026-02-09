@@ -6,7 +6,7 @@ import { ConversationDetail } from "@/types/conversations";
 
 export function useConversationDetail(id?: string) {
   return useQuery<ConversationDetail>({
-    queryKey: ["conversation", id],
+    queryKey: ["conversationDetail", id],
     queryFn: () => apiClient.conversations.getDetail(id!),
   });
 }

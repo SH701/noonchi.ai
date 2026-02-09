@@ -15,6 +15,7 @@ import { Preview, PreviewSendResponse } from "@/types/preview/preview.type";
 import axios from "axios";
 import { AskAPiRequest } from "@/types/conversations/ask/ask.type";
 import { TopicScenario } from "@/types/topics";
+import { AskRes } from "@/types/ask/ask.type";
 
 interface SendMessageResponse {
   taskResult: {
@@ -77,23 +78,25 @@ export const apiMutations = {
         messages: normalized,
       };
     },
-    tts: async (messageId: string): Promise<string> => {
-      const audioUrl = await apiFetch<string>(
-        `/api/messages/${messageId}/tts`,
-        {
-          method: "PUT",
-        },
-      );
-      return audioUrl;
+    roleplaysend: async (
+      conversationId: number,
+      content?: string,
+      audioUrl?: string,
+    ): Promise<ChatMsg> => {
+      return apiFetch<ChatMsg>(`/api/messages/roleplay`, {
+        method: "POST",
+        body: JSON.stringify({ conversationId, content, audioUrl }),
+      });
     },
-    translate: async (messageId: string): Promise<string> => {
-      const translatedText = await apiFetch<string>(
-        `/api/messages/${messageId}/translate`,
-        {
-          method: "PUT",
-        },
-      );
-      return translatedText;
+    tts: async (messageId: number): Promise<string> => {
+      return apiFetch<string>(`/api/messages/${messageId}/tts`, {
+        method: "PUT",
+      });
+    },
+    translate: async (messageId: number): Promise<string> => {
+      return apiFetch<string>(`/api/messages/${messageId}/translate`, {
+        method: "PUT",
+      });
     },
   },
 
@@ -115,8 +118,8 @@ export const apiMutations = {
         body: JSON.stringify(data),
       });
     },
-    createAsk: async (data: AskAPiRequest): Promise<ConversationResponse> => {
-      return apiFetch<ConversationResponse>("/api/conversations/ask", {
+    createAsk: async (data: AskAPiRequest): Promise<AskRes> => {
+      return apiFetch<AskRes>("/api/conversations/ask", {
         method: "POST",
         body: JSON.stringify(data),
       });
@@ -272,9 +275,10 @@ export const apiMutations = {
     },
   },
   language: {
-    createcontext: async (): Promise<TopicScenario> => {
+    createcontext: async (scenarioId: number): Promise<TopicScenario> => {
       return apiFetch<TopicScenario>(`/api/language/scenario-context`, {
         method: "POST",
+        body: JSON.stringify(scenarioId),
       });
     },
   },

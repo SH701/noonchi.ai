@@ -8,6 +8,7 @@ import { useTabStore } from "@/store/tab/useTabStore";
 import Tab from "../tab/Tab";
 import Header from "../common/Header";
 import { useConversationEnd } from "@/hooks/mutations";
+import { useConversationFeedback } from "@/hooks/queries";
 
 export default function RoleplayHeader() {
   const { toggleTab, closeTab } = useTabStore();
@@ -19,8 +20,10 @@ export default function RoleplayHeader() {
   const router = useRouter();
   const [, forceUpdate] = useState(0);
   const isRoleplay = pathname.startsWith("/main/roleplay");
-  // const {} = useConversationEnd() ToDo: 대화 종료
+  const { mutate: conversationEnd } = useConversationEnd();
 
+  const roomId = pathname.split("/").pop();
+  const { data } = useConversationFeedback(String(roomId));
   useEffect(() => {
     requestAnimationFrame(() => {
       forceUpdate((n) => n + 1);
@@ -63,7 +66,13 @@ export default function RoleplayHeader() {
     setOpen(!open);
   };
   const handleEnd = () => {
-    console.log("End");
+    try {
+      conversationEnd(Number(roomId));
+      
+      router.push(`/main/roleplay/chatroom/${roomId}/result`);
+    } catch (error) {
+      console.error("처리 중 오류 발생:", error);
+    }
   };
   const ToggleSwitch = (
     <div

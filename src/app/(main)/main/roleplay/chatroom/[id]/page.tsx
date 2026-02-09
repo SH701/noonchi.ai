@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { ChatroomInput, MessageList } from "@/components/chatroom";
+import { MessageList } from "@/components/chatroom";
 import { useParams } from "next/navigation";
 
 import { useConversationDetail } from "@/hooks/queries/";
-import { useChatMessages } from "@/hooks/useChatMessages";
+
 import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { ChatInput } from "@/components/common";
+import { useRoleplayMessages } from "@/hooks/mutations/messages/useRoleplayMessages";
 
 export default function RolePlayChatRoom() {
   const { id } = useParams<{ id: string }>();
@@ -25,10 +26,9 @@ export default function RolePlayChatRoom() {
   const {
     messages,
     sendMessage,
-    isAIResponding,
     feedbackOpenId,
     handleFeedbacks,
-  } = useChatMessages(conversationId);
+  } = useRoleplayMessages(conversationId);
 
   const {
     micState,

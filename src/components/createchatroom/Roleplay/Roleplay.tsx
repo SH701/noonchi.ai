@@ -77,7 +77,11 @@ export default function RolePlay() {
           </div>
           <div>
             <p className="font-semibold pb-5 pt-8">Conversation Context</p>
-            <RoleplayForm onSubmit={handleSubmit} mode={mode} />
+            <RoleplayForm
+              onSubmit={handleSubmit}
+              mode={mode}
+              topicId={topicId}
+            />
           </div>
         </div>
       </div>

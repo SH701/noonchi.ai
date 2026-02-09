@@ -6,19 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "noonchi-bucket.s3.ap-northeast-2.amazonaws.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.imweb.me",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "gemini.google.com",
+        hostname: "noonchi-bucket2.s3.ap-northeast-2.amazonaws.com",
         port: "",
         pathname: "/**",
       },

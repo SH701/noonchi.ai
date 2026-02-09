@@ -29,9 +29,6 @@ export default function Onboarding() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const handleSkip = () => {
-    sliderRef.current?.slickGoTo(slides.length - 1);
-  };
   const lastIndex = slides.length - 1;
 
   const handleNext = () => {
@@ -82,12 +79,6 @@ export default function Onboarding() {
                         : "relative h-100 flex items-center justify-center"
                     }
                   >
-                    <button
-                      onClick={handleSkip}
-                      className="absolute top-4 right-4 text-sm underline text-gray-500 z-50 cursor-pointer"
-                    >
-                      Skip
-                    </button>
                     <Content />
                   </div>
                   {!isFormSlide && (

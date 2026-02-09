@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button/button";
 import { Textarea } from "@/components/ui/form";
 
 import { TONE_OPTIONS } from "@/constants/tone";
+import { useCreateContext } from "@/hooks/mutations/language/useCreateContext";
 
 interface RoleplayProps {
   onSubmit: (data: {
@@ -15,6 +16,7 @@ interface RoleplayProps {
   AiRole?: string;
   myRole?: string;
   mode: "topic" | "custom";
+  topicId: number;
 }
 
 export default function RoleplayForm({
@@ -22,10 +24,11 @@ export default function RoleplayForm({
   AiRole,
   myRole,
   mode,
+  topicId,
 }: RoleplayProps) {
   const [details, setDetails] = useState("");
   const [selectedTone, setSelectedTone] = useState("casual");
-
+  const { mutate: createContext } = useCreateContext(topicId);
   const [displayMe, setDisplayMe] = useState(
     mode === "topic" ? myRole || "" : "",
   );
@@ -45,6 +48,7 @@ export default function RoleplayForm({
 
   const handleHintMe = () => {
     setDisplayMe(myRole || "");
+    createContext();
   };
 
   const handleHintAi = () => {

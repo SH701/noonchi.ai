@@ -5,12 +5,13 @@ import { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { MyAI } from "@/types/etc/persona.type";
-import { Info, RotateCcw, User, Volume2 } from "lucide-react";
+import { RotateCcw, User, Volume2 } from "lucide-react";
 
 import {
   useMessageTTS,
   useMessageTranslate,
 } from "@/hooks/mutations/messages/useMessageFeedback";
+
 
 type MessageItemProps = {
   m: any;
@@ -29,56 +30,23 @@ export default function MessageItem({
   feedbackOpenId,
   handleFeedbacks,
 }: MessageItemProps) {
-  const [translated, setTranslated] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
-  const [loadingFeedbacks, setLoadingFeedbacks] = useState<
-    Record<string, boolean>
-  >({});
-
-  const { mutate: fetchTTS, isPending: loadingTTS } = useMessageTTS();
-  const { mutate: fetchTranslate, isPending: loadingTranslate } =
-    useMessageTranslate();
-
-  const showFeedbackButton =
-    isMine &&
-    (m.politenessScore ?? -1) >= 0 &&
-    (m.naturalnessScore ?? -1) >= 0 &&
-    (m.politenessScore + m.naturalnessScore) / 2 <= 80;
-
-  const handleFeedbackClick = async () => {
-    setLoadingFeedbacks((prev) => ({ ...prev, [m.messageId]: true }));
-    await handleFeedbacks(m.messageId);
-    setLoadingFeedbacks((prev) => ({ ...prev, [m.messageId]: false }));
-  };
+  
+  const { mutate: TTS, isPending: loadingTTS } = useMessageTTS();
+  const {
+    data: translateText,
+    mutate: translate,
+    isPending: loadingTranslate,
+  } = useMessageTranslate();
 
   const handleTTsClick = (messageId: string) => {
     if (!messageId) return;
-
-    fetchTTS(messageId, {
-      onSuccess: (audioUrl) => {
-        const audio = new Audio(audioUrl);
-        audio.play();
-      },
-      onError: (err) => {
-        console.error("handleTTS error:", err);
-      },
-    });
+    TTS(messageId);
   };
 
   const handleTranslateClick = (messageId: string) => {
-    if (translated) {
-      setTranslated(null);
-      return;
-    }
-
-    fetchTranslate(messageId, {
-      onSuccess: (text) => {
-        setTranslated(text);
-      },
-      onError: (err) => {
-        console.error("handleTranslate error:", err);
-      },
-    });
+    if (!messageId) return;
+    translate(messageId);
   };
 
   const handleReactionReason = () => {
@@ -109,7 +77,9 @@ export default function MessageItem({
     >
       {!isMine && (
         <div className=" flex flex-row gap-2 mb-1">
-          <User className="w-6 h-6 rounded-full  bg-gray-300 text-white" />
+          <div className="flex items-center justify-center bg-gray-300 p-2 rounded-full">
+            <span>{myAI?.aiRole[0]}</span>
+          </div>
           <p className="text-sm font-medium text-gray-600">
             {myAI?.name ?? "AI"}
           </p>
@@ -118,41 +88,10 @@ export default function MessageItem({
 
       {/* 메시지 박스 */}
       <div className="w-61">
-        {showFeedbackButton && (
-          <button
-            onClick={handleFeedbackClick}
-            disabled={loadingFeedbacks[m.messageId]}
-            className=" cursor-pointer mb-4"
-          >
-            {loadingFeedbacks[m.messageId] ? (
-              <svg
-                className="animate-spin w-3 h-3 text-gray-600"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                />
-              </svg>
-            ) : (
-              <Info className="text-red-500 size-4" />
-            )}
-          </button>
-        )}
-
         {/* 유저 말풍선 박스 */}
         {isMine && (
           <div className="flex flex-col gap-1">
-            <p className="text-end">나라고</p>
+            <p className="text-end">{myAI?.userRole}</p>
             <div className="p-4 bg-white rounded-b-xl rounded-tl-xl">
               <p className="text-sm whitespace-pre-wrap my-1 ">{m.content}</p>
               <div className="pt-2.5 border-t border-gray-200 flex justify-between">
@@ -211,6 +150,7 @@ export default function MessageItem({
                 </span>
               </button>
             </div>
+            {translateText && <span>{translateText}</span>}
           </div>
         )}
       </div>
