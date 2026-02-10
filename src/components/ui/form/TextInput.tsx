@@ -2,7 +2,7 @@
 
 import { Wand } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { Spinner } from "../spinner";
+import { Spinner } from "../spinner/spinner";
 
 interface TextInputProps {
   label?: string;
@@ -57,7 +57,7 @@ export default function TextInput({
       />
       {pathname.startsWith("/main/roleplay/create") &&
         (disabled ? (
-          <Spinner className="size-6 absolute right-3 top-10" />
+          <Spinner className=" absolute right-3 top-10" />
         ) : (
           <button
             className="absolute right-3 top-10"

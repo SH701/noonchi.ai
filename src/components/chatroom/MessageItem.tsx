@@ -13,7 +13,7 @@ import {
   useMessageTranslate,
 } from "@/hooks/mutations/messages/useMessageFeedback";
 import NotTTS from "../modal/NotTTS";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "../ui/spinner/spinner";
 
 type MessageItemProps = {
   m: any;
@@ -162,7 +162,7 @@ export default function MessageItem({
                   disabled={loadingTranslate}
                 >
                   {loadingTranslate ? (
-                    <Spinner className="size-5" />
+                    <Spinner size="20px" />
                   ) : (
                     <Image
                       src="/message/language.svg"

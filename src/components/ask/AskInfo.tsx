@@ -5,7 +5,7 @@ import { ChatInput } from "../common";
 import { Button } from "@/components/ui/button/button";
 import { useAsk } from "@/hooks/mutations/conversation/useAsk";
 import { useAskMessages } from "@/hooks/mutations/messages/useAskMessages";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "../ui/spinner/spinner";
 import { Earth, Lightbulb, Volume2 } from "lucide-react";
 import { useMessageTranslate, useMessageTTS } from "@/hooks/mutations";
 
@@ -176,7 +176,7 @@ export default function AskInfo() {
       {/* 로딩 */}
       {isPending && (
         <div className="flex flex-col gap-2 justify-center items-center pt-4">
-          <Spinner />
+          <Spinner size="64px" />
           <span>Processing AI...</span>
         </div>
       )}

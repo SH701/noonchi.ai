@@ -1,5 +1,5 @@
 import { Wand } from "lucide-react";
-import { Spinner } from "../spinner";
+import { Spinner } from "../spinner/spinner";
 interface TextareaProps {
   label?: string;
   value: string;
@@ -45,7 +45,7 @@ export default function Textarea({
         `}
       />
       {disabled ? (
-        <Spinner className="size-6 absolute right-3 top-10" />
+        <Spinner className=" absolute right-3 top-10" />
       ) : (
         <button
           className="absolute right-3 top-10"
