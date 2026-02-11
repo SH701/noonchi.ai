@@ -31,8 +31,8 @@ async function refreshAccessToken(refreshToken: string) {
   }
 }
 
-// TODO: 프로덕션에서는 60 * 60 * 1000 (1시간)으로 변경
-const ACCESS_TOKEN_EXPIRES = 60 * 1000; // 테스트용 1분
+
+const ACCESS_TOKEN_EXPIRES = 60 * 1000 * 60; 
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
