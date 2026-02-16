@@ -83,16 +83,16 @@ export default function SignupContent() {
             {serverErrors.email}
           </p>
         )}
-        <div className="text-center text-sm text-gray-500">
-          Already have an account?{" "}
-          <button
-            className="font-medium text-blue-500 hover:underline"
-            onClick={() => openModal(<LoginContent />)}
-          >
-            Login
-          </button>
-        </div>
       </SignupTemplate>
+      <div className="text-center text-sm text-gray-500 pb-10 pt-6">
+        Already have an account?{" "}
+        <button
+          className="font-medium text-blue-500 hover:underline"
+          onClick={() => openModal(<LoginContent />)}
+        >
+          Login
+        </button>
+      </div>
     </div>
   );
 }

@@ -10,7 +10,7 @@ export default function SignupTemplate({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col  mx-auto pb-12">
+    <div className="flex flex-col  mx-auto ">
       {header}
       <div className="flex-1 px-6 py-8 space-y-4 ">{children}</div>
       {footer && (

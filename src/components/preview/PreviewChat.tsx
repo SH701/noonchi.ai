@@ -6,11 +6,12 @@ import {
   usePreviewSend,
   usePreviewStart,
 } from "@/hooks/mutations/";
-import { ChatInput, Header } from "../common";
-import { Earth, Menu, RotateCcw, SquarePen, Volume2 } from "lucide-react";
-import Image from "next/image";
+import { ChatInput, ChatLoading, Header } from "../common";
+import { Earth, Info, Megaphone, Menu, RotateCcw, Volume2 } from "lucide-react";
+
 import { useRouter } from "next/navigation";
 import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
+import { PreviewModal } from "../modal";
 
 interface AiMessage {
   content: string;
@@ -20,12 +21,15 @@ interface AiMessage {
 
 export default function PreviewChat() {
   const { data, mutate, isPending } = usePreviewStart();
+  const { data: hintData } = usePreviewHint(data?.session_id);
   const [message, setMessage] = useState("");
   const [userMessages, setUserMessages] = useState<string[]>([]);
   const [aiResponses, setAiResponses] = useState<AiMessage[]>([]);
+  const [firstHiddenMessage, setFirstHiddenMessage] = useState(false);
   const [showHintPanel, setShowHintPanel] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
   const router = useRouter();
-  const { data: hintData } = usePreviewHint(data?.session_id);
+
   const handleChunk = useCallback((chunk: string) => {
     setAiResponses((prev) => {
       const newResponses = [...prev];
@@ -68,7 +72,7 @@ export default function PreviewChat() {
           });
           if (res.is_preview_ended) {
             removePreview(data.session_id);
-            router.push("/preview/end");
+            setShowPreviewModal(true);
           }
         },
         onError: (error) => {
@@ -89,14 +93,32 @@ export default function PreviewChat() {
       ),
     );
   };
-
+  const handleMoveAuth = () => {
+    router.push("/preview/end");
+  };
+  const handleHiddenMessage = () => {
+    setFirstHiddenMessage((prev) => !prev);
+  };
   return (
     <div className="min-h-screen px-5 pb-30">
-      <Header leftIcon={<Menu />} center="Preview" rightIcon={<SquarePen />} />
+      <Header
+        leftIcon={<Menu />}
+        center="RolePlay Preview"
+        rightIcon="Skip"
+        className="text-gray-600 font-medium"
+        onRightClick={handleMoveAuth}
+      />
+
       {isPending ? (
-        <div>loading</div>
+        <ChatLoading />
       ) : (
         <>
+          <div className="border-y border-white px-5 py-3 flex gap-4 bg-white/50 -mx-5 mb-4">
+            <Megaphone className="text-gray-600 shrink-0" />
+            <span className="text-sm font-medium text-gray-600">
+              {data?.scenario.description}
+            </span>
+          </div>
           {/* 첫 AI 메세지  */}
           <div className="flex gap-2 mb-1">
             <div className="size-8 rounded-full shrink-0 bg-gray-300 flex items-center justify-center">
@@ -107,9 +129,27 @@ export default function PreviewChat() {
                 {data?.ai_name}
               </span>
               <div className="flex flex-col gap-2 rounded-tr-xl rounded-b-xl p-4 border border-gray-300 bg-white mb-8">
-                <p className="text-sm whitespace-pre-wrap my-1">
-                  {data?.ai_message}
-                </p>
+                <div>
+                  <p className="text-sm whitespace-pre-wrap my-1">
+                    {data?.ai_message}
+                  </p>
+                </div>
+                <div className="pt-2.5 border-t border-gray-200 flex justify-between">
+                  <div className="flex gap-2">
+                    <Volume2 />
+                    <Earth />
+                  </div>
+                  <button
+                    onClick={handleHiddenMessage}
+                    className="border-gradient-primary rounded-full px-2 py-1"
+                  >
+                    👀{" "}
+                    <span className="text-gradient-primary text-xs font-semibold">
+                      Really mean
+                    </span>
+                  </button>
+                </div>
+                {firstHiddenMessage && <span>{data?.ai_hidden_meaning}</span>}
               </div>
             </div>
           </div>
@@ -122,16 +162,9 @@ export default function PreviewChat() {
                 <div className="flex flex-col gap-2 rounded-tl-xl rounded-b-xl p-4 border border-gray-300 bg-white w-61">
                   <p className="text-sm whitespace-pre-wrap my-1">{userMsg}</p>
                   <div className="pt-2.5 border-t border-gray-200 flex justify-between">
-                    <button className="flex rounded-full border border-blue-500 px-2 py-1 gap-1">
-                      <Image
-                        src="/chatroom/warning.png"
-                        alt="feedback"
-                        width={20}
-                        height={20}
-                      />
-                      <span className="text-blue-500 text-sm">
-                        View feedback
-                      </span>
+                    <button className="flex rounded-full border border-blue-500 px-2 py-1 gap-1 text-blue-500">
+                      <Info />
+                      <span className=" text-sm pt-1">View feedback</span>
                     </button>
                     <RotateCcw size={20} />
                   </div>
@@ -192,6 +225,13 @@ export default function PreviewChat() {
           ))}
         </div>
       )}
+      {/* 남은 턴수 */}
+      <div className="text-white px-5 py-2.5 flex gap-2.5 items-center justify-center bg-gray-800/50 fixed bottom-34 left-1/2 -translate-x-1/2 w-full max-w-83.75 rounded-xl z-40">
+        <Info />
+        <span className=" text-sm">
+          They`re waiting for your reply! ({aiResponses.length}/2)
+        </span>
+      </div>
       <ChatInput
         message={message}
         setMessage={setMessage}
@@ -200,6 +240,10 @@ export default function PreviewChat() {
         showHint={true}
         showSituation={true}
         isHintActive={showHintPanel}
+      />
+      <PreviewModal
+        isOpen={showPreviewModal}
+        onClose={() => setShowPreviewModal(false)}
       />
     </div>
   );

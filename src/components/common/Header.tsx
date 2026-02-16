@@ -8,6 +8,7 @@ interface HeaderProps {
   rightIcon?: ReactNode;
   onLeftClick?: () => void;
   onRightClick?: () => void;
+  className?: string;
 }
 
 export default function Header({
@@ -16,14 +17,18 @@ export default function Header({
   rightIcon,
   onLeftClick,
   onRightClick,
+  className,
 }: HeaderProps) {
   return (
-    <div className="w-full py-8 flex justify-between items-center">
+    <div className={`w-full py-8 flex justify-between items-center `}>
       <div className="w-6 cursor-pointer" onClick={onLeftClick}>
         {leftIcon}
       </div>
       <span className="text-xl font-semibold">{center}</span>
-      <div className="w-6 cursor-pointer" onClick={onRightClick}>
+      <div
+        className={`w-6 cursor-pointer ${className ?? ""}`}
+        onClick={onRightClick}
+      >
         {rightIcon}
       </div>
     </div>
