@@ -1,7 +1,8 @@
 "use client";
 
+import { Header } from "@/components/common";
 import { ChevronLeftIcon } from "lucide-react";
-import Header from "../common/Header";
+
 import { useRouter } from "next/navigation";
 
 export default function ProfileHeader() {

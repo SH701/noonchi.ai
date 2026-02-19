@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { apiMutations } from "@/api/mutations";
 import { toast } from "@/components/ui/toast/toast";
 import { signOut } from "next-auth/react";
-import { Button } from "../ui/button/button";
+import { Button } from "@/components/ui/button/button";
+
 
 export default function Logout() {
   const router = useRouter();
