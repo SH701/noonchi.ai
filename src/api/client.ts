@@ -30,6 +30,9 @@ export const apiClient = {
       params.set("favoritesOnly", String(favoritesOnly));
       return apiFetch<TopicRes[]>(`/api/topics?${params.toString()}`);
     },
+    getRecentTopic: async (page: number = 1, size: number = 10): Promise<TopicRes[]> => {
+      return apiFetch<TopicRes[]>(`/api/topics/recent?page=${page}&size=${size}`);
+    },
   },
   conversations: {
     getConversations: async (filter: FilterState) => {

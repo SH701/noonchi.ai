@@ -9,17 +9,17 @@ import {
   useAddFavorite,
   useRemoveFavorite,
 } from "@/hooks/mutations/topics/useFavorite";
-import { useTopics } from "@/hooks/queries/useTopics";
+import { useRecentTopics, useTopics } from "@/hooks/queries/useTopics";
 
-type TopicListProps = {
+interface TopicListProps {
   category: CategoryType;
   setCategory: (c: CategoryType) => void;
-};
+}
 
 export default function TopicList({ category, setCategory }: TopicListProps) {
   const isLove = category === "Favorites";
   const { data: topics = [] } = useTopics(isLove ? "" : category, isLove);
-
+  const { data: recent } = useRecentTopics();
   const router = useRouter();
   const { mutate: addFavorite } = useAddFavorite();
   const { mutate: removeFavorite } = useRemoveFavorite();
@@ -46,48 +46,54 @@ export default function TopicList({ category, setCategory }: TopicListProps) {
         onSelect={(c) => setCategory(c)}
       />
 
-      <div className="grid grid-cols-2 gap-4 w-full pb-10">
-        {topics.map((topic) => (
-          <div
-            key={topic.topicId}
-            className="relative flex flex-col rounded-xl cursor-pointer hover:shadow-md transition-shadow w-41 h-41 overflow-hidden group"
-            onClick={() =>
-              router.push(
-                `/main/roleplay/create?category=${category}&topicId=${topic.topicId}`,
-              )
-            }
-          >
-            <Image
-              src={topic.imageUrl}
-              alt={topic.name}
-              fill
-              className="object-cover"
-            />
-
-            <div className="flex flex-col justify-end px-4 py-2 text-white gap-1 absolute inset-x-0 bottom-0 h-auto bg-gray backdrop-blur-sm rounded-b-xl">
-              <span className="text-xs">{topic.category}</span>
-              <h4 className="text-sm font-semibold">{topic.name}</h4>
-            </div>
-
-            <button
-              className="absolute top-3 right-3 text-white opacity-80 hover:opacity-100 transition-opacity"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFavorite(topic.topicId, topic.isFavorite);
-              }}
+      {isLove && topics.length === 0 ? (
+        <div className="flex flex-col items-center justify-center w-full py-20 gap-2 ">
+          <span className="text-2xl font-medium">Your Favrites is empty</span>
+          <span className="text-sm text-gray-600">
+            Tap the heart on roles you like
+          </span>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-4 w-full pb-10">
+          {topics.map((topic) => (
+            <div
+              key={topic.topicId}
+              className="relative flex flex-col rounded-xl cursor-pointer hover:shadow-md transition-shadow w-41 h-41 overflow-hidden group"
+              onClick={() =>
+                router.push(
+                  `/main/roleplay/create?category=${category}&topicId=${topic.topicId}`,
+                )
+              }
             >
-              <Heart fill={topic.isFavorite ? "currentColor" : "none"} />
-            </button>
-          </div>
-        ))}
-
-        <button
-          className="flex items-center justify-center size-10 bg-white rounded-full z-9999 absolute right-4 bottom-8"
-          onClick={() => router.push("/main/roleplay/create/custom")}
-        >
-          <Plus />
-        </button>
-      </div>
+              <Image
+                src={topic.imageUrl}
+                alt={topic.name}
+                fill
+                className="object-cover"
+              />
+              <div className="flex flex-col justify-end px-4 py-2 text-white gap-1 absolute inset-x-0 bottom-0 h-auto bg-gray backdrop-blur-sm rounded-b-xl">
+                <span className="text-xs">{topic.category}</span>
+                <h4 className="text-sm font-semibold">{topic.name}</h4>
+              </div>
+              <button
+                className="absolute top-3 right-3 text-white opacity-80 hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(topic.topicId, topic.isFavorite);
+                }}
+              >
+                <Heart fill={topic.isFavorite ? "currentColor" : "none"} />
+              </button>
+            </div>
+          ))}
+          <button
+            className="flex items-center justify-center size-10 bg-white rounded-full z-9999 absolute right-4 bottom-8 border border-gradient-primary"
+            onClick={() => router.push("/main/roleplay/create/custom")}
+          >
+            <Plus />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

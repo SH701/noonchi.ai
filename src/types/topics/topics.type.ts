@@ -10,12 +10,6 @@ export interface Topic {
   label: CategoryType;
 }
 
-export interface TopicProps {
-  topics: Topic[];
-  active: CategoryType;
-  onSelect: (key: CategoryType) => void;
-}
-
 export interface TopicRes {
   topicId: 0;
   name: string;

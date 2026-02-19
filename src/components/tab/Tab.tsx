@@ -76,7 +76,7 @@ export default function Tab() {
 
               <button
                 onClick={handleProfileClick}
-                className="flex shrink-0 gap-4 bg-gray-700 p-4"
+                className="flex shrink-0 gap-4 bg-white p-4"
               >
                 {session?.user.profileImageUrl ? (
                   <Image
@@ -89,9 +89,7 @@ export default function Tab() {
                 ) : (
                   <div className="size-12 rounded-full bg-gray-400 shrink-0" />
                 )}
-                <span className="text-white pt-3 truncate">
-                  {session?.user.name}
-                </span>
+                <span className=" pt-3 truncate">{session?.user.name}</span>
               </button>
             </motion.div>
           </motion.div>

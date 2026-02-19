@@ -8,3 +8,9 @@ export const useTopics = (category: string, favoritesOnly: boolean) => {
     enabled: !!category,
   });
 };
+export const useRecentTopics = (page: number = 1, size: number = 20) => {
+  return useQuery({
+    queryKey: ["recentTopics", page, size],
+    queryFn: () => apiClient.topic.getRecentTopic(page, size),
+  });
+};

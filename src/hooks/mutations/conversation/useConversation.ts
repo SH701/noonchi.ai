@@ -1,5 +1,12 @@
-import { apiMutations } from "@/api";
+import { apiMutations } from "@/api/mutations";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+export const useConversationEnd = (conversationId: number) => {
+  return useMutation({
+    mutationFn: () =>
+      apiMutations.conversations.endConversation(conversationId),
+  });
+};
 
 export function useDeleteConversation() {
   const queryClient = useQueryClient();

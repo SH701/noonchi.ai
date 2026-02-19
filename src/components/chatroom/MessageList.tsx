@@ -27,11 +27,10 @@ export default function MessageList({
         return (
           <MessageItem
             key={m.messageId}
-            m={m}
+            messages={m}
             myAI={myAI}
             isMine={isMine}
             isPending={isPending}
-   
             showsituation={showsituation}
           />
         );
