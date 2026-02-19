@@ -10,7 +10,7 @@ import {
   FilterState,
 } from "@/types/conversations";
 import { filterMap } from "@/constants/filter";
-import { TopicRes } from "@/types/topics";
+import { TopicRes, PagedTopicRes } from "@/types/topics";
 import { PreviewHint } from "@/types/preview/preview.type";
 import axios from "axios";
 
@@ -31,7 +31,8 @@ export const apiClient = {
       return apiFetch<TopicRes[]>(`/api/topics?${params.toString()}`);
     },
     getRecentTopic: async (page: number = 1, size: number = 10): Promise<TopicRes[]> => {
-      return apiFetch<TopicRes[]>(`/api/topics/recent?page=${page}&size=${size}`);
+      const res = await apiFetch<PagedTopicRes>(`/api/topics/recent?page=${page}&size=${size}`);
+      return res.content;
     },
   },
   conversations: {

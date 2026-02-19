@@ -1,5 +1,5 @@
-import AskChat from "@/components/ask/AskChat";
+import PreAsk from "@/features/ask/PreAsk";
 
 export default function Ask() {
-  return <AskChat />;
+  return <PreAsk />;
 }

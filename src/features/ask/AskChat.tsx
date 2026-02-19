@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChatInput } from "../common";
+import { ChatInput } from "../../components/common";
 import { Button } from "@/components/ui/button/button";
 import { useAsk } from "@/hooks/mutations/conversation/useAsk";
 import { useAskMessages } from "@/hooks/mutations/messages/useAskMessages";
-import { Spinner } from "../ui/spinner/spinner";
+import { Spinner } from "../../components/ui/spinner/spinner";
 import { Earth, Lightbulb, Volume2 } from "lucide-react";
 import { useMessageTranslate, useMessageTTS } from "@/hooks/mutations";
 
@@ -26,7 +26,7 @@ const STEP_QUESTIONS: Record<string, string> = {
   situation: "What do you want to say?",
 };
 
-export default function AskInfo() {
+export default function AskChat() {
   const [step, setStep] = useState<Step>("askTarget");
   const [message, setMessage] = useState("");
   const [askTarget, setAskTarget] = useState("");

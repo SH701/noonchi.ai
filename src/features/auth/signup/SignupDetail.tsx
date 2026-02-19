@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button/button";
 import { apiMutations } from "@/api/mutations";
-import { SignupHeader, SignupTemplate, SignupForm2 } from "@/components/auth";
+import { SignupHeader, SignupTemplate, SignupForm2 } from "@/features/auth";
 import { signup2Schema } from "@/types/auth";
 import { signIn } from "next-auth/react";
 import StepIndicator from "./StepIndicator";

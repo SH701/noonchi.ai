@@ -12,7 +12,7 @@ import {
   SignupTemplate,
   SignupDetail,
   LoginContent,
-} from "@/components/auth";
+} from "@/features/auth";
 import { signupSchema } from "@/types/auth";
 import StepIndicator from "./StepIndicator";
 import { useModalActions } from "@/store/modal/useModalStore";

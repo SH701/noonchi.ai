@@ -6,13 +6,13 @@ import {
   usePreviewSend,
   usePreviewStart,
 } from "@/hooks/mutations/";
-import { ChatInput, ChatLoading, Header } from "../common";
+import { ChatInput, ChatLoading, Header } from "../../components/common";
 import { Info, Megaphone, Menu } from "lucide-react";
-import MessageItem from "../chatroom/MessageItem";
+import MessageItem from "../../components/chatroom/MessageItem";
 
 import { useRouter } from "next/navigation";
 import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
-import { PreviewModal } from "../modal";
+import { PreviewModal } from "../../components/modal";
 
 interface AiMessage {
   content: string;

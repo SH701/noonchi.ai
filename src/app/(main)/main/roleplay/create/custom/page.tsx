@@ -1,4 +1,4 @@
-import { CustomSection } from "@/components/createchatroom";
+import { CustomSection } from "@/features/createchatroom";
 
 export default function Custom() {
   return <CustomSection />;

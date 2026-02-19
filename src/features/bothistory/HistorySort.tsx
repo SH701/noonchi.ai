@@ -4,11 +4,12 @@ import { useChatHistoryStore } from "@/store/chathistory/useChatHistorystore";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 
-export default function Sort() {
+export default function HistorySort() {
   const { sort, setSort } = useChatHistoryStore();
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
   return (
-    <div className="relative flex items-end justify-end px-4 mb-2">
+    <div className="relative flex items-center justify-between mb-2">
+      <span className="text-sm">All</span>
       <button
         onClick={() => setOpenSortDropdown((prev) => !prev)}
         className="flex items-center gap-1 text-xs cursor-pointer rounded"

@@ -1,4 +1,4 @@
-import MyInfo from "@/components/profile/myinfo/MyInfo";
+import MyInfo from "@/features/profile/myinfo/MyInfo";
 import { getAge } from "@/lib/common/time-format";
 import { auth } from "@/lib/next-auth/auth";
 

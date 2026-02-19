@@ -3,9 +3,9 @@
 import { Button } from "@/components/ui/button/button";
 
 import { useState } from "react";
-import AskInfo from "./AskInfo";
+import AskChat from "./AskChat";
 
-export default function AskChat() {
+export default function PreAsk() {
   const [step, setStep] = useState<"chat" | "info">("chat");
   const handleStart = () => {
     setStep("info");
@@ -33,7 +33,7 @@ export default function AskChat() {
           </div>
         </div>
       ) : (
-        <AskInfo />
+        <AskChat />
       )}
     </>
   );

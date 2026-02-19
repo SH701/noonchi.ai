@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { CategoryType } from "@/types/topics/topics.type";
-import { TopicList } from "@/components/roleplay";
+import { TopicList } from "@/features/roleplay";
 
 export default function Main() {
   const [category, setCategory] = useState<CategoryType>("Career");

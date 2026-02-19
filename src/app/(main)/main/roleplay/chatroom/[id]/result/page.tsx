@@ -11,7 +11,7 @@ import {
 
 import { MessageList } from "@/components/chatroom";
 
-import { ResultTab, Point, Part } from "@/components/result";
+import { ResultTab, Point, Part } from "@/features/result";
 import { ChatMsg } from "@/types/messages";
 import { Button } from "@/components/ui/button/button";
 

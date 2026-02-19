@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-import RoleplayForm from "@/components/createchatroom/Roleplay/RoleplayForm";
+import RoleplayForm from "@/features/createchatroom/Roleplay/RoleplayForm";
 
 import { useCreateRoleplay } from "@/hooks/mutations";
 import { toast } from "@/components/ui/toast/toast";

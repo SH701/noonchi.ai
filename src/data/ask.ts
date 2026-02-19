@@ -1,5 +1,5 @@
-import AskChat from "@/components/ask/AskChat";
-import AskInfo from "@/components/ask/AskInfo";
+import AskChat from "@/features/ask/PreAsk";
+import AskInfo from "@/features/ask/AskChat";
 import { ComponentType } from "react";
 
 interface slidesProps {

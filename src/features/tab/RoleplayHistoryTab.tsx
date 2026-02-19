@@ -7,14 +7,13 @@ import { useTopics } from "@/hooks/queries/useTopics";
 export default function RoleplayHistoryTab() {
   const router = useRouter();
   const { data: conversations } = useConversations();
-  const { data: topics = [] } = useTopics("ROLE_PLAYING", false);
+  const { data: topics = [] } = useTopics("", false);
 
   const handleHistoryPage = () => {
     router.push("/bothistory/roleplay");
   };
-  console.log(topics);
   return (
-    <div className="mb-6">
+    <div>
       <button
         onClick={handleHistoryPage}
         className="flex items-center gap-1 mb-3"
@@ -23,7 +22,7 @@ export default function RoleplayHistoryTab() {
         <ChevronRight size={18} className="text-gray-400" />
       </button>
 
-      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+      <div className="flex gap-3 overflow-x-auto ">
         {conversations
           ?.filter((convo) => convo.conversationType === "ROLE_PLAYING")
           .map((convo) => {

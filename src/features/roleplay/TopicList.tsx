@@ -1,6 +1,6 @@
 "use client";
 
-import TopicSlider from "@/components/roleplay/TopicSlider";
+import TopicSlider from "@/features/roleplay/TopicSlider";
 import { CategoryType } from "@/types/topics";
 import { useRouter } from "next/navigation";
 import { Heart, Plus } from "lucide-react";
@@ -9,7 +9,7 @@ import {
   useAddFavorite,
   useRemoveFavorite,
 } from "@/hooks/mutations/topics/useFavorite";
-import { useRecentTopics, useTopics } from "@/hooks/queries/useTopics";
+import { useTopics } from "@/hooks/queries/useTopics";
 
 interface TopicListProps {
   category: CategoryType;
@@ -19,7 +19,7 @@ interface TopicListProps {
 export default function TopicList({ category, setCategory }: TopicListProps) {
   const isLove = category === "Favorites";
   const { data: topics = [] } = useTopics(isLove ? "" : category, isLove);
-  const { data: recent } = useRecentTopics();
+
   const router = useRouter();
   const { mutate: addFavorite } = useAddFavorite();
   const { mutate: removeFavorite } = useRemoveFavorite();

@@ -1,4 +1,4 @@
-import MyLanguage from "@/components/profile/mylanguage/MyLanguage";
+import MyLanguage from "@/features/profile/mylanguage/MyLanguage";
 
 export default function Language() {
   return (

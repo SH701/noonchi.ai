@@ -4,8 +4,8 @@ export default function AskHistoryTab() {
   const { data } = useConversations();
 
   return (
-    <div className="flex flex-col h-full overflow-hidden px-4">
-      <div className="flex justify-between mb-3 mt-5 shrink-0">
+    <div className="flex flex-col h-full overflow-hidden ">
+      <div className="flex justify-between mt-5 shrink-0">
         <span className="text-sm font-medium mb-2">Ask</span>
         <span className="text-xs text-gray-600 cursor-pointer">Edit</span>
       </div>
@@ -16,7 +16,7 @@ export default function AskHistoryTab() {
           .map((convo) => (
             <div
               key={convo.conversationId}
-              className="mb-5 p-3 bg-white/10 rounded-lg"
+              className="mb-2 p-3 bg-white/10 rounded-lg"
             >
               <div className="flex flex-col">
                 <span className="text-sm font-bold text-blue-400">

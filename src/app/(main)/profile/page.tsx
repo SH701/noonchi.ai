@@ -4,7 +4,7 @@ import {
   ProfileHeader,
   Logout,
   DeleteAccount,
-} from "@/components/profile";
+} from "@/features/profile";
 import { auth } from "@/lib/next-auth/auth";
 import {
   UserRound,

@@ -5,7 +5,7 @@ export const useTopics = (category: string, favoritesOnly: boolean) => {
     queryKey: ["topics", category, favoritesOnly],
     queryFn: () => apiClient.topic.getTopic(category, favoritesOnly),
 
-    enabled: !!category,
+    enabled: true,
   });
 };
 export const useRecentTopics = (page: number = 1, size: number = 20) => {

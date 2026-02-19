@@ -6,10 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTabStore } from "@/store/tab/useTabStore";
 import Tab from "../tab/Tab";
-import Header from "../common/Header";
+import Header from "../../components/common/Header";
 import { useConversationEnd } from "@/hooks/mutations";
 import { useConversationDetail } from "@/hooks/queries";
-import { ExitChatting } from "../modal";
+import { ExitChatting } from "../../components/modal";
 
 export default function RoleplayHeader() {
   const { toggleTab } = useTabStore();

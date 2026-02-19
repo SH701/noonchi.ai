@@ -2,7 +2,8 @@ import { ModalProps } from "@/types/etc";
 import Modal from "./Modal";
 import { Button } from "../ui/button/button";
 import { useModalActions } from "@/store/modal/useModalStore";
-import { LoginContent, SignupContent } from "../auth";
+import { LoginContent, SignupContent } from "@/features/auth";
+
 
 export default function PreviewModal({ isOpen, onClose }: ModalProps) {
   const { openModal } = useModalActions();

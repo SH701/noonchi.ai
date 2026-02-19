@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Button } from "../ui/button/button";
+import { Button } from "../../components/ui/button/button";
 import { CategoryType, Topic } from "@/types/topics";
 
 interface TopicProps {

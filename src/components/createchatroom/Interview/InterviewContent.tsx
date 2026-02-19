@@ -16,8 +16,8 @@ export default function IntreviewContent() {
 // } from "@/hooks/mutations";
 // import { InterviewFormData } from "@/types/conversations";
 
-// import { InterviewForm } from "@/components/createchatroom";
-// import InterviewSection from "@/components/createchatroom/Interview/InterviewSection";
+// import { InterviewForm } from "@/features/createchatroom";
+// import InterviewSection from "@/features/createchatroom/Interview/InterviewSection";
 
 // export default function InterviewContent() {
 //   const router = useRouter();

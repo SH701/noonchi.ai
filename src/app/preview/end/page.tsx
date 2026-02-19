@@ -1,4 +1,4 @@
-import PreviewEnd from "@/components/preview/PreviewEnd";
+import PreviewEnd from "@/features/preview/PreviewEnd";
 
 export default function PreviewsEnd() {
   return <PreviewEnd />;

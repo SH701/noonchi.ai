@@ -2,7 +2,7 @@
 
 import { useModalActions } from "@/store/modal/useModalStore";
 import Image from "next/image";
-import { Button } from "../ui/button/button";
+import { Button } from "../../components/ui/button/button";
 import { LoginContent, SignupContent } from "../auth";
 
 export default function PreviewEnd() {

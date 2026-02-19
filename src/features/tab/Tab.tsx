@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useTabStore } from "@/store/tab/useTabStore";
-import { SearchBar } from "../common";
+import { SearchBar } from "../../components/common";
 import { Users } from "lucide-react";
 import RoleplayHistoryTab from "./RoleplayHistoryTab";
 import AskHistoryTab from "./AskHistoryTab";
@@ -68,7 +68,7 @@ export default function Tab() {
                   </button>
                 </div>
 
-                <div className="flex-1  min-h-0 pb-5 custom-scrollbar">
+                <div className="flex-1  min-h-0  custom-scrollbar">
                   <RoleplayHistoryTab />
                   <AskHistoryTab />
                 </div>
@@ -76,7 +76,7 @@ export default function Tab() {
 
               <button
                 onClick={handleProfileClick}
-                className="flex shrink-0 gap-4 bg-white p-4"
+                className="flex gap-4 bg-white p-4 w-70"
               >
                 {session?.user.profileImageUrl ? (
                   <Image
@@ -89,7 +89,7 @@ export default function Tab() {
                 ) : (
                   <div className="size-12 rounded-full bg-gray-400 shrink-0" />
                 )}
-                <span className=" pt-3 truncate">{session?.user.name}</span>
+                <span className=" pt-3">{session?.user.name}</span>
               </button>
             </motion.div>
           </motion.div>
