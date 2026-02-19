@@ -7,7 +7,8 @@ import {
   usePreviewStart,
 } from "@/hooks/mutations/";
 import { ChatInput, ChatLoading, Header } from "../common";
-import { Earth, Info, Megaphone, Menu, RotateCcw, Volume2 } from "lucide-react";
+import { Info, Megaphone, Menu } from "lucide-react";
+import MessageItem from "../chatroom/MessageItem";
 
 import { useRouter } from "next/navigation";
 import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
@@ -27,6 +28,7 @@ export default function PreviewChat() {
   const [aiResponses, setAiResponses] = useState<AiMessage[]>([]);
   const [firstHiddenMessage, setFirstHiddenMessage] = useState(false);
   const [showHintPanel, setShowHintPanel] = useState(false);
+  const [showSituation, setShowSituation] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const router = useRouter();
 
@@ -93,154 +95,119 @@ export default function PreviewChat() {
       ),
     );
   };
+  const handleHint = () => {
+    setShowHintPanel((prev) => !prev);
+  };
   const handleMoveAuth = () => {
     router.push("/preview/end");
   };
   const handleHiddenMessage = () => {
     setFirstHiddenMessage((prev) => !prev);
   };
+  const handleSituation = () => {
+    setShowSituation((prev) => !prev);
+  };
   return (
-    <div className="min-h-screen px-5 pb-30">
-      <Header
-        leftIcon={<Menu />}
-        center="RolePlay Preview"
-        rightIcon="Skip"
-        className="text-gray-600 font-medium"
-        onRightClick={handleMoveAuth}
-      />
-
-      {isPending ? (
-        <ChatLoading />
-      ) : (
-        <>
-          <div className="border-y border-white px-5 py-3 flex gap-4 bg-white/50 -mx-5 mb-4">
-            <Megaphone className="text-gray-600 shrink-0" />
-            <span className="text-sm font-medium text-gray-600">
-              {data?.scenario.description}
-            </span>
-          </div>
-          {/* 첫 AI 메세지  */}
-          <div className="flex gap-2 mb-1">
-            <div className="size-8 rounded-full shrink-0 bg-gray-300 flex items-center justify-center">
-              <span>{data?.ai_name[0]}</span>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-gray-600">
-                {data?.ai_name}
-              </span>
-              <div className="flex flex-col gap-2 rounded-tr-xl rounded-b-xl p-4 border border-gray-300 bg-white mb-8">
-                <div>
-                  <p className="text-sm whitespace-pre-wrap my-1">
-                    {data?.ai_message}
-                  </p>
-                </div>
-                <div className="pt-2.5 border-t border-gray-200 flex justify-between">
-                  <div className="flex gap-2">
-                    <Volume2 />
-                    <Earth />
-                  </div>
-                  <button
-                    onClick={handleHiddenMessage}
-                    className="border-gradient-primary rounded-full px-2 py-1"
-                  >
-                    👀{" "}
-                    <span className="text-gradient-primary text-xs font-semibold">
-                      Really mean
-                    </span>
-                  </button>
-                </div>
-                {firstHiddenMessage && <span>{data?.ai_hidden_meaning}</span>}
-              </div>
-            </div>
-          </div>
-
-          {/* 대화 히스토리 */}
-          {userMessages.map((userMsg, idx) => (
-            <div key={idx} className="justify-end">
-              <div className="flex justify-end mb-8 flex-col items-end gap-2">
-                <span>{data?.my_name}</span>
-                <div className="flex flex-col gap-2 rounded-tl-xl rounded-b-xl p-4 border border-gray-300 bg-white w-61">
-                  <p className="text-sm whitespace-pre-wrap my-1">{userMsg}</p>
-                  <div className="pt-2.5 border-t border-gray-200 flex justify-between">
-                    <button className="flex rounded-full border border-blue-500 px-2 py-1 gap-1 text-blue-500">
-                      <Info />
-                      <span className=" text-sm pt-1">View feedback</span>
-                    </button>
-                    <RotateCcw size={20} />
-                  </div>
-                </div>
-              </div>
-
-              {/* AI 메세지*/}
-              {aiResponses[idx] && (
-                <div className="flex gap-2 mb-1">
-                  <div className="size-8 rounded-full shrink-0 bg-gray-300" />
-                  <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-600">
-                      {data?.ai_name}
-                    </span>
-                    <div className="flex flex-col gap-2 rounded-tr-xl rounded-b-xl p-4 border border-gray-300 bg-white mb-8">
-                      <p className="text-sm  my-1">
-                        {aiResponses[idx].content || "..."}
-                      </p>
-                      <div className="flex justify-between pt-3 border-t border-gray-200">
-                        <div className="flex gap-2">
-                          <Volume2 />
-                          <Earth />
-                        </div>
-                        <button
-                          onClick={() => toggleReveal(idx)}
-                          className="border-gradient-primary rounded-full px-2 py-1"
-                        >
-                          👀{" "}
-                          <span className="text-gradient-primary text-xs font-semibold">
-                            Really mean
-                          </span>
-                        </button>
-                      </div>
-
-                      {aiResponses[idx].isRevealed &&
-                        aiResponses[idx].hiddenMeaning && (
-                          <p className="text-xs text-gray-500 bg-gray-50 rounded-lg p-3 mt-1">
-                            {aiResponses[idx].hiddenMeaning}
-                          </p>
-                        )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </>
-      )}
-      {showHintPanel && hintData && (
-        <div className="fixed bottom-34 left-5 right-5 z-50 flex flex-col gap-2">
-          {hintData.hints.map((h, idx) => (
-            <div
-              key={idx}
-              className="rounded-2xl bg-gray-100 px-4 py-3 shadow-sm"
-            >
-              <p className="text-sm text-gray-700">{h}</p>
-            </div>
-          ))}
+    <div className="h-screen flex flex-col">
+      {/* 스크롤 영역 */}
+      <div className="flex-1 overflow-y-auto px-5">
+        <div className="sticky top-0 ">
+          <Header
+            leftIcon={<Menu />}
+            center="RolePlay Preview"
+            rightIcon="Skip"
+            className="text-gray-600 font-medium"
+            onRightClick={handleMoveAuth}
+          />
         </div>
-      )}
-      {/* 남은 턴수 */}
-      <div className="text-white px-5 py-2.5 flex gap-2.5 items-center justify-center bg-gray-800/50 fixed bottom-34 left-1/2 -translate-x-1/2 w-full max-w-83.75 rounded-xl z-40">
-        <Info />
-        <span className=" text-sm">
-          They`re waiting for your reply! ({aiResponses.length}/2)
-        </span>
+        {isPending ? (
+          <ChatLoading />
+        ) : (
+          <>
+            <div className="border-y border-white px-5 py-3 flex gap-4 bg-white/50 -mx-5 mb-4">
+              <Megaphone className="text-gray-600 shrink-0" />
+              <span className="text-sm font-medium text-gray-600">
+                {data?.scenario.description}
+              </span>
+            </div>
+            {/* 첫 AI 메세지 */}
+            <MessageItem
+              messages={{
+                content: data?.ai_message ?? "",
+                visualAction: data?.visual_action,
+              }}
+              aiName={data?.ai_name}
+              isPreview={true}
+              hiddenMeaning={data?.ai_hidden_meaning}
+              isRevealed={firstHiddenMessage}
+              onToggleReveal={handleHiddenMessage}
+              showsituation={showSituation}
+            />
+
+            {/* 대화 히스토리 */}
+            {userMessages.map((userMsg, idx) => (
+              <div key={idx}>
+                <MessageItem
+                  messages={{ content: userMsg }}
+                  isMine={true}
+                  userName={data?.my_name}
+                  isPreview={true}
+                />
+                {aiResponses[idx] && (
+                  <MessageItem
+                    messages={{
+                      content: aiResponses[idx].content || "...",
+                      visualAction: data?.visual_action,
+                    }}
+                    isMine={false}
+                    aiName={data?.ai_name}
+                    isPreview={true}
+                    hiddenMeaning={aiResponses[idx].hiddenMeaning}
+                    isRevealed={aiResponses[idx].isRevealed}
+                    onToggleReveal={() => toggleReveal(idx)}
+                    showsituation={showSituation}
+                  />
+                )}
+              </div>
+            ))}
+          </>
+        )}
       </div>
-      <ChatInput
-        message={message}
-        setMessage={setMessage}
-        onSend={handleSend}
-        onHintClick={() => setShowHintPanel((prev) => !prev)}
-        showHint={true}
-        showSituation={true}
-        isHintActive={showHintPanel}
-      />
+
+      {/* 하단 고정 영역 */}
+      <div className="px-5 pb-5 flex flex-col gap-2 backdrop-blur-md">
+        {showHintPanel && hintData && (
+          <div className="flex flex-col gap-2">
+            {hintData.hints.map((h, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl bg-gray-100 px-4 py-3 shadow-sm"
+              >
+                <p className="text-sm text-gray-700">{h}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 남은 턴수 */}
+        <div className="text-white px-5 py-2.5 flex gap-2.5 items-center justify-center bg-gray-800/50 rounded-xl">
+          <Info />
+          <span className="text-sm">
+            They`re waiting for your reply! ({aiResponses.length}/2)
+          </span>
+        </div>
+        <ChatInput
+          message={message}
+          setMessage={setMessage}
+          onSend={handleSend}
+          onHintClick={handleHint}
+          onSituationClick={handleSituation}
+          showHint={true}
+          showSituation={true}
+          isHintActive={showHintPanel}
+          isSituationActive={showSituation}
+        />
+      </div>
       <PreviewModal
         isOpen={showPreviewModal}
         onClose={() => setShowPreviewModal(false)}

@@ -43,8 +43,8 @@ export default function ChatInput({
   }, [message]);
 
   return (
-    <div className="border-gray-200 max-w-93.75 w-full flex-col gap-6 fixed bottom-10 left-1/2 -translate-x-1/2 z-50 items-center justify-center">
-      <div className="flex flex-col items-center w-full max-w-83.75 min-w-0 rounded-[20px] bg-white px-4 py-3 mx-auto">
+    <div className="w-full">
+      <div className="flex flex-col items-center w-full min-w-0 rounded-[20px] bg-white px-4 py-3">
         <textarea
           ref={textRef}
           rows={1}
