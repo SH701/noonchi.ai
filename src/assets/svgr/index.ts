@@ -6,6 +6,7 @@ export { default as ControlIcon } from "./control.svg";
 export { default as EmptyheartIcon } from "./emptyheart.svg";
 export { default as FullheartIcon } from "./fullheart.svg";
 export { default as HamburgerIcon } from "./hamburger.svg";
+export { default as HomeIcon } from "./home.svg";
 export { default as InfoIcon } from "./info.svg";
 export { default as LanguageIcon } from "./language.svg";
 export { default as MicIcon } from "./mic.svg";
