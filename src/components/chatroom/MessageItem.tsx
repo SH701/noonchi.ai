@@ -15,6 +15,7 @@ import {
 import NotTTS from "../modal/NotTTS";
 import { Spinner } from "../ui/spinner/spinner";
 import { ChatLoading } from "../common";
+import { InfoIcon } from "@/assets/svgr";
 
 type MessageItemProps = {
   messages: Pick<ChatMsg, "content"> & Partial<ChatMsg>;
@@ -122,12 +123,7 @@ export default function MessageItem({
                   className="flex rounded-full border border-blue-500 px-2 py-1 gap-1"
                   onClick={handleFeedback}
                 >
-                  <Image
-                    src="/chatroom/warning.png"
-                    alt="feedback"
-                    width={20}
-                    height={20}
-                  />
+                  <InfoIcon />
                   <span className="text-blue-500 text-sm">View feedback</span>
                 </button>
                 <RotateCcw size={20} />
