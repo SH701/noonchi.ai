@@ -46,7 +46,7 @@ export const signup2Schema = z.object({
         message: "Birth year must be 1900 or later",
       },
     ),
-  gender: z.enum(["MALE", "FEMALE"], {
+  gender: z.enum(["NONE"], {
     message: "Please select your gender",
   }),
 });

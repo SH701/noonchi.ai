@@ -8,5 +8,5 @@ export interface MyAI {
   userRole: string;
   description: string;
   profileImageUrl: string;
-  hiddenMeaning:string
+  hiddenMeaning: string;
 }

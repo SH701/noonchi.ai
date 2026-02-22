@@ -2,7 +2,7 @@ export interface SignupRequest {
   email: string;
   password: string;
   nickname: string;
-  gender: "MALE" | "FEMALE";
+  gender: "NONE";
   birthDate: string;
   profileImageUrl?: string;
 }

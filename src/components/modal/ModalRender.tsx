@@ -1,10 +1,11 @@
 "use client";
 
-import { useModalStore } from "@/store/modal/useModalStore";
+import { useModalStore, useModalActions } from "@/store/modal/useModalStore";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function ModalRender() {
   const { isOpen, content } = useModalStore();
+  const { closeModal } = useModalActions();
 
   return (
     <AnimatePresence>
@@ -16,6 +17,7 @@ export default function ModalRender() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="absolute inset-0 bg-black/60"
+            onClick={closeModal}
           />
 
           <motion.div

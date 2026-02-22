@@ -39,7 +39,7 @@ export default function SignupDetail({
     defaultValues: {
       name: "",
       birthdate: "",
-      gender: "MALE",
+      gender: "NONE",
     },
   });
 
@@ -50,7 +50,7 @@ export default function SignupDetail({
         password,
         nickname: data.name,
         birthDate: data.birthdate,
-        gender: "MALE",
+        gender: "NONE",
       });
 
       await signIn("credentials", {
@@ -78,6 +78,7 @@ export default function SignupDetail({
             size="lg"
             disabled={!isValid}
             onClick={handleSubmit(onSubmit)}
+            className="mb-8"
           >
             Get Started
           </Button>
