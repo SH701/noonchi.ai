@@ -1,22 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { MyAI } from "@/types/etc/persona.type";
 
 import MessageItem from "./MessageItem";
+import { ChatMsg } from "@/types/messages";
 
-type MessageListProps = {
-  messages: any[];
+interface MessageListProps {
+  messages: ChatMsg[];
   myAI: MyAI | null;
-
-  messageStatuses?: Record<string, "default" | "error">;
   showsituation?: boolean;
-};
+}
 
 export default function MessageList({
   messages,
   myAI,
-
   showsituation,
 }: MessageListProps) {
   return (

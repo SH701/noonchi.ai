@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { BasilIcon, BulbIcon, MicIcon, SendIcon } from "@/assets/svgr";
+import { MicIcon, SendIcon } from "@/assets/svgr";
+import { Asterisk, Lightbulb } from "lucide-react";
 
 interface ChatInputProps {
   message: string;
@@ -42,8 +43,8 @@ export default function ChatInput({
   }, [message]);
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col items-center w-full min-w-0 rounded-[20px] bg-white px-4 py-3">
+    <div className="w-full ">
+      <div className="flex flex-col items-center w-full min-w-0 rounded-[20px] bg-white px-4 py-3 ">
         <textarea
           ref={textRef}
           rows={1}
@@ -68,10 +69,10 @@ export default function ChatInput({
           <div className="flex gap-1">
             {showSituation && (
               <button
-                className={`flex border rounded-full px-2 h-6.5 ${isSituationActive ? "border-amber-500 text-amber-500" : ""}`}
+                className={`flex border rounded-full px-1 h-6.5 ${isSituationActive ? "border-amber-500 text-amber-500" : ""}`}
                 onClick={onSituationClick}
               >
-                <BasilIcon
+                <Asterisk
                   className={`py-1 ${isSituationActive ? "text-amber-500" : ""}`}
                 />
                 <p>situation</p>
@@ -82,10 +83,10 @@ export default function ChatInput({
                 onClick={onHintClick}
                 className={`flex border rounded-full px-2 h-6.5 ${isHintActive ? "border-blue-500 text-blue-500" : ""}`}
               >
-                <BulbIcon
+                <Lightbulb
                   className={`py-1 ${isHintActive ? "text-blue-500" : ""}`}
                 />
-                <p>hint</p>
+                <p>needhelp</p>
               </button>
             )}
           </div>
@@ -100,10 +101,10 @@ export default function ChatInput({
             )}
             <button
               onClick={onSend}
-              className="shrink-0 hover:bg-gray-50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center shrink-0 hover:bg-gray-50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-blue-100"
               disabled={disabled || !message.trim()}
             >
-              <SendIcon className="size-7 text-blue-600" />
+              <SendIcon className=" text-blue-600" />
             </button>
           </div>
         </div>

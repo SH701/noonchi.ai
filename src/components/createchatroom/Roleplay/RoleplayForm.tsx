@@ -15,7 +15,6 @@ interface RoleplayProps {
   }) => void;
   AiRole?: string;
   myRole?: string;
-  mode: "topic" | "custom";
   topicId: number;
 }
 

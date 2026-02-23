@@ -7,10 +7,11 @@ import { useParams } from "next/navigation";
 
 import { useConversationDetail } from "@/hooks/queries/";
 
-import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { ChatInput } from "@/components/common";
 import { useRoleplayMessages } from "@/hooks/mutations/messages/useRoleplayMessages";
 import { useRoleplayHint } from "@/hooks/queries/useRoleplayHint";
+import { NoticeIcon } from "@/assets/svgr";
+import { Lightbulb } from "lucide-react";
 
 export default function RolePlayChatroomPage() {
   const { id } = useParams<{ id: string }>();
@@ -28,15 +29,15 @@ export default function RolePlayChatroomPage() {
   const { messages, sendMessage } = useRoleplayMessages(conversationId);
 
   const { data: hintData } = useRoleplayHint(conversationId);
-  const {
-    micState,
-    pendingAudioUrl,
-    sttText,
-    showVoiceError,
-    handleMicClick,
-    handleResetAudio,
-    handleSendAudio,
-  } = useVoiceChat(conversationId, sendMessage);
+  // const {
+  //   micState,
+  //   pendingAudioUrl,
+  //   sttText,
+  //   showVoiceError,
+  //   handleMicClick,
+  //   handleResetAudio,
+  //   handleSendAudio,
+  // } = useVoiceChat(conversationId, sendMessage);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -69,8 +70,14 @@ export default function RolePlayChatroomPage() {
     setSituationOpen((prev) => !prev);
   };
   return (
-    <div className="min-h-screen  flex flex-col w-full">
-      <div className="flex flex-col  overflow-y-auto pb-32">
+    <div className="min-h-screen flex flex-col w-full">
+      <div className="border-y border-white px-5 py-3 flex gap-4 bg-white/50 mb-4 -mx-5">
+        <NoticeIcon className="text-gray-600 shrink-0" />
+        <span className="text-sm font-medium text-gray-600">
+          {conversation?.situation}
+        </span>
+      </div>
+      <div className="flex-1 flex flex-col ">
         <MessageList
           messages={messages}
           myAI={myAI}
@@ -79,29 +86,37 @@ export default function RolePlayChatroomPage() {
         <div ref={bottomRef} />
       </div>
 
-      <ChatInput
-        message={message}
-        setMessage={setMessage}
-        showHint={true}
-        onHintClick={handleHint}
-        onSituationClick={handleSituation}
-        showSituation={true}
-        onSend={handleSendText}
-        isHintActive={showHintPanel}
-        isSituationActive={situationOpen}
-      />
-      {showHintPanel && hintData && (
-        <div className="fixed bottom-34 left-5 right-5 z-60 flex flex-col gap-2">
-          {hintData.map((h, idx) => (
-            <div
-              key={idx}
-              className="rounded-2xl bg-gray-100 px-4 py-3 shadow-sm"
-            >
-              <p className="text-sm text-gray-700">{h}</p>
+      <div className="pb-5 flex flex-col backdrop-blur-md">
+        {showHintPanel && hintData && (
+          <>
+            <div className="flex flex-col items-center justify-center gap-2 bg-white border px-3 pt-3 pb-7 shadow-sm rounded-t-[20px] border-white -mb-4">
+              <div className="flex gap-2 text-sm text-gray-400 font-medium">
+                <Lightbulb className="size-4" />
+                <span>Please choose the correct one</span>
+              </div>
+              {hintData.map((h, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-xl  px-3.5 py-3 border border-gray-300 bg-white/50"
+                >
+                  <p className="text-sm text-gray-700">{h}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          </>
+        )}
+        <ChatInput
+          message={message}
+          setMessage={setMessage}
+          showHint={true}
+          onHintClick={handleHint}
+          onSituationClick={handleSituation}
+          showSituation={true}
+          onSend={handleSendText}
+          isHintActive={showHintPanel}
+          isSituationActive={situationOpen}
+        />
+      </div>
     </div>
   );
 }

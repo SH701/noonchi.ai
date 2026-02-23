@@ -7,13 +7,13 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { useTabStore } from "@/store/tab/useTabStore";
 import { SearchBar } from "../../components/common";
-import { Users } from "lucide-react";
 import RoleplayHistoryTab from "./RoleplayHistoryTab";
 import AskHistoryTab from "./AskHistoryTab";
+import { PeopleIcon } from "@/assets/svgr";
 
 const slideVariants = {
-  hidden: { width: 0 },
-  visible: { width: "75%" },
+  hidden: { scaleX: 0 },
+  visible: { scaleX: 1 },
 };
 
 const fadeVariants = {
@@ -35,12 +35,12 @@ export default function Tab() {
       {isOpen && (
         <>
           <div
-            className="fixed inset-0 z-9998 bg-black/60"
+            className="fixed inset-0 z-9998 bg-black/60 flex items-center justify-center"
             onClick={closeTab}
           />
           <motion.div
             key="tab"
-            className="fixed left-0 top-0 z-9999 h-full w-[75%] bg-gradient-primary pt-15" // absolute를 fixed로 변경하여 화면 고정
+            className="fixed left-1/2 top-0 z-9999 h-full w-70 -translate-x-2/3 origin-left bg-gradient-primary pt-15"
             variants={slideVariants}
             initial="hidden"
             animate="visible"
@@ -63,7 +63,7 @@ export default function Tab() {
                     className="flex gap-2 cursor-pointer"
                     onClick={handleCoach}
                   >
-                    <Users />
+                    <PeopleIcon />
                     <span className="text-sm pt-1">Live 1:1 Coaching</span>
                   </button>
                 </div>

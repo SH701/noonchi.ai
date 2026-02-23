@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import clsx from "clsx";
 import { MyAI } from "@/types/etc/persona.type";
 import { ChatMsg } from "@/types/messages/messages.type";
@@ -14,7 +13,12 @@ import {
 import NotTTS from "../modal/NotTTS";
 import { Spinner } from "../ui/spinner/spinner";
 import { ChatLoading } from "../common";
-import { InfoIcon, RefreshIcon, VolumeUpIcon } from "@/assets/svgr";
+import {
+  InfoIcon,
+  LanguageIcon,
+  RefreshIcon,
+  VolumeUpIcon,
+} from "@/assets/svgr";
 
 type MessageItemProps = {
   messages: Pick<ChatMsg, "content"> & Partial<ChatMsg>;
@@ -36,12 +40,8 @@ export default function MessageItem({
   myAI,
   isMine,
   showsituation,
-  isPreview = false,
   aiName,
   userName,
-  hiddenMeaning,
-  isRevealed,
-  onToggleReveal,
 }: MessageItemProps) {
   const [translateOpen, setTranslateOpen] = useState(false);
   const [ttsOpen, setTtsOpen] = useState(false);
@@ -91,10 +91,10 @@ export default function MessageItem({
     >
       {!isMine && (
         <div className=" flex flex-row gap-2 mb-1">
-          <div className="flex items-center justify-center bg-gray-300 p-2 rounded-full">
+          <div className="flex items-center justify-center bg-gray-300 size-8 rounded-full shrink-0">
             <span>{(aiName ?? myAI?.aiRole ?? "A")[0]}</span>
           </div>
-          <p className="text-sm font-medium text-gray-600">
+          <p className="text-sm font-medium text-gray-600 pt-1.5">
             {aiName ?? myAI?.name ?? "AI"}
           </p>
         </div>
@@ -114,27 +114,33 @@ export default function MessageItem({
                   </p>
                 </div>
               )}
-              <p className="text-sm whitespace-pre-wrap my-1 ">
+              <p className="text-sm whitespace-pre-wrap pt-1 pb-2 ">
                 {messages.content}
               </p>
-              <div className="pt-2.5 border-t border-gray-200 flex justify-between">
-                <button
-                  className="flex rounded-full border border-blue-500 px-2 py-1 gap-1"
-                  onClick={handleFeedback}
-                >
-                  <InfoIcon />
-                  <span className="text-blue-500 text-sm">View feedback</span>
-                </button>
-                <RefreshIcon size={20} />
-              </div>
-              {feedbackOpen && <span>{feedbackData?.nuanceFeedback}</span>}
+
+              {feedbackOpen ? (
+                <div className="border-t border-black pt-2">
+                  <span>{feedbackData?.nuanceFeedback}</span>
+                </div>
+              ) : (
+                <div className="pt-2.5 border-t border-gray-200 flex justify-between">
+                  <button
+                    className="flex rounded-full border border-blue-500 px-2 py-1 gap-1"
+                    onClick={handleFeedback}
+                  >
+                    <InfoIcon className="text-blue-500" />
+                    <span className="text-blue-500 text-sm">View feedback</span>
+                  </button>
+                  <RefreshIcon size={20} />
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {/* AI 말풍선 */}
         {!isMine && (
-          <div className="flex flex-col gap-2 rounded-xl p-4 border border-gray-300 bg-white">
+          <div className="flex flex-col gap-2 rounded-tr-xl rounded-b-xl p-4 border border-gray-300 bg-white">
             {showsituation && messages.visualAction && (
               <div className="mb-2 p-3 bg-blue-50 border border-blue-100 rounded-lg shadow-sm animate-in fade-in duration-300">
                 <p className="text-sm text-blue-800 italic">
@@ -164,19 +170,14 @@ export default function MessageItem({
                   {loadingTranslate ? (
                     <Spinner size="20px" />
                   ) : (
-                    <Image
-                      src="/message/language.svg"
-                      width={20}
-                      height={20}
-                      alt="Translate"
-                    />
+                    <LanguageIcon />
                   )}
                 </button>
               </div>
 
               <button
                 className="border-gradient-primary rounded-full px-2 py-1"
-                onClick={isPreview ? onToggleReveal : handleHiddenMean}
+                onClick={handleHiddenMean}
               >
                 👀{" "}
                 <span className="text-gradient-primary text-xs font-semibold">
@@ -184,23 +185,17 @@ export default function MessageItem({
                 </span>
               </button>
             </div>
-            {!isPreview && translateText && translateOpen && (
-              <span>{translateText}</span>
-            )}
-            {isPreview
-              ? isRevealed &&
-                hiddenMeaning && (
-                  <p className="text-xs text-gray-500 bg-gray-50 rounded-lg p-3 mt-1">
-                    {hiddenMeaning}
-                  </p>
-                )
-              : messages.hiddenMeaning &&
-                meanOpen && <span>{messages.hiddenMeaning}</span>}
+            {translateText && translateOpen && <span>{translateText}</span>}
           </div>
         )}
       </div>
-      {!isPreview && (
-        <NotTTS isOpen={ttsOpen} onClose={() => setTtsOpen(false)} />
+      {ttsOpen && <NotTTS isOpen={ttsOpen} onClose={() => setTtsOpen(false)} />}
+      {meanOpen && (
+        <div className="bg-white/50 p-4 border border-white w-61 rounded-xl">
+          <span className="text-sm text-gray-800">
+            👀 {messages.hiddenMeaning}
+          </span>
+        </div>
       )}
     </div>
   );

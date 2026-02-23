@@ -13,7 +13,6 @@ interface CustomProps {
   }) => void;
   AiRole?: string;
   myRole?: string;
-  mode: "topic" | "custom";
 }
 
 export default function CustomForm({ onSubmit }: CustomProps) {
@@ -32,9 +31,9 @@ export default function CustomForm({ onSubmit }: CustomProps) {
       details,
     });
   };
-
+  // Todo: 사진 업로드 후 채팅방 생성
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3">
       <TextInput
         label="My Role"
         value={""}
