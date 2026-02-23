@@ -5,7 +5,6 @@ import Image from "next/image";
 import clsx from "clsx";
 import { MyAI } from "@/types/etc/persona.type";
 import { ChatMsg } from "@/types/messages/messages.type";
-import { RotateCcw, Volume2 } from "lucide-react";
 
 import {
   useMessageFeedback,
@@ -15,7 +14,7 @@ import {
 import NotTTS from "../modal/NotTTS";
 import { Spinner } from "../ui/spinner/spinner";
 import { ChatLoading } from "../common";
-import { InfoIcon } from "@/assets/svgr";
+import { InfoIcon, RefreshIcon, VolumeUpIcon } from "@/assets/svgr";
 
 type MessageItemProps = {
   messages: Pick<ChatMsg, "content"> & Partial<ChatMsg>;
@@ -126,7 +125,7 @@ export default function MessageItem({
                   <InfoIcon />
                   <span className="text-blue-500 text-sm">View feedback</span>
                 </button>
-                <RotateCcw size={20} />
+                <RefreshIcon size={20} />
               </div>
               {feedbackOpen && <span>{feedbackData?.nuanceFeedback}</span>}
             </div>
@@ -153,7 +152,7 @@ export default function MessageItem({
                   onClick={() => handleTTsClick(String(messages.messageId))}
                   disabled={loadingTTS}
                 >
-                  <Volume2 size={20} />
+                  <VolumeUpIcon size={20} />
                 </button>
 
                 <button

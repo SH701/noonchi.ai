@@ -23,7 +23,6 @@ export default function RoleplayForm({
   onSubmit,
   AiRole,
   myRole,
-  mode,
   topicId,
 }: RoleplayProps) {
   const [details, setDetails] = useState<string | undefined>(undefined);

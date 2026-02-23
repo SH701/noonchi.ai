@@ -1,8 +1,8 @@
 "use client";
 
-import { Asterisk, Lightbulb, Send } from "lucide-react";
 import { MicrophoneIcon } from "@heroicons/react/24/solid";
 import { useRef, useEffect } from "react";
+import { BasilIcon, BulbIcon, SendIcon } from "@/assets/svgr";
 
 interface ChatInputProps {
   message: string;
@@ -72,7 +72,7 @@ export default function ChatInput({
                 className={`flex border rounded-full px-2 h-6.5 ${isSituationActive ? "border-amber-500 text-amber-500" : ""}`}
                 onClick={onSituationClick}
               >
-                <Asterisk
+                <BasilIcon
                   className={`py-1 ${isSituationActive ? "text-amber-500" : ""}`}
                 />
                 <p>situation</p>
@@ -83,7 +83,7 @@ export default function ChatInput({
                 onClick={onHintClick}
                 className={`flex border rounded-full px-2 h-6.5 ${isHintActive ? "border-blue-500 text-blue-500" : ""}`}
               >
-                <Lightbulb
+                <BulbIcon
                   className={`py-1 ${isHintActive ? "text-blue-500" : ""}`}
                 />
                 <p>hint</p>
@@ -104,7 +104,7 @@ export default function ChatInput({
               className="shrink-0 hover:bg-gray-50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={disabled || !message.trim()}
             >
-              <Send className="size-7 text-blue-600" />
+              <SendIcon className="size-7 text-blue-600" />
             </button>
           </div>
         </div>

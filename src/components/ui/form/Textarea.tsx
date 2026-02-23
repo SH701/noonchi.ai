@@ -1,5 +1,5 @@
-import { Wand } from "lucide-react";
 import { Spinner } from "../spinner/spinner";
+import { WandIcon } from "@/assets/svgr";
 interface TextareaProps {
   label?: string;
   value: string;
@@ -52,7 +52,7 @@ export default function Textarea({
           onClick={onClick}
           type="button"
         >
-          <Wand />
+          <WandIcon />
         </button>
       )}
     </div>

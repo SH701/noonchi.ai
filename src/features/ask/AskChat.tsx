@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button/button";
 import { useAsk } from "@/hooks/mutations/conversation/useAsk";
 import { useAskMessages } from "@/hooks/mutations/messages/useAskMessages";
 import { Spinner } from "../../components/ui/spinner/spinner";
-import { Earth, Lightbulb, Volume2 } from "lucide-react";
 import { useMessageTranslate, useMessageTTS } from "@/hooks/mutations";
+import { BulbIcon, LanguageIcon, VolumeUpIcon } from "@/assets/svgr";
 
 type Step = "askTarget" | "closeness" | "situation" | "chat";
 
@@ -194,14 +194,14 @@ export default function AskChat() {
               <p className="text-sm  my-1">{res?.content || "..."}</p>
               <div className="flex justify-between pt-3 border-t border-gray-200">
                 <div className="flex gap-2">
-                  <Volume2 onClick={handleTTS} />
-                  <Earth onClick={handleTranslate} />
+                  <VolumeUpIcon onClick={handleTTS} />
+                  <LanguageIcon onClick={handleTranslate} />
                 </div>
               </div>
             </div>
             <div className="flex flex-col gap-1 text-sm">
               <div className="flex gap-1 text-blue-600">
-                <Lightbulb size={14} /> Cultural Insights
+                <BulbIcon size={14} /> Cultural Insights
               </div>
               {res?.askCulturalInsight}
             </div>

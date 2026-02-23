@@ -1,8 +1,9 @@
 "use client";
 
-import { Wand } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Spinner } from "../spinner/spinner";
+import { WandIcon } from "@/assets/svgr";
+
 
 interface TextInputProps {
   label?: string;
@@ -64,7 +65,7 @@ export default function TextInput({
             onClick={onClick}
             type="button"
           >
-            <Wand />
+            <WandIcon />
           </button>
         ))}
     </div>

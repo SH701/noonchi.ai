@@ -1,7 +1,7 @@
 "use client";
 
+import { SearchIcon } from "@/assets/svgr";
 import { useChatHistoryStore } from "@/store/chathistory/useChatHistorystore";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 export default function SearchBar() {
   const { keyword, setKeyword } = useChatHistoryStore();
@@ -21,7 +21,7 @@ export default function SearchBar() {
         placeholder="Search for chats"
         style={{ minWidth: 0 }}
       />
-      <MagnifyingGlassIcon className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2" />
+      <SearchIcon className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2" />
     </div>
   );
 }

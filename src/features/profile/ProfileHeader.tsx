@@ -1,7 +1,8 @@
 "use client";
 
+import { ChevronLeftIcon } from "@/assets/svgr";
 import { Header } from "@/components/common";
-import { ChevronLeftIcon } from "lucide-react";
+
 
 import { useRouter } from "next/navigation";
 

@@ -7,12 +7,13 @@ import {
   usePreviewStart,
 } from "@/hooks/mutations/";
 import { ChatInput, ChatLoading, Header } from "../../components/common";
-import { Info, Megaphone, Menu } from "lucide-react";
+
 import MessageItem from "../../components/chatroom/MessageItem";
 
 import { useRouter } from "next/navigation";
 import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
 import { PreviewModal } from "../../components/modal";
+import { HamburgerIcon, InfoIcon, NoticeIcon } from "@/assets/svgr";
 
 interface AiMessage {
   content: string;
@@ -113,7 +114,7 @@ export default function PreviewChat() {
       <div className="flex-1 overflow-y-auto px-5">
         <div className="sticky top-0 ">
           <Header
-            leftIcon={<Menu />}
+            leftIcon={<HamburgerIcon />}
             center="RolePlay Preview"
             rightIcon="Skip"
             className="text-gray-600 font-medium"
@@ -125,7 +126,7 @@ export default function PreviewChat() {
         ) : (
           <>
             <div className="border-y border-white px-5 py-3 flex gap-4 bg-white/50 -mx-5 mb-4">
-              <Megaphone className="text-gray-600 shrink-0" />
+              <NoticeIcon className="text-gray-600 shrink-0" />
               <span className="text-sm font-medium text-gray-600">
                 {data?.scenario.description}
               </span>
@@ -191,7 +192,7 @@ export default function PreviewChat() {
 
         {/* 남은 턴수 */}
         <div className="text-white px-5 py-2.5 flex gap-2.5 items-center justify-center bg-gray-800/50 rounded-xl">
-          <Info />
+          <InfoIcon />
           <span className="text-sm">
             They`re waiting for your reply! ({aiResponses.length}/2)
           </span>

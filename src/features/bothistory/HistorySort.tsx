@@ -1,7 +1,8 @@
 "use client";
 
+import { ChevronDownIcon } from "@/assets/svgr";
 import { useChatHistoryStore } from "@/store/chathistory/useChatHistorystore";
-import { ChevronDownIcon } from "lucide-react";
+
 import { useState } from "react";
 
 export default function HistorySort() {

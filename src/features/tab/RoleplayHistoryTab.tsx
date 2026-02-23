@@ -1,8 +1,8 @@
 import { useConversations } from "@/hooks/queries";
-import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useTopics } from "@/hooks/queries/useTopics";
+import { ChevronRightIcon } from "@/assets/svgr";
 
 export default function RoleplayHistoryTab() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function RoleplayHistoryTab() {
         className="flex items-center gap-1 mb-3"
       >
         <span className="text-sm font-medium">Role Playing</span>
-        <ChevronRight size={18} className="text-gray-400" />
+        <ChevronRightIcon size={18} className="text-gray-400" />
       </button>
 
       <div className="flex gap-3 overflow-x-auto ">

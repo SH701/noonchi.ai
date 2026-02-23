@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronLeftIcon } from "lucide-react";
+
+import { ChevronLeftIcon } from "@/assets/svgr";
 import { Header } from "../common";
 import { coach } from "@/data/coach";
 import Image from "next/image";

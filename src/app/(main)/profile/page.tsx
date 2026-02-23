@@ -1,4 +1,10 @@
 import {
+  AlpabatIcon,
+  ControlIcon,
+  PersonIcon,
+  SettingIcon,
+} from "@/assets/svgr";
+import {
   ProfileInfo,
   ProfileMenuList,
   ProfileHeader,
@@ -6,12 +12,6 @@ import {
   DeleteAccount,
 } from "@/features/profile";
 import { auth } from "@/lib/next-auth/auth";
-import {
-  UserRound,
-  SlidersHorizontal,
-  Languages,
-  LayoutGrid,
-} from "lucide-react";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -31,22 +31,22 @@ export default async function ProfilePage() {
               {
                 label: "My Profile",
                 href: "/profile/myprofile",
-                icon: <UserRound size={18} />,
+                icon: <PersonIcon />,
               },
               {
                 label: "Topics of Interest",
                 href: "/profile/interest",
-                icon: <SlidersHorizontal size={18} />,
+                icon: <ControlIcon  />,
               },
               {
                 label: "Language",
                 href: "/profile/language",
-                icon: <Languages size={18} />,
+                icon: <AlpabatIcon  />,
               },
               {
                 label: "Subscription Management",
                 href: "/profile/subscription",
-                icon: <LayoutGrid size={18} />,
+                icon: <SettingIcon />,
               },
             ]}
           />

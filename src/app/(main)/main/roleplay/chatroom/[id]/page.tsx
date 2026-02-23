@@ -91,7 +91,7 @@ export default function RolePlayChatroomPage() {
         isSituationActive={situationOpen}
       />
       {showHintPanel && hintData && (
-        <div className="fixed bottom-34 left-5 right-5 z-[60] flex flex-col gap-2">
+        <div className="fixed bottom-34 left-5 right-5 z-60 flex flex-col gap-2">
           {hintData.map((h, idx) => (
             <div
               key={idx}

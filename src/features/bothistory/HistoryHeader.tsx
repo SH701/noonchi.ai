@@ -1,12 +1,13 @@
-import { ChevronLeft, SquarePen } from "lucide-react";
+
 import { Header } from "../../components/common";
+import { ChevronLeftIcon, SqurepenIcon } from "@/assets/svgr";
 
 export default function HistoryHeader() {
   return (
     <Header
-      leftIcon={<ChevronLeft />}
+      leftIcon={<ChevronLeftIcon />}
       center="Role Play"
-      rightIcon={<SquarePen />}
+      rightIcon={<SqurepenIcon />}
     />
   );
 }

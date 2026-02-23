@@ -1,7 +1,7 @@
 import { apiFetch } from "./api";
 import { User } from "@/types/user/user.type";
 
-import { normalizeChatMessage } from "@/utils/normalizeChatMessage";
+import { normalizeChatMessage } from "@/lib/normalizeChatMessage";
 import { ChatMsg, Feedback } from "@/types/messages";
 import {
   Conversation,

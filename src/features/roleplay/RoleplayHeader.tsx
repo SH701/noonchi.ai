@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, MessageCircle, Sparkles, SquarePen } from "lucide-react";
+import {  MessageCircle, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import Header from "../../components/common/Header";
 import { useConversationEnd } from "@/hooks/mutations";
 import { useConversationDetail } from "@/hooks/queries";
 import { ExitChatting } from "../../components/modal";
+import { HamburgerIcon, SqurepenIcon } from "@/assets/svgr";
 
 export default function RoleplayHeader() {
   const { toggleTab } = useTabStore();
@@ -136,12 +137,12 @@ export default function RoleplayHeader() {
   return (
     <>
       <Header
-        leftIcon={<Menu onClick={toggleTab} />}
+        leftIcon={<HamburgerIcon onClick={toggleTab} />}
         center={ToggleSwitch}
         rightIcon={
           isChatRoom || isAsk ? (
             <div ref={toggleBtnRef}>
-              <SquarePen onClick={handleOpen} />
+              <SqurepenIcon onClick={handleOpen} />
             </div>
           ) : (
             ""
