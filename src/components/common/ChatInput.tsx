@@ -91,14 +91,14 @@ export default function ChatInput({
             )}
           </div>
           <div className="flex gap-1">
-            {onMicClick && (
+            
               <button
                 onClick={onMicClick}
                 className="shrink-0 hover:bg-gray-50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <MicIcon className="size-7" />
               </button>
-            )}
+            
             <button
               onClick={onSend}
               className="flex items-center justify-center shrink-0 hover:bg-gray-50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-blue-100"

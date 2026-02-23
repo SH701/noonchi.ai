@@ -4,6 +4,6 @@ export * from "./conversation/useRoleplay";
 export * from "./language/useCreateContext";
 export * from "./messages/useAskMessages";
 export * from "./messages/useRoleplayMessages";
-export * from "./messages/useMessageFeedback";
+export * from "./messages/useMessage";
 export * from "./preview/usePreview";
 export * from "./topics/useFavorite";

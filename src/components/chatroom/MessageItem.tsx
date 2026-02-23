@@ -9,7 +9,7 @@ import {
   useMessageFeedback,
   useMessageTTS,
   useMessageTranslate,
-} from "@/hooks/mutations/messages/useMessageFeedback";
+} from "@/hooks/mutations/messages/useMessage";
 import NotTTS from "../modal/NotTTS";
 import { Spinner } from "../ui/spinner/spinner";
 import { ChatLoading } from "../common";

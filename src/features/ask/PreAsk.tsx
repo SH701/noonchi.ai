@@ -26,7 +26,7 @@ export default function PreAsk() {
               </span>
             </div>
           </div>
-          <div className="mt-auto pb-13">
+          <div className="mt-auto pb-13 ">
             <Button variant="primary" size="lg" onClick={handleStart}>
               Check how is sounds
             </Button>

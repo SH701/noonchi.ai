@@ -1,5 +1,5 @@
 import MyInfo from "@/features/profile/myinfo/MyInfo";
-import { getAge } from "@/lib/common/time-format";
+import { getAge } from "@/lib/time-format";
 import { auth } from "@/lib/next-auth/auth";
 
 export default async function MyProfile() {

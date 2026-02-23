@@ -10,6 +10,7 @@ import { useConversationDetail } from "@/hooks/queries/";
 import { ChatInput } from "@/components/common";
 import { useRoleplayMessages } from "@/hooks/mutations/messages/useRoleplayMessages";
 import { useRoleplayHint } from "@/hooks/queries/useRoleplayHint";
+import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { NoticeIcon } from "@/assets/svgr";
 import { Lightbulb } from "lucide-react";
 
@@ -28,15 +29,12 @@ export default function RolePlayChatroomPage() {
   const { messages, sendMessage } = useRoleplayMessages(conversationId);
 
   const { data: hintData } = useRoleplayHint(conversationId);
-  // const {
-  //   micState,
-  //   pendingAudioUrl,
-  //   sttText,
-  //   showVoiceError,
-  //   handleMicClick,
-  //   handleResetAudio,
-  //   handleSendAudio,
-  // } = useVoiceChat(conversationId, sendMessage);
+  const {
+    micState,
+    sttText,
+    handleMicClick,
+    handleSendAudio,
+  } = useVoiceChat(conversationId, sendMessage);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -90,13 +88,14 @@ export default function RolePlayChatroomPage() {
           </>
         )}
         <ChatInput
-          message={message}
+          message={micState === "recorded" ? sttText : message}
           setMessage={setMessage}
           showHint={true}
           onHintClick={handleHint}
           onSituationClick={handleSituation}
           showSituation={true}
-          onSend={handleSendText}
+          onSend={micState === "recorded" ? handleSendAudio : handleSendText}
+          onMicClick={handleMicClick}
           isHintActive={showHintPanel}
           isSituationActive={situationOpen}
         />

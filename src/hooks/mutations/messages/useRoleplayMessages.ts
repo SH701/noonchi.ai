@@ -98,7 +98,6 @@ export function useRoleplayMessages(conversationId?: number) {
     messages,
     sendMessage,
     isAIResponding,
-
     isSending: isPending,
   };
 }
