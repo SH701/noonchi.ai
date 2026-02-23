@@ -1,6 +1,6 @@
 "use client";
 
-import {  MessageCircle, Sparkles } from "lucide-react";
+import { MessageCircle, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ import Header from "../../components/common/Header";
 import { useConversationEnd } from "@/hooks/mutations";
 import { useConversationDetail } from "@/hooks/queries";
 import { ExitChatting } from "../../components/modal";
-import { HamburgerIcon, SqurepenIcon } from "@/assets/svgr";
+import { HamburgerIcon, HomeIcon, SqurepenIcon } from "@/assets/svgr";
 
 export default function RoleplayHeader() {
   const { toggleTab } = useTabStore();
@@ -29,14 +29,16 @@ export default function RoleplayHeader() {
   const paths = pathname.split("/");
   const roomIdStr = paths.find((p) => /^\d+$/.test(p));
   const roomId = roomIdStr ? Number(roomIdStr) : null;
-  const isValidRoom = isChatRoom && roomId && !isNaN(Number(roomId));
-  const { data: detailData } = useConversationDetail(Number(roomId), {
-    // 이 옵션이 없으면 조건과 상관없이 무한 호출됩니다!
+  const isValidRoom = isChatRoom && roomId && !isNaN(roomId);
+  const { data: detailData } = useConversationDetail(roomId ?? 0, {
     enabled: !!isValidRoom,
   });
-  const { mutate: conversationEnd } = useConversationEnd(Number(roomId));
+  const { mutate: conversationEnd } = useConversationEnd(roomId ?? 0);
   const canGetReport = detailData?.canGetReport;
   const [showExitModal, setShowExitModal] = useState(false);
+  const isReport = pathname.startsWith(
+    `/main/roleplay/chatroom/${roomId}/result`,
+  );
   useEffect(() => {
     requestAnimationFrame(() => {
       forceUpdate((n) => n + 1);
@@ -86,21 +88,14 @@ export default function RoleplayHeader() {
   };
   const handleEnd = () => {
     if (canGetReport === true) {
-      try {
-        conversationEnd();
-        router.push(`/main/roleplay/chatroom/${roomId}/result`);
-      } catch (error) {
-        console.error("처리 중 오류 발생:", error);
-      }
+      conversationEnd();
+      router.push(`/main/roleplay/chatroom/${roomId}/result`);
     } else {
       setShowExitModal(true);
     }
     setOpen(false);
   };
-  const handleAsk = () => {
-    router.push("/main/ask");
-  };
-  const handleRoleplay = () => {
+  const handleHome = () => {
     router.push("/main");
   };
   const ToggleSwitch = (
@@ -140,7 +135,9 @@ export default function RoleplayHeader() {
         leftIcon={<HamburgerIcon onClick={toggleTab} />}
         center={ToggleSwitch}
         rightIcon={
-          isChatRoom || isAsk ? (
+          isReport ? (
+            <HomeIcon onClick={handleHome} />
+          ) : isChatRoom || isAsk ? (
             <div ref={toggleBtnRef}>
               <SqurepenIcon onClick={handleOpen} />
             </div>
@@ -155,10 +152,7 @@ export default function RoleplayHeader() {
           ref={dropdownRef}
           className="p-3 rounded-xl bg-white flex flex-col gap-1 absolute right-5 top-16 z-50"
         >
-          <button
-            className="p-2 flex gap-2"
-            onClick={isAsk ? handleAsk : handleRoleplay}
-          >
+          <button className="p-2 flex gap-2" onClick={handleToggle}>
             <Sparkles />
             New Chat
           </button>

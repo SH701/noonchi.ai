@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter, useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
 import {
   useConversationFeedback,
@@ -12,64 +12,25 @@ import {
 import { MessageList } from "@/components/chatroom";
 
 import { ResultTab, Point, Part } from "@/features/result";
-import { ChatMsg } from "@/types/messages";
-import { Button } from "@/components/ui/button/button";
 
 export default function Result() {
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
   const { id } = useParams<{ id: string }>();
-  const router = useRouter();
-  const { data: conversation } = useConversationDetail(Number(id));
+  const roomId = Number(id);
 
+  const { data: conversation } = useConversationDetail(roomId);
   const myAI = conversation?.aiPersona ?? null;
-  const [messages, setMessages] = useState<ChatMsg[]>([]);
-
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  const {
-    data: initialMessages = [],
-    error: messagesError,
-    isLoading: messagesLoading,
-  } = useChatQuery(Number(id));
-
-  const {
-    data: feedback,
-    error: feedbackError,
-    isLoading: feedbackLoading,
-  } = useConversationFeedback(Number(id));
-  useEffect(() => {
-    if (!isInitialized && initialMessages && initialMessages.length > 0) {
-      setMessages(initialMessages);
-      setIsInitialized(true);
-    }
-  }, [initialMessages, isInitialized]);
-  if (messagesLoading || feedbackLoading) {
-    return <p className="p-6">Loading...</p>;
-  }
-  console.log(initialMessages);
-  if (messagesError) {
-    return (
-      <p className="p-6 text-red-500">
-        메시지 로드 실패: {messagesError.message}
-      </p>
-    );
-  }
-  if (feedbackError) {
-    return (
-      <p className="p-6 text-red-500">
-        피드백 로드 실패: {feedbackError.message}
-      </p>
-    );
-  }
+  const { data: messages = [] } = useChatQuery(roomId);
+  const { data: feedback } = useConversationFeedback(roomId);
 
   if (!feedback) {
     return <p className="p-6">No feedback available</p>;
   }
 
   return (
-    <div className="min-h-screen  flex flex-col overflow-x-hidden">
+    <div className="min-h-screen flex flex-col overflow-x-hidden">
       <div className="flex-1 flex justify-center overflow-y-auto">
-        <div className="">
+        <div>
           <div className="w-full max-w-125">
             <div className="flex items-center gap-3 mb-3">
               <h2 className="text-gray-900 text-xl font-semibold font-pretendard leading-[130%]">
@@ -88,7 +49,6 @@ export default function Result() {
             </div>
           </div>
 
-          {/* Content Section */}
           <div className="px-4 pb-6">
             <ResultTab tab={tab} setTab={setTab} />
             {tab === "transcript" ? (
@@ -119,15 +79,6 @@ export default function Result() {
             )}
           </div>
         </div>
-      </div>
-      <div className=" pb-6 sticky bottom-0 z-50">
-        <Button
-          variant="primary"
-          size="lg"
-          onClick={() => router.push("/main")}
-        >
-          Complete
-        </Button>
       </div>
     </div>
   );

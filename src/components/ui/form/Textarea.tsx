@@ -34,7 +34,6 @@ export default function Textarea({
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        onClick={onClick}
         className={`
           w-full py-2.5 pl-2.5 pr-10  h-30
            border border-gray-400 bg-white

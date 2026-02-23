@@ -21,8 +21,7 @@ export default function RolePlayChatroomPage() {
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const { data: conversation, error: conversationError } =
-    useConversationDetail(Number(id));
+  const { data: conversation } = useConversationDetail(Number(id));
 
   const conversationId = conversation?.conversationId;
 
@@ -44,19 +43,10 @@ export default function RolePlayChatroomPage() {
   }, [messages]);
 
   // const isDataLoading = isConversationLoading || isMessagesLoading;
-  const hasError = conversationError;
 
   // if ((isDataLoading && messages.length === 0) || !accessToken) {
   //   return <ChatroomLoading />;
   // }
-
-  if (hasError && messages.length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-500">채팅방 정보를 불러오지 못했습니다.</p>
-      </div>
-    );
-  }
 
   const myAI = conversation?.aiPersona ?? null;
   const handleSendText = async () => {

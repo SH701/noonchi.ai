@@ -18,7 +18,6 @@ interface SubmitProps {
 export default function RolePlay() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const mode = searchParams.get("mode") as "topic" | "custom";
   const category = searchParams.get("category") ?? "";
   const topicId = Number(searchParams.get("topicId"));
 
@@ -77,11 +76,7 @@ export default function RolePlay() {
           </div>
           <div>
             <p className="font-semibold pb-5 pt-8">Conversation Context</p>
-            <RoleplayForm
-              onSubmit={handleSubmit}
-              mode={mode}
-              topicId={topicId}
-            />
+            <RoleplayForm onSubmit={handleSubmit} topicId={topicId} />
           </div>
         </div>
       </div>

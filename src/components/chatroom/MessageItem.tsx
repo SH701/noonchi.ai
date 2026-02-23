@@ -117,13 +117,20 @@ export default function MessageItem({
               <p className="text-sm whitespace-pre-wrap pt-1 pb-2 ">
                 {messages.content}
               </p>
-
+              <div className="pt-2.5 border-t border-gray-200 " />
               {feedbackOpen ? (
-                <div className="border-t border-black pt-2">
+                <div>
                   <span>{feedbackData?.nuanceFeedback}</span>
+                  <button
+                    className="flex rounded-full border border-blue-500 px-2 py-1 gap-1 mt-2.5"
+                    onClick={handleFeedback}
+                  >
+                    <InfoIcon className="text-blue-500" />
+                    <span className="text-blue-500 text-sm">Hide feedback</span>
+                  </button>
                 </div>
               ) : (
-                <div className="pt-2.5 border-t border-gray-200 flex justify-between">
+                <div className="flex justify-between">
                   <button
                     className="flex rounded-full border border-blue-500 px-2 py-1 gap-1"
                     onClick={handleFeedback}
