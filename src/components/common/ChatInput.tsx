@@ -1,8 +1,7 @@
 "use client";
 
-import { MicrophoneIcon } from "@heroicons/react/24/solid";
 import { useRef, useEffect } from "react";
-import { BasilIcon, BulbIcon, SendIcon } from "@/assets/svgr";
+import { BasilIcon, BulbIcon, MicIcon, SendIcon } from "@/assets/svgr";
 
 interface ChatInputProps {
   message: string;
@@ -96,7 +95,7 @@ export default function ChatInput({
                 onClick={onMicClick}
                 className="shrink-0 hover:bg-gray-50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <MicrophoneIcon className="size-7" />
+                <MicIcon className="size-7" />
               </button>
             )}
             <button

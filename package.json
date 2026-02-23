@@ -12,8 +12,6 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@clerk/themes": "^2.4.4",
-    "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.2.2",
     "@next/bundle-analyzer": "^16.0.6",
     "@radix-ui/react-slot": "^1.2.4",
