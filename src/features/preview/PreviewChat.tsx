@@ -15,11 +15,19 @@ import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
 import { PreviewModal } from "../../components/modal";
 import { HamburgerIcon, InfoIcon, NoticeIcon } from "@/assets/svgr";
 import {useVoiceChat} from "@/hooks/useVoiceChat";
+import { Lightbulb } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface AiMessage {
   content: string;
   hiddenMeaning: string;
   isRevealed: boolean;
+  translatedContent: string;
+}
+
+const toastVariants = {
+  visible: { opacity: 1, height: "auto", marginBottom: 0 },
+  hidden: { opacity: 0, height: 0, marginBottom: 0 },
 }
 
 export default function PreviewChat() {
@@ -56,37 +64,31 @@ export default function PreviewChat() {
     started.current = true;
     mutate();
   }, [mutate]);
-
+  
+  useEffect(()=>{
+    if(data && aiResponses.length > 0 && data.max_turns === aiResponses.length){
+      removePreview(data.session_id)
+      setShowPreviewModal(true);
+    }
+  },[data, aiResponses, removePreview, setShowPreviewModal])
+  
   const handleSend = () => {
     if (!data?.session_id || !message.trim()) return;
-
     setUserMessages((prev) => [...prev, message]);
-
     setAiResponses((prev) => [
       ...prev,
-      { content: "", hiddenMeaning: "", isRevealed: false },
+      { content: "", hiddenMeaning: "", isRevealed: false, translatedContent: "" },
     ]);
-
     sendMessage(
       { sessionId: data.session_id, userMessage: message },
       {
         onSuccess: (res) => {
           setAiResponses((prev) => {
             const newResponses = [...prev];
-            newResponses[newResponses.length - 1].hiddenMeaning =
-              res.ai_hidden_meaning;
+            newResponses[newResponses.length - 1].hiddenMeaning = res.ai_hidden_meaning;
+            newResponses[newResponses.length - 1].translatedContent = res.ai_message_en;
             return newResponses;
           });
-          if (res.is_preview_ended) {
-            removePreview(data.session_id);
-            setShowPreviewModal(true);
-          }
-        },
-        onError: (error) => {
-          if (error.message.includes("429")) {
-            removePreview(data.session_id);
-            router.push("/preview/end");
-          }
         },
       },
     );
@@ -112,6 +114,7 @@ export default function PreviewChat() {
   const handleSituation = () => {
     setShowSituation((prev) => !prev);
   };
+
   return (
     <div className="h-screen flex flex-col">
       {/* 스크롤 영역 */}
@@ -147,6 +150,7 @@ export default function PreviewChat() {
               isRevealed={firstHiddenMessage}
               onToggleReveal={handleHiddenMessage}
               showsituation={showSituation}
+              translatedContent={data?.ai_message_en}
             />
 
             {/* 대화 히스토리 */}
@@ -171,6 +175,7 @@ export default function PreviewChat() {
                     isRevealed={aiResponses[idx].isRevealed}
                     onToggleReveal={() => toggleReveal(idx)}
                     showsituation={showSituation}
+                    translatedContent={aiResponses[idx].translatedContent}
                   />
                 )}
               </div>
@@ -182,11 +187,15 @@ export default function PreviewChat() {
       {/* 하단 고정 영역 */}
       <div className="px-5 pb-5 flex flex-col gap-2 backdrop-blur-md">
         {showHintPanel && hintData && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col items-center justify-center gap-2 bg-white border px-3 pt-3 pb-7 shadow-sm rounded-t-[20px] border-white -mb-18">
+            <div className="flex gap-2 text-sm text-gray-400 font-medium">
+                <Lightbulb className="size-4" />
+                <span>Please choose the correct one</span>
+              </div>
             {hintData.hints.map((h, idx) => (
               <div
                 key={idx}
-                className="rounded-2xl bg-gray-100 px-4 py-3 shadow-sm"
+                className="rounded-xl  px-3.5 py-3 border border-gray-300 bg-white/50"
               >
                 <p className="text-sm text-gray-700">{h}</p>
               </div>
@@ -195,12 +204,20 @@ export default function PreviewChat() {
         )}
 
         {/* 남은 턴수 */}
-        <div className="text-white px-5 py-2.5 flex gap-2.5 items-center justify-center bg-gray-800/50 rounded-xl">
+        <motion.div
+          key={aiResponses.length}
+          className="text-white px-5 py-2.5 flex gap-2.5 items-center justify-center bg-gray-800/50 rounded-xl overflow-hidden"
+          variants={toastVariants}
+          initial="visible"
+          animate="hidden"
+          exit="visible"
+          transition={{ duration: 3 }}
+        >
           <InfoIcon />
           <span className="text-sm">
-            They`re waiting for your reply! ({aiResponses.length}/2)
+            They`re waiting for your reply! ({aiResponses.length}/{data?.max_turns})
           </span>
-        </div>
+        </motion.div>
         <ChatInput
           message={micState === "recorded" ? sttText : message}
           setMessage={setMessage}

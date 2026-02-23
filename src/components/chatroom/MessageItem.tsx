@@ -33,6 +33,7 @@ type MessageItemProps = {
   hiddenMeaning?: string;
   isRevealed?: boolean;
   onToggleReveal?: () => void;
+  translatedContent?: string;
 };
 
 export default function MessageItem({
@@ -42,10 +43,15 @@ export default function MessageItem({
   showsituation,
   aiName,
   userName,
+  hiddenMeaning,
+  isRevealed,
+  onToggleReveal,
+  translatedContent,
 }: MessageItemProps) {
   const [translateOpen, setTranslateOpen] = useState(false);
   const [ttsOpen, setTtsOpen] = useState(false);
   const [meanOpen, setMeanOpen] = useState(false);
+  const isMeanOpen = onToggleReveal !== undefined ? (isRevealed ?? false) : meanOpen;
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const {
@@ -69,6 +75,10 @@ export default function MessageItem({
   };
 
   const handleTranslateClick = (messageId: string) => {
+    if (translatedContent) {
+      setTranslateOpen((prev) => !prev);
+      return;
+    }
     if (!messageId) return;
     if (!translateOpen) {
       translate(messageId);
@@ -76,7 +86,11 @@ export default function MessageItem({
     setTranslateOpen((prev) => !prev);
   };
   const handleHiddenMean = () => {
-    setMeanOpen((prev) => !prev);
+    if (onToggleReveal) {
+      onToggleReveal();
+    } else {
+      setMeanOpen((prev) => !prev);
+    }
   };
 
   if (messages.isLoading && !isMine) {
@@ -192,15 +206,15 @@ export default function MessageItem({
                 </span>
               </button>
             </div>
-            {translateText && translateOpen && <span>{translateText}</span>}
+            {translateOpen && <span>{translatedContent ?? translateText}</span>}
           </div>
         )}
       </div>
       {ttsOpen && <NotTTS isOpen={ttsOpen} onClose={() => setTtsOpen(false)} />}
-      {meanOpen && (
+      {isMeanOpen && (
         <div className="bg-white/50 p-4 border border-white w-61 rounded-xl">
           <span className="text-sm text-gray-800">
-            👀 {messages.hiddenMeaning}
+            👀 {hiddenMeaning ?? messages.hiddenMeaning}
           </span>
         </div>
       )}

@@ -10,6 +10,7 @@ export interface Preview {
   ai_name: string;
   my_name: string;
   ai_message: string;
+  ai_message_en: string;
   ai_hidden_meaning: string;
   visual_action: string;
   user_visual_action: string;
@@ -26,6 +27,7 @@ export interface PreviewHint {
 export interface PreviewSendResponse {
   session_id: string;
   ai_message: string;
+  ai_message_en: string;
   ai_hidden_meaning: string;
   visual_action: string;
   user_visual_action: string;
