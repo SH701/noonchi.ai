@@ -7,6 +7,7 @@ import {
   PresignedUrlResponse,
   UploadedFile,
   RoleplayApiRequest,
+  ConversationResponse,
 } from "@/types/conversations";
 import { ChatMsg } from "@/types/messages";
 import { Preview, PreviewSendResponse } from "@/types/preview/preview.type";
@@ -78,8 +79,8 @@ export const apiMutations = {
   conversations: {
     createInterview: async (
       data: InterviewFormData,
-    ): Promise<number> => {
-      return apiFetch<number>("/api/conversations/interview", {
+    ): Promise<ConversationResponse> => {
+      return apiFetch<ConversationResponse>("/api/conversations/interview", {
         method: "POST",
         body: JSON.stringify(data),
       });
@@ -87,8 +88,8 @@ export const apiMutations = {
 
     createRoleplay: async (
       data: RoleplayApiRequest,
-    ): Promise<number> => {
-      return apiFetch<number>("/api/conversations/role-playing", {
+    ): Promise<ConversationResponse> => {
+      return apiFetch<ConversationResponse>("/api/conversations/role-playing", {
         method: "POST",
         body: JSON.stringify(data),
       });

@@ -46,7 +46,7 @@ export default function PreviewChat() {
 
   const { mutate: sendMessage } = usePreviewSend(handleChunk);
   const { mutate: removePreview } = usePreviewRemove();
-   const { micState, sttText, handleMicClick, handleSendAudio } = useVoiceChat(
+  const { micState, sttText, handleMicClick, handleSendAudio } = useVoiceChat(
   3000 
 );
   const started = useRef(false);
