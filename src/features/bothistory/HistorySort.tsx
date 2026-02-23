@@ -17,7 +17,7 @@ export default function HistorySort() {
       >
         {sort === "asc" ? "Oldest activity" : "Latest activity"}
         <ChevronDownIcon
-          className={`w-4 h-4 transform transition-transform pt-0.5 ${
+          className={`size-3 transform transition-transform pt-0.5 shrink-0 ${
             openSortDropdown ? "rotate-180" : ""
           }`}
         />

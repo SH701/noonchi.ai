@@ -11,7 +11,9 @@ import {
 
 import { MessageList } from "@/components/chatroom";
 
-import { ResultTab, Point, Part } from "@/features/result";
+import { ResultTab, Point } from "@/features/result";
+
+import FeedbackPart from "@/features/result/FeedbackPart";
 
 export default function Result() {
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
@@ -49,33 +51,12 @@ export default function Result() {
             </div>
           </div>
 
-          <div className="px-4 pb-6">
+          <div className="pb-6">
             <ResultTab tab={tab} setTab={setTab} />
             {tab === "transcript" ? (
               <MessageList messages={messages} myAI={myAI} />
             ) : (
-              <div className="space-y-4 pb-2">
-                <Part title="Conversation Summary" desc={feedback.summary} />
-                <Part title="What you did well" desc={feedback.goodPoints} />
-                <div className="bg-white rounded-2xl border border-gray-200 p-4">
-                  <h3 className="text-gray-900 text-base font-semibold font-pretendard leading-[130%] mb-3">
-                    What you can improve
-                  </h3>
-                  <div className="border-t border-gray-200 pt-3 flex flex-col">
-                    <p className="text-gray-700 text-sm font-medium font-pretendard leading-[130%] mb-4">
-                      {feedback.improvementPoints?.[0]?.point}
-                    </p>
-                    <div className="bg-gray-50 rounded-xl p-3">
-                      <p className="text-gray-600 bg-blue-200 w-10 py-1 font-semibold text-center rounded-full text-sm font-pretendard leading-[130%] mb-3">
-                        Try
-                      </p>
-                      <p className="text-gray-700 text-sm font-medium font-pretendard leading-[130%]">
-                        {feedback.improvementPoints?.[0]?.tip}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <FeedbackPart summary={feedback.summary} goodPoints={feedback.goodPoints} improvementPoints={feedback.improvementPoints}/>
             )}
           </div>
         </div>

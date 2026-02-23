@@ -13,6 +13,7 @@ export { default as HomeIcon } from "./home.svg";
 export { default as InfoIcon } from "./info.svg";
 export { default as LanguageIcon } from "./language.svg";
 export { default as MicIcon } from "./mic.svg";
+export {default as NoteIcon} from "./note.svg"
 export { default as NoticeIcon } from "./notice.svg";
 export { default as PeopleIcon } from "./people.svg";
 export { default as PersonIcon } from "./person.svg";
@@ -26,3 +27,4 @@ export { default as TalkIcon } from "./talk.svg";
 export { default as UpIcon } from "./up.svg";
 export { default as VolumeUpIcon } from "./volume_up.svg";
 export { default as WandIcon } from "./wand.svg";
+

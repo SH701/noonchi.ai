@@ -42,12 +42,6 @@ export default function RolePlayChatroomPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // const isDataLoading = isConversationLoading || isMessagesLoading;
-
-  // if ((isDataLoading && messages.length === 0) || !accessToken) {
-  //   return <ChatroomLoading />;
-  // }
-
   const myAI = conversation?.aiPersona ?? null;
   const handleSendText = async () => {
     await sendMessage(message);
