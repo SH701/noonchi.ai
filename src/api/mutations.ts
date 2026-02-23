@@ -6,7 +6,6 @@ import {
   InterviewFormData,
   PresignedUrlResponse,
   UploadedFile,
-  ConversationResponse,
   RoleplayApiRequest,
 } from "@/types/conversations";
 import { ChatMsg } from "@/types/messages";
@@ -16,9 +15,7 @@ import { AskAPiRequest } from "@/types/conversations/ask/ask.type";
 import { TopicScenario } from "@/types/topics";
 import { AskRes } from "@/types/ask/ask.type";
 
-export interface EndConversationResponse {
-  conversationId: number;
-}
+
 
 export const apiMutations = {
   auth: {
@@ -81,8 +78,8 @@ export const apiMutations = {
   conversations: {
     createInterview: async (
       data: InterviewFormData,
-    ): Promise<ConversationResponse> => {
-      return apiFetch<ConversationResponse>("/api/conversations/interview", {
+    ): Promise<number> => {
+      return apiFetch<number>("/api/conversations/interview", {
         method: "POST",
         body: JSON.stringify(data),
       });
@@ -90,8 +87,8 @@ export const apiMutations = {
 
     createRoleplay: async (
       data: RoleplayApiRequest,
-    ): Promise<ConversationResponse> => {
-      return apiFetch<ConversationResponse>("/api/conversations/role-playing", {
+    ): Promise<number> => {
+      return apiFetch<number>("/api/conversations/role-playing", {
         method: "POST",
         body: JSON.stringify(data),
       });
@@ -109,8 +106,8 @@ export const apiMutations = {
     },
     endConversation: async (
       conversationId: number,
-    ): Promise<EndConversationResponse> => {
-      return apiFetch<EndConversationResponse>(
+    ): Promise<number> => {
+      return apiFetch<number>(
         `/api/conversations/${conversationId}/end`,
         { method: "PUT" },
       );
@@ -161,6 +158,24 @@ export const apiMutations = {
           };
         }),
       );
+    },
+    uploadAudio: async (blob: Blob): Promise<string> => {
+      const blobType = blob.type || "audio/webm";
+      const fileExtension = blobType.includes("webm") ? "webm" : "wav";
+      const { url: presignedUrl } = await apiFetch<PresignedUrlResponse>(
+        "/api/files/presigned-url",
+        {
+          method: "POST",
+          body: JSON.stringify({ fileType: blobType, fileExtension }),
+        },
+      );
+      await fetch(presignedUrl, {
+        method: "PUT",
+        headers: { "Content-Type": blobType },
+        body: blob,
+      });
+
+      return presignedUrl.split("?")[0];
     },
   },
   preview: {
@@ -226,7 +241,6 @@ export const apiMutations = {
           }
         }
       }
-
       return doneData!;
     },
     remove: async (sessionId: string): Promise<void> => {
@@ -262,6 +276,12 @@ export const apiMutations = {
       return apiFetch<TopicScenario>(`/api/language/scenario-context`, {
         method: "POST",
         body: JSON.stringify({ scenarioId, myRole, aiRole, detail }),
+      });
+    },
+    stt: async (audioUrl: string): Promise<string> => {
+      return apiFetch<string>(`/api/language/stt`, {
+        method: "POST",
+        body: JSON.stringify({ audioUrl }),
       });
     },
   },

@@ -25,12 +25,10 @@ export function useRecorder() {
   const stopRecording = async (): Promise<Blob> => {
     return new Promise((resolve) => {
       if (!mediaRecorderRef.current) return resolve(new Blob());
-
       mediaRecorderRef.current.onstop = () => {
         const blob = new Blob(chunksRef.current, { type: "audio/wav" });
         resolve(blob);
       };
-
       mediaRecorderRef.current.stop();
       setIsRecording(false);
     });

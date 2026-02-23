@@ -92,7 +92,7 @@ export default function MessageItem({
       {!isMine && (
         <div className=" flex flex-row gap-2 mb-1">
           <div className="flex items-center justify-center bg-gray-300 size-8 rounded-full shrink-0">
-            <span>{(aiName ?? myAI?.aiRole ?? "A")[0]}</span>
+            <span>{(aiName ?? myAI?.aiRole ?? "A")[0].toUpperCase()}</span>
           </div>
           <p className="text-sm font-medium text-gray-600 pt-1.5">
             {aiName ?? myAI?.name ?? "AI"}

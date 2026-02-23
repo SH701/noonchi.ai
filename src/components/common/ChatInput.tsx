@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { MicIcon, SendIcon } from "@/assets/svgr";
 import { Asterisk, Lightbulb } from "lucide-react";
+import { MicState } from "@/hooks/useVoiceChat";
 
 interface ChatInputProps {
   message: string;
@@ -17,6 +18,7 @@ interface ChatInputProps {
   showHint?: boolean;
   isHintActive?: boolean;
   isSituationActive?: boolean;
+  micState?: MicState;
 }
 
 export default function ChatInput({
@@ -32,9 +34,10 @@ export default function ChatInput({
   showHint = false,
   isHintActive = false,
   isSituationActive = false,
+  micState = "idle",
 }: ChatInputProps) {
   const textRef = useRef<HTMLTextAreaElement>(null);
-
+  const [isFocused, setIsFocused] = useState(false);
   useEffect(() => {
     if (textRef.current) {
       textRef.current.style.height = "auto";
@@ -48,6 +51,8 @@ export default function ChatInput({
         <textarea
           ref={textRef}
           rows={1}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           className="grow min-w-0 w-full text-gray-500 placeholder-gray-400 border-none outline-none disabled:bg-gray-50 max-h-30 resize-none overflow-y-auto mb-3"
           value={message}
@@ -90,22 +95,39 @@ export default function ChatInput({
               </button>
             )}
           </div>
-          <div className="flex gap-1">
-            
+          <div>
+            {micState === "recording" ? (
               <button
                 onClick={onMicClick}
-                className="shrink-0 hover:bg-gray-50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="shrink-0 rounded-full flex items-center justify-center p-1 border border-white"
+                style={{
+                  background:
+                    "linear-gradient(180deg, #B499FF 0%, #98AEFF 100%)",
+                  boxShadow: "0 0 12px 0 #8434FF",
+                }}
               >
-                <MicIcon className="size-7" />
+                <MicIcon className="size-6 text-white animate-pulse" />
               </button>
-            
-            <button
-              onClick={onSend}
-              className="flex items-center justify-center shrink-0 hover:bg-gray-50 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-blue-100"
-              disabled={disabled || !message.trim()}
-            >
-              <SendIcon className=" text-blue-600" />
-            </button>
+            ) : isFocused || micState === "recorded" ? (
+              <button
+                onClick={onSend}
+                className="flex items-center justify-center shrink-0  rounded-full transition-colors  bg-blue-100 p-1"
+                disabled={disabled || !message.trim()}
+                style={{
+                  background:
+                    "linear-gradient(180deg, #86C3E8 0%, #8397FF 100%)",
+                }}
+              >
+                <SendIcon className="text-blue-600" />
+              </button>
+            ) : (
+              <button
+                onClick={onMicClick}
+                className="shrink-0 rounded-full border flex items-center justify-center p-1"
+              >
+                <MicIcon className="size-6" />
+              </button>
+            )}
           </div>
         </div>
       </div>

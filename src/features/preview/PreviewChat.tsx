@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
 import { PreviewModal } from "../../components/modal";
 import { HamburgerIcon, InfoIcon, NoticeIcon } from "@/assets/svgr";
+import {useVoiceChat} from "@/hooks/useVoiceChat";
 
 interface AiMessage {
   content: string;
@@ -45,6 +46,9 @@ export default function PreviewChat() {
 
   const { mutate: sendMessage } = usePreviewSend(handleChunk);
   const { mutate: removePreview } = usePreviewRemove();
+   const { micState, sttText, handleMicClick, handleSendAudio } = useVoiceChat(
+  3000 
+);
   const started = useRef(false);
 
   useEffect(() => {
@@ -198,15 +202,17 @@ export default function PreviewChat() {
           </span>
         </div>
         <ChatInput
-          message={message}
+          message={micState === "recorded" ? sttText : message}
           setMessage={setMessage}
-          onSend={handleSend}
+          onSend={micState === "recorded" ? handleSendAudio : handleSend}
           onHintClick={handleHint}
           onSituationClick={handleSituation}
+          onMicClick={handleMicClick}
           showHint={true}
           showSituation={true}
           isHintActive={showHintPanel}
           isSituationActive={showSituation}
+          micState={micState}
         />
       </div>
       <PreviewModal

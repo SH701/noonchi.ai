@@ -29,12 +29,10 @@ export default function RolePlayChatroomPage() {
   const { messages, sendMessage } = useRoleplayMessages(conversationId);
 
   const { data: hintData } = useRoleplayHint(conversationId);
-  const {
-    micState,
-    sttText,
-    handleMicClick,
-    handleSendAudio,
-  } = useVoiceChat(conversationId, sendMessage);
+  const { micState, sttText, handleMicClick, handleSendAudio } = useVoiceChat(
+    conversationId,
+    sendMessage,
+  );
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -98,6 +96,7 @@ export default function RolePlayChatroomPage() {
           onMicClick={handleMicClick}
           isHintActive={showHintPanel}
           isSituationActive={situationOpen}
+          micState={micState}
         />
       </div>
     </div>
