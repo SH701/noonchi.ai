@@ -50,8 +50,8 @@ export default function TextInput({
         className={`
           w-full py-2.5 pl-2.5 pr-10
            border border-gray-400 bg-white text-sm
-          rounded-xl text-gray-900 placeholder-gray-400 placeholder:text-sm
-          focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-inset focus:ring-blue-500
+          rounded-xl text-gray-800 placeholder-gray-400 placeholder:text-sm
+          focus:outline-none  focus:ring-1 focus:ring-inset focus:ring-blue-500 focus:shadow-[0_0_8px_0_rgba(133,162,255,0.50)] outline-none"
           transition-colors
           ${className}
         `}

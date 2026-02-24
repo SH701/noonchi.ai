@@ -108,7 +108,7 @@ export default function MessageItem({
           <div className="flex items-center justify-center bg-gray-300 size-8 rounded-full shrink-0">
             <span>{(aiName ?? myAI?.aiRole ?? "A")[0].toUpperCase()}</span>
           </div>
-          <p className="text-sm font-medium text-gray-600 pt-1.5">
+          <p className="text-sm font-medium pt-1.5">
             {aiName ?? myAI?.name ?? "AI"}
           </p>
         </div>
@@ -197,7 +197,7 @@ export default function MessageItem({
               </div>
 
               <button
-                className="border-gradient-primary rounded-full px-2 py-1"
+                className=" border border-gradient-primary rounded-full px-2 py-1"
                 onClick={handleHiddenMean}
               >
                 👀{" "}

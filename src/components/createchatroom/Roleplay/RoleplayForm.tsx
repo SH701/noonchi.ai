@@ -84,7 +84,7 @@ export default function RoleplayForm({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Level of closeness</label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           {TONE_OPTIONS.map((tone) => (
             <button
               key={tone.value}

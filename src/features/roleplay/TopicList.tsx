@@ -10,6 +10,7 @@ import {
   useRemoveFavorite,
 } from "@/hooks/mutations/topics/useFavorite";
 import { useTopics } from "@/hooks/queries/useTopics";
+import TopicListSkeleton from "./TopicListSkeleton";
 
 interface TopicListProps {
   category: CategoryType;
@@ -18,7 +19,10 @@ interface TopicListProps {
 
 export default function TopicList({ category, setCategory }: TopicListProps) {
   const isLove = category === "Favorites";
-  const { data: topics = [] } = useTopics(isLove ? "" : category, isLove);
+  const { data: topics = [], isPending } = useTopics(
+    isLove ? "" : category,
+    isLove,
+  );
 
   const router = useRouter();
   const { mutate: addFavorite } = useAddFavorite();
@@ -46,7 +50,9 @@ export default function TopicList({ category, setCategory }: TopicListProps) {
         onSelect={(c) => setCategory(c)}
       />
 
-      {isLove && topics.length === 0 ? (
+      {isPending ? (
+        <TopicListSkeleton />
+      ) : isLove && topics.length === 0 ? (
         <div className="flex flex-col items-center justify-center w-full py-20 gap-2 ">
           <span className="text-2xl font-medium">Your Favrites is empty</span>
           <span className="text-sm text-gray-600">
@@ -76,7 +82,7 @@ export default function TopicList({ category, setCategory }: TopicListProps) {
                 <h4 className="text-sm font-semibold">{topic.name}</h4>
               </div>
               <button
-                className="absolute top-3 right-3 text-white opacity-80 hover:opacity-100 transition-opacity"
+                className="absolute top-3 right-3 text-white transition-opacity"
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleFavorite(topic.topicId, topic.isFavorite);

@@ -25,13 +25,9 @@ interface AiMessage {
   translatedContent: string;
 }
 
-const toastVariants = {
-  visible: { opacity: 1, height: "auto", marginBottom: 0 },
-  hidden: { opacity: 0, height: 0, marginBottom: 0 },
-}
 
 export default function PreviewChat() {
-  const { data, mutate, isPending } = usePreviewStart();
+  const { data, mutate:startChat, isPending } = usePreviewStart();
   const { data: hintData } = usePreviewHint(data?.session_id);
   const [message, setMessage] = useState("");
   const [userMessages, setUserMessages] = useState<string[]>([]);
@@ -62,8 +58,8 @@ export default function PreviewChat() {
   useEffect(() => {
     if (started.current) return;
     started.current = true;
-    mutate();
-  }, [mutate]);
+    startChat();
+  }, [startChat]);
   
   useEffect(()=>{
     if(data && aiResponses.length > 0 && data.max_turns === aiResponses.length){
@@ -155,7 +151,7 @@ export default function PreviewChat() {
 
             {/* 대화 히스토리 */}
             {userMessages.map((userMsg, idx) => (
-              <div key={idx}>
+              <div key={idx} className="z-9999">
                 <MessageItem
                   messages={{ content: userMsg }}
                   isMine={true}
@@ -185,7 +181,22 @@ export default function PreviewChat() {
       </div>
 
       {/* 하단 고정 영역 */}
-      <div className="px-5 pb-5 flex flex-col gap-2 backdrop-blur-md">
+      <div className="relative px-5 pb-5 flex flex-col gap-2">
+        {/* 남은 턴수 */}
+        {!isPending && (
+          <motion.div
+            key={aiResponses.length}
+            className="absolute -top-12 left-5 right-5 text-white px-5 py-2.5 flex gap-2.5 items-center justify-center bg-gray-800/50 rounded-xl"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 0 }}
+            transition={{ duration: 3 }}
+          >
+            <InfoIcon />
+            <span className="text-sm">
+              They`re waiting for your reply! ({aiResponses.length}/2)
+            </span>
+          </motion.div>
+        )}
         {showHintPanel && hintData && (
           <div className="flex flex-col items-center justify-center gap-2 bg-white border px-3 pt-3 pb-7 shadow-sm rounded-t-[20px] border-white -mb-18">
             <div className="flex gap-2 text-sm text-gray-400 font-medium">
@@ -202,22 +213,6 @@ export default function PreviewChat() {
             ))}
           </div>
         )}
-
-        {/* 남은 턴수 */}
-        <motion.div
-          key={aiResponses.length}
-          className="text-white px-5 py-2.5 flex gap-2.5 items-center justify-center bg-gray-800/50 rounded-xl overflow-hidden"
-          variants={toastVariants}
-          initial="visible"
-          animate="hidden"
-          exit="visible"
-          transition={{ duration: 3 }}
-        >
-          <InfoIcon />
-          <span className="text-sm">
-            They`re waiting for your reply! ({aiResponses.length}/{data?.max_turns})
-          </span>
-        </motion.div>
         <ChatInput
           message={micState === "recorded" ? sttText : message}
           setMessage={setMessage}

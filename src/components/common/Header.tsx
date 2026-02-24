@@ -20,7 +20,7 @@ export default function Header({
   className,
 }: HeaderProps) {
   return (
-    <div className={`w-full py-8 flex justify-between items-center backdrop-blur-md`}>
+    <div className="w-full py-8 flex justify-between items-center backdrop-blur-md">
       <div className="w-6 cursor-pointer" onClick={onLeftClick}>
         {leftIcon}
       </div>

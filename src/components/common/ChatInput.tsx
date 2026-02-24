@@ -54,7 +54,7 @@ export default function ChatInput({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          className="grow min-w-0 w-full text-gray-500 placeholder-gray-400 border-none outline-none disabled:bg-gray-50 max-h-30 resize-none overflow-y-auto mb-3"
+          className="grow min-w-0 w-full text-gray-800 placeholder-gray-400 border-none outline-none disabled:bg-gray-50 max-h-30 resize-none overflow-y-auto mb-3"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {
@@ -74,11 +74,11 @@ export default function ChatInput({
           <div className="flex gap-1">
             {showSituation && (
               <button
-                className={`flex border rounded-full px-1 h-6.5 ${isSituationActive ? "border-amber-500 text-amber-500" : ""}`}
+                className={`flex border rounded-full px-1 h-6.5 ${isSituationActive ? "border-indigo-500 text-indigo-500" : ""}`}
                 onClick={onSituationClick}
               >
                 <Asterisk
-                  className={`py-1 ${isSituationActive ? "text-amber-500" : ""}`}
+                  className={`py-1 ${isSituationActive ? "text-indigo-500" : ""}`}
                 />
                 <p>situation</p>
               </button>
@@ -86,10 +86,10 @@ export default function ChatInput({
             {showHint && (
               <button
                 onClick={onHintClick}
-                className={`flex border rounded-full px-2 h-6.5 ${isHintActive ? "border-blue-500 text-blue-500" : ""}`}
+                className={`flex border rounded-full px-2 h-6.5 ${isHintActive ? "border-indigo-500 text-indigo-500" : ""}`}
               >
                 <Lightbulb
-                  className={`py-1 ${isHintActive ? "text-blue-500" : ""}`}
+                  className={`py-1 ${isHintActive ? "text-indigo-500" : ""}`}
                 />
                 <p>needhelp</p>
               </button>

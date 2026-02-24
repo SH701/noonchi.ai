@@ -37,7 +37,7 @@ export default function Textarea({
         className={`
           w-full py-2.5 pl-2.5 pr-10  h-30
            border border-gray-400 bg-white
-          rounded-xl text-gray-900 placeholder-gray-400
+          rounded-xl text-gray-800 placeholder-gray-400
           focus:outline-none focus:border-blue-500 focus:ring-1  focus:ring-inset focus:ring-blue-500
           transition-colors
           ${className}
