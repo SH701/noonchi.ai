@@ -1,10 +1,10 @@
 import { apiMutations } from "@/api/mutations";
-import { RoleplayApiRequest } from "@/types/conversations";
+import { RoleplayReq } from "@/types/conversations";
 import { useMutation } from "@tanstack/react-query";
 
 export const useCreateRoleplay = () => {
   return useMutation({
-    mutationFn: async (data: RoleplayApiRequest) => {
+    mutationFn: async (data: RoleplayReq) => {
       return apiMutations.conversations.createRoleplay(data);
     },
   });

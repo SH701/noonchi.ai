@@ -1,7 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { use, useState } from "react";
 
 import {
   useConversationFeedback,
@@ -15,11 +14,10 @@ import { ResultTab, Point } from "@/features/result";
 
 import FeedbackPart from "@/features/result/FeedbackPart";
 
-export default function Result() {
+export default function Result({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const [tab, setTab] = useState<"transcript" | "mistakes">("transcript");
-  const { id } = useParams<{ id: string }>();
   const roomId = Number(id);
-
   const { data: conversation } = useConversationDetail(roomId);
   const myAI = conversation?.aiPersona ?? null;
   const { data: messages = [] } = useChatQuery(roomId);

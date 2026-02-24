@@ -3,7 +3,7 @@ import TextInput from "../../ui/form/TextInput";
 import { Button } from "@/components/ui/button/button";
 import { Textarea } from "@/components/ui/form";
 
-import { TONE_OPTIONS } from "@/constants/tone";
+import { TONE_OPTIONS } from "@/constants";
 import { useCreateContext } from "@/hooks/mutations/language/useCreateContext";
 
 interface RoleplayProps {

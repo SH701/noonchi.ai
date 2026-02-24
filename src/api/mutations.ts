@@ -1,34 +1,36 @@
 import { apiFetch } from "./api";
 
-import { AuthResponse, LoginRequest, SignupRequest } from "@/types/auth";
+
 
 import {
   InterviewFormData,
-  PresignedUrlResponse,
+  
   UploadedFile,
-  RoleplayApiRequest,
-  ConversationResponse,
+  RoleplayReq,
+  ConversationRes,
+  AskReq,
+  AskRes,
+  PresignedUrlRes,
 } from "@/types/conversations";
 import { ChatMsg } from "@/types/messages";
-import { Preview, PreviewSendResponse } from "@/types/preview/preview.type";
+import { Preview, PreviewSendRes } from "@/types/preview/preview.type";
 import axios from "axios";
-import { AskAPiRequest } from "@/types/conversations/ask/ask.type";
 import { TopicScenario } from "@/types/topics";
-import { AskRes } from "@/types/ask/ask.type";
+import { AuthRes, LoginReq, SignupReq } from "@/types/auth";
+
 
 
 
 export const apiMutations = {
   auth: {
-    login: async (payload: LoginRequest): Promise<AuthResponse> => {
-      return apiFetch<AuthResponse>("/api/auth/login", {
+    login: async (payload: LoginReq): Promise<AuthRes> => {
+      return apiFetch<AuthRes>("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({ payload }),
       });
     },
-
-    signup: async (payload: SignupRequest): Promise<AuthResponse> => {
-      const response = await apiFetch<AuthResponse>("/api/auth/signup", {
+    signup: async (payload: SignupReq): Promise<AuthRes> => {
+      const response = await apiFetch<AuthRes>("/api/auth/signup", {
         method: "POST",
         body: JSON.stringify(payload),
       });
@@ -79,22 +81,22 @@ export const apiMutations = {
   conversations: {
     createInterview: async (
       data: InterviewFormData,
-    ): Promise<ConversationResponse> => {
-      return apiFetch<ConversationResponse>("/api/conversations/interview", {
+    ): Promise<ConversationRes> => {
+      return apiFetch<ConversationRes>("/api/conversations/interview", {
         method: "POST",
         body: JSON.stringify(data),
       });
     },
 
     createRoleplay: async (
-      data: RoleplayApiRequest,
-    ): Promise<ConversationResponse> => {
-      return apiFetch<ConversationResponse>("/api/conversations/role-playing", {
+      data: RoleplayReq,
+    ): Promise<ConversationRes> => {
+      return apiFetch<ConversationRes>("/api/conversations/role-playing", {
         method: "POST",
         body: JSON.stringify(data),
       });
     },
-    createAsk: async (data: AskAPiRequest): Promise<AskRes> => {
+    createAsk: async (data: AskReq): Promise<AskRes> => {
       return apiFetch<AskRes>("/api/conversations/ask", {
         method: "POST",
         body: JSON.stringify(data),
@@ -134,7 +136,7 @@ export const apiMutations = {
     uploadFiles: async (files: File[]): Promise<UploadedFile[]> => {
       return Promise.all(
         files.map(async (file) => {
-          const presignedData = await apiFetch<PresignedUrlResponse>(
+          const presignedData = await apiFetch<PresignedUrlRes>(
             "/api/files/presigned-url",
             {
               method: "POST",
@@ -163,7 +165,7 @@ export const apiMutations = {
     uploadAudio: async (blob: Blob): Promise<string> => {
       const blobType = blob.type || "audio/webm";
       const fileExtension = blobType.includes("webm") ? "webm" : "wav";
-      const { url: presignedUrl } = await apiFetch<PresignedUrlResponse>(
+      const { url: presignedUrl } = await apiFetch<PresignedUrlRes>(
         "/api/files/presigned-url",
         {
           method: "POST",
@@ -197,7 +199,7 @@ export const apiMutations = {
       userMessage: string,
       inputType: "text" | "voice" = "text",
       onChunk?: (chunk: string) => void,
-    ): Promise<PreviewSendResponse> => {
+    ): Promise<PreviewSendRes> => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PREVIEW_BASE_URL}/preview/roleplay/${sessionId}/messages`,
         {
@@ -218,7 +220,7 @@ export const apiMutations = {
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let fullText = "";
-      let doneData: PreviewSendResponse | null = null;
+      let doneData: PreviewSendRes | null = null;
       let buffer = "";
 
       if (reader) {
@@ -237,7 +239,7 @@ export const apiMutations = {
               fullText += json.content;
               onChunk?.(fullText);
             } else if (json.type === "done") {
-              doneData = json.data as PreviewSendResponse;
+              doneData = json.data as PreviewSendRes;
             }
           }
         }

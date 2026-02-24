@@ -1,4 +1,4 @@
-export interface PresignedUrlResponse {
+export interface PresignedUrlRes {
   url: string;
 }
 export interface UploadedFile {
@@ -17,10 +17,6 @@ export interface InterviewFormData {
 
 
 
-export const INTERVIEW_STYLES = [
-  { value: "friendly", label: "Friendly" },
-  { value: "standard", label: "Standard" },
-  { value: "strict", label: "Strict" },
-] as const;
 
-export type InterviewStyle = (typeof INTERVIEW_STYLES)[number]["value"];
+
+

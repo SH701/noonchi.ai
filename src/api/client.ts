@@ -9,7 +9,7 @@ import {
   ConversationFeedback,
   FilterState,
 } from "@/types/conversations";
-import { filterMap } from "@/constants/filter";
+import { filterMap } from "@/constants";
 import { TopicRes, PagedTopicRes } from "@/types/topics";
 import { PreviewHint } from "@/types/preview/preview.type";
 import axios from "axios";

@@ -24,7 +24,7 @@ export interface PreviewHint {
   explanations: string[];
 }
 
-export interface PreviewSendResponse {
+export interface PreviewSendRes {
   session_id: string;
   ai_message: string;
   ai_message_en: string;

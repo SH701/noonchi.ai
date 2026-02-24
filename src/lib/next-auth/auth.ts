@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import z from "zod";
-import { AuthResponse } from "@/types/auth";
+import { AuthRes } from "@/types/auth";
 import { User } from "@/types/user";
 
 async function refreshAccessToken(refreshToken: string) {
@@ -19,7 +19,7 @@ async function refreshAccessToken(refreshToken: string) {
       throw new Error("Failed to refresh token");
     }
 
-    const data: AuthResponse = await res.json();
+    const data: AuthRes = await res.json();
     return {
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
@@ -68,7 +68,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return null;
           }
 
-          const data: AuthResponse = await res.json();
+          const data: AuthRes = await res.json();
 
           return {
             id: String(data.user.id),

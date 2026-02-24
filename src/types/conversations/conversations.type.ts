@@ -1,7 +1,7 @@
 import { MyAI } from "../etc";
 import { Feedback } from "../messages";
 
-export interface ConversationResponse{
+export interface ConversationRes{
   conversationId:number
 }
 export interface Conversation {

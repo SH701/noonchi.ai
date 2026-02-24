@@ -1,4 +1,4 @@
-export interface RoleplayApiRequest {
+export interface RoleplayReq {
   conversationTopicId: number;
   userRole: string;
   aiRole: string;

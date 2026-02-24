@@ -8,23 +8,7 @@ import { useAskMessages } from "@/hooks/mutations/messages/useAskMessages";
 import { Spinner } from "../../components/ui/spinner/spinner";
 import { useMessageTranslate, useMessageTTS } from "@/hooks/mutations";
 import { BulbIcon, LanguageIcon, VolumeUpIcon } from "@/assets/svgr";
-
-type Step = "askTarget" | "closeness" | "situation" | "chat";
-
-const STEPS: Step[] = ["askTarget", "closeness", "situation", "chat"];
-
-const CLOSENESS_OPTIONS = [
-  { label: "Casual", value: "casual" },
-  { label: "Friendly", value: "friendly" },
-  { label: "Professional", value: "professional" },
-  { label: "Formal", value: "formal" },
-] as const;
-
-const STEP_QUESTIONS: Record<string, string> = {
-  askTarget: "Who is this for?",
-  closeness: "How close are you with them?",
-  situation: "What do you want to say?",
-};
+import { CLOSENESS_OPTIONS, Step, STEP_QUESTIONS, STEPS } from "@/constants";
 
 export default function AskChat() {
   const [step, setStep] = useState<Step>("askTarget");

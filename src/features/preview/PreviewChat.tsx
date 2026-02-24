@@ -6,17 +6,14 @@ import {
   usePreviewSend,
   usePreviewStart,
 } from "@/hooks/mutations/";
-import { ChatInput, ChatLoading, Header } from "../../components/common";
-
-import MessageItem from "../../components/chatroom/MessageItem";
-
+import { ChatInput, ChatLoading, Header } from "@/components/common";
 import { useRouter } from "next/navigation";
 import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
-import { PreviewModal } from "../../components/modal";
+import { PreviewModal } from "@/components/modal";
 import { HamburgerIcon, InfoIcon, NoticeIcon } from "@/assets/svgr";
 import {useVoiceChat} from "@/hooks/useVoiceChat";
-import { Lightbulb } from "lucide-react";
 import { motion } from "framer-motion";
+import { HintMessage,MessageItem } from "@/components/chatroom";
 
 interface AiMessage {
   content: string;
@@ -198,20 +195,10 @@ export default function PreviewChat() {
           </motion.div>
         )}
         {showHintPanel && hintData && (
-          <div className="flex flex-col items-center justify-center gap-2 bg-white border px-3 pt-3 pb-7 shadow-sm rounded-t-[20px] border-white -mb-18">
-            <div className="flex gap-2 text-sm text-gray-400 font-medium">
-                <Lightbulb className="size-4" />
-                <span>Please choose the correct one</span>
-              </div>
-            {hintData.hints.map((h, idx) => (
-              <div
-                key={idx}
-                className="rounded-xl  px-3.5 py-3 border border-gray-300 bg-white/50"
-              >
-                <p className="text-sm text-gray-700">{h}</p>
-              </div>
-            ))}
-          </div>
+          <HintMessage hintData={hintData.hints} onSelect={(h)=>{
+            setMessage(h) 
+            setShowHintPanel(false)
+          }}/>
         )}
         <ChatInput
           message={micState === "recorded" ? sttText : message}

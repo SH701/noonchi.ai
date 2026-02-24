@@ -13,3 +13,14 @@ export interface User {
   creditPoint: number;
   interests: string[];
 }
+
+export interface MeRes{
+  user: User;
+}
+export interface UpdateProfileReq {
+  nickname?: string;
+  birthDate?: string;
+  koreanLevel?: string;
+  profileImageUrl?: string;
+  interests?: string[];
+}

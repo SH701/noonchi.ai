@@ -12,3 +12,4 @@ export const TONE_OPTIONS = [
     description: "(High-level executives, Public)",
   },
 ];
+export type InterviewStyle = (typeof TONE_OPTIONS)[number]["value"];

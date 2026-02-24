@@ -1,28 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { MessageList } from "@/components/chatroom";
-import { useParams } from "next/navigation";
+
 import { useConversationDetail } from "@/hooks/queries";
 import { ChatInput } from "@/components/common";
 import { useRoleplayMessages } from "@/hooks/mutations/messages/useRoleplayMessages";
 import { useRoleplayHint } from "@/hooks/queries/useRoleplayHint";
 import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { NoticeIcon } from "@/assets/svgr";
-import { Lightbulb } from "lucide-react";
 import ChatroomHeader from "@/features/roleplay/ChatroomHeader";
+import HintMessage from "@/components/chatroom/HintMessage";
 
-export default function RolePlayChatroomPage() {
-  const { id } = useParams<{ id: string }>();
+export default function RolePlayChatroomPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const [showHintPanel, setShowHintPanel] = useState(false);
   const [message, setMessage] = useState("");
   const [situationOpen, setSituationOpen] = useState(false);
-
   const bottomRef = useRef<HTMLDivElement>(null);
-
   const { data: conversation } = useConversationDetail(Number(id));
   const conversationId = conversation?.conversationId;
-
   const { messages, sendMessage } = useRoleplayMessages(conversationId);
   const { data: hintData } = useRoleplayHint(conversationId);
   const { micState, sttText, handleMicClick, handleSendAudio } = useVoiceChat(
@@ -37,8 +34,8 @@ export default function RolePlayChatroomPage() {
   const myAI = conversation?.aiPersona ?? null;
 
   const handleSendText = async () => {
-    await sendMessage(message);
     setMessage("");
+    await sendMessage(message);
   };
 
   return (
@@ -65,28 +62,13 @@ export default function RolePlayChatroomPage() {
 
         <div className="pb-5 flex flex-col backdrop-blur-md sticky bottom-0">
           {showHintPanel && hintData && (
-            <div className="flex flex-col items-center justify-center gap-2 bg-white border px-3 pt-3 pb-7 shadow-sm rounded-t-[20px] border-white -mb-4">
-              <div className="flex gap-2 text-sm text-gray-400 font-medium">
-                <Lightbulb className="size-4" />
-                <span>Please choose the correct one</span>
-              </div>
-              {hintData.map((h, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-xl px-3.5 py-3 border border-gray-300 bg-white/50 w-full"
-                >
-                  <p
-                    className="text-sm text-gray-700"
-                    onClick={() => {
-                      setMessage(h);
-                      setShowHintPanel(false);
-                    }}
-                  >
-                    {h}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <HintMessage
+              hintData={hintData}
+              onSelect={(h) => {
+                setMessage(h);
+                setShowHintPanel(false);
+              }}
+            />
           )}
           <ChatInput
             message={micState === "recorded" ? sttText : message}

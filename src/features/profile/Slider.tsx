@@ -1,7 +1,4 @@
-import {
-  SLIDER_POSITION_CLASSES,
-  SLIDER_WIDTH_CLASSES,
-} from "@/constants/slider";
+import { SLIDER_POSITION_CLASSES, SLIDER_WIDTH_CLASSES } from "@/constants";
 
 interface SilderProps {
   level: number;
