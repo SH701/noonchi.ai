@@ -47,7 +47,7 @@ export default function ChatInput({
 
   return (
     <div className="w-full ">
-      <div className="flex flex-col items-center w-full min-w-0 rounded-[20px] bg-white px-4 py-3 ">
+      <div className="flex flex-col items-center w-full min-w-0 rounded-[20px] bg-white px-4 py-3 shadow-[0_-3px_8px_0_rgba(80,41,138,0.08)]">
         <textarea
           ref={textRef}
           rows={1}
@@ -108,7 +108,7 @@ export default function ChatInput({
               >
                 <MicIcon className="size-6 text-white animate-pulse" />
               </button>
-            ) : isFocused || micState === "recorded" ? (
+            ) : isFocused || micState === "recorded" || showHint? (
               <button
                 onClick={onSend}
                 className="flex items-center justify-center shrink-0  rounded-full transition-colors  bg-blue-100 p-1"

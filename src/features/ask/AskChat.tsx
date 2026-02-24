@@ -239,7 +239,7 @@ export default function AskChat() {
       </div>
 
       {/* 하단 고정 ChatInput */}
-      <div className="mt-auto pb-5 flex flex-col backdrop-blur-md">
+      <div className=" pb-5 flex flex-col backdrop-blur-md sticky bottom-0">
         {(step === "situation" || step === "chat") && (
           <ChatInput
             message={message}
