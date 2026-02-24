@@ -40,11 +40,11 @@ export default function RoleplayHeader() {
             onClick={handleToggle}
           >
             <motion.div
-              className="absolute bg-white rounded-full h-6"
+              className="absolute bg-white rounded-full h-6 w-full"
               initial={false}
               animate={getActiveStyles()}
               transition={{ type: "spring", stiffness: 200, damping: 25 }}
-              style={{ left: 4 }}
+              
             />
             <span
               ref={roleRef}

@@ -4,9 +4,11 @@ import Image from "next/image";
 import { useTopics } from "@/hooks/queries/useTopics";
 import { ChevronRightIcon } from "@/assets/svgr";
 import RoleplayHistorySkeleton from "./RoleplayHistorySkeleton";
+import { useChatHistoryStore } from "@/store/chathistory/useChatHistorystore";
 
 export default function RoleplayHistoryTab() {
   const router = useRouter();
+  const { keyword } = useChatHistoryStore();
   const { data: conversations, isPending: isConversationsPending } = useConversations();
   const { data: topics = [], isPending: isTopicsPending } = useTopics("", false);
   const isPending = isConversationsPending || isTopicsPending;
@@ -29,6 +31,11 @@ export default function RoleplayHistoryTab() {
         <div className="flex gap-3 overflow-x-auto ">
           {conversations
             ?.filter((convo) => convo.conversationType === "ROLE_PLAYING")
+            .filter((convo) =>
+              keyword
+                ? convo.conversationTopic.toLowerCase().includes(keyword.toLowerCase())
+                : true,
+            )
             .map((convo) => {
               const matchedTopic = topics?.find(
                 (topic) => topic.name === convo.conversationTopic,

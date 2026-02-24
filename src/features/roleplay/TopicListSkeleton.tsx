@@ -1,5 +1,5 @@
 export default function TopicListSkeleton() {
-  const skeletonCards = Array.from({ length: 6 });
+  const skeletonCards = Array.from({ length: 5 });
 
   return (
     <div className="w-full">

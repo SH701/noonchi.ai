@@ -1,8 +1,10 @@
 import { useConversations } from "@/hooks/queries";
 import AskHistorySkeleton from "./AskHistorySkeleton";
+import { useChatHistoryStore } from "@/store/chathistory/useChatHistorystore";
 
 export default function AskHistoryTab() {
   const { data, isPending } = useConversations();
+  const { keyword } = useChatHistoryStore();
 
   return (
     <div className="flex flex-col h-full overflow-hidden ">
@@ -16,6 +18,11 @@ export default function AskHistoryTab() {
           <AskHistorySkeleton />
         ) : data
           ?.filter((convo) => convo.conversationType === "ASK")
+          .filter((convo) =>
+            keyword
+              ? convo.askTarget.toLowerCase().includes(keyword.toLowerCase())
+              : true,
+          )
           .map((convo) => (
             <div
               key={convo.conversationId}

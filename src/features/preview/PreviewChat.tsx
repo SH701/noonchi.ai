@@ -45,7 +45,7 @@ export default function PreviewChat() {
     });
   }, []);
 
-  const { mutate: sendMessage } = usePreviewSend(handleChunk);
+  const { mutate: sendMessage,isPending:messageLoading } = usePreviewSend(handleChunk);
   const { mutate: removePreview } = usePreviewRemove();
   const { micState, sttText, handleMicClick, handleSendAudio } = useVoiceChat(
   3000 
@@ -155,7 +155,8 @@ export default function PreviewChat() {
                   userName={data?.my_name}
                   isPreview={true}
                 />
-                {aiResponses[idx] && (
+                {messageLoading ? (<ChatLoading/>) : (
+                  aiResponses[idx] && (
                   <MessageItem
                     messages={{
                       content: aiResponses[idx].content || "...",
@@ -170,7 +171,8 @@ export default function PreviewChat() {
                     showsituation={showSituation}
                     translatedContent={aiResponses[idx].translatedContent}
                   />
-                )}
+                ))}
+             
               </div>
             ))}
           </>

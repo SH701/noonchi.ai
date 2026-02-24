@@ -3,8 +3,8 @@ import TextInput from "../../ui/form/TextInput";
 import { Button } from "@/components/ui/button/button";
 import { Textarea } from "@/components/ui/form";
 
-import { TONE_OPTIONS } from "@/constants";
 import { useCreateContext } from "@/hooks/mutations/language/useCreateContext";
+import SelectButton from "@/components/ui/form/SelectButton";
 
 interface RoleplayProps {
   onSubmit: (data: {
@@ -82,25 +82,7 @@ export default function RoleplayForm({
         onClick={handleAIHint}
       />
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Level of closeness</label>
-        <div className="grid grid-cols-2 gap-3">
-          {TONE_OPTIONS.map((tone) => (
-            <button
-              key={tone.value}
-              type="button"
-              onClick={() => setSelectedTone(tone.value)}
-              className={`
-                py-3 px-4 rounded-lg  transition-all text-left cursor-pointer
-                ${selectedTone === tone.value ? " bg-white" : " bg-white/50"}
-              `}
-            >
-              <div className="font-semibold text-sm">{tone.label}</div>
-              <div className="text-xs text-gray-500">{tone.description}</div>
-            </button>
-          ))}
-        </div>
-      </div>
+      <SelectButton selectedTone={selectedTone} onSelect={setSelectedTone} />
 
       <Textarea
         label="Detail"

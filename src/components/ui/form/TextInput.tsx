@@ -52,7 +52,7 @@ export default function TextInput({
            border border-gray-400 bg-white text-sm
           rounded-xl text-gray-800 placeholder-gray-400 placeholder:text-sm
           focus:outline-none  focus:ring-1 focus:ring-inset focus:ring-blue-500 focus:shadow-[0_0_8px_0_rgba(133,162,255,0.50)] outline-none"
-          transition-colors
+          transition-colors 
           ${className}
         `}
       />

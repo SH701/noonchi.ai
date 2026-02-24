@@ -7,7 +7,7 @@ interface HintProps {
 
 export default function HintMessage({ hintData, onSelect }: HintProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 bg-white border px-3 pt-3 pb-7 shadow-sm rounded-t-[20px] border-white -mb-4">
+    <div className="flex flex-col items-center justify-center gap-2 bg-white border px-3 pt-3 pb-7 shadow-sm rounded-t-[20px] border-white -mb-6">
       <div className="flex gap-2 text-sm text-gray-400 font-medium">
         <Lightbulb className="size-4" />
         <span>Please choose the correct one</span>

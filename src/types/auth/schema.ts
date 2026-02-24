@@ -31,7 +31,7 @@ export const signup2Schema = z.object({
     .min(1, "Please enter a nickname")
     .max(16, "Nickname can be up to 16 characters long")
     .regex(
-      /^[A-Za-z0-9가-힣]+$/,
+      /^[A-Za-z0-9가-힣 ]+$/,
       "Nickname can only contain letters, numbers, and Korean characters",
     ),
   birthdate: z

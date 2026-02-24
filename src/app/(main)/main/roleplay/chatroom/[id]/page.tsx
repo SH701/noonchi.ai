@@ -12,13 +12,13 @@ import { NoticeIcon } from "@/assets/svgr";
 import ChatroomHeader from "@/features/roleplay/ChatroomHeader";
 import HintMessage from "@/components/chatroom/HintMessage";
 
-export default function RolePlayChatroomPage({ params }: { params: Promise<{ id: string }> }) {
+export default function RolePlayChatroomPage({ params }: { params: Promise<{ id: number }> }) {
   const { id } = use(params);
   const [showHintPanel, setShowHintPanel] = useState(false);
   const [message, setMessage] = useState("");
   const [situationOpen, setSituationOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { data: conversation } = useConversationDetail(Number(id));
+  const { data: conversation } = useConversationDetail(id);
   const conversationId = conversation?.conversationId;
   const { messages, sendMessage } = useRoleplayMessages(conversationId);
   const { data: hintData } = useRoleplayHint(conversationId);
@@ -41,7 +41,7 @@ export default function RolePlayChatroomPage({ params }: { params: Promise<{ id:
   return (
     <>
       <ChatroomHeader
-        roomId={Number(id)}
+        roomId={id}
         title={conversation?.conversationTopic ?? ""}
       />
       <div className="min-h-screen flex flex-col w-full">

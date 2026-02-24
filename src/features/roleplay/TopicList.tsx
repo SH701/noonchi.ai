@@ -93,7 +93,7 @@ export default function TopicList({ category, setCategory }: TopicListProps) {
             </div>
           ))}
           <button
-            className="flex items-center justify-center size-10 bg-white rounded-full z-99 absolute right-4 bottom-8 border border-gradient-primary"
+            className="flex items-center justify-center size-10 bg-white rounded-full z-99 fixed right-4 bottom-8 border border-gradient-primary"
             onClick={() => router.push("/main/roleplay/create/custom")}
           >
             <Plus />

@@ -26,9 +26,13 @@ export default function Tab() {
   const { data: session } = useSession();
   const { isOpen, closeTab } = useTabStore();
 
-  const handleProfileClick = () => router.push("/profile");
+  const handleProfileClick = () => {
+    router.push("/profile");
+    closeTab();
+  };
   const handleCoach = () => {
     router.push("/coach");
+    closeTab();
   };
   return (
     <AnimatePresence>
