@@ -76,7 +76,7 @@ export default function Tab() {
 
               <button
                 onClick={handleProfileClick}
-                className="flex gap-4 bg-white p-4 w-70"
+                className="flex gap-4 bg-white p-4 w-70 z-9999"
               >
                 {session?.user.profileImageUrl ? (
                   <Image

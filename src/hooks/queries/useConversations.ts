@@ -8,6 +8,5 @@ export const useConversations = (filter: FilterState = null) => {
     queryFn: () => apiClient.conversations.getConversations(filter),
     select: (data) =>
       (data?.content ?? []).filter((c): c is Conversation => !!c?.aiPersona),
-    initialData: { content: [] },
   });
 };
