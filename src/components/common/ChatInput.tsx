@@ -110,6 +110,7 @@ export default function ChatInput({
               </button>
             ) : isFocused || micState === "recorded" || isHintActive ? (
               <button
+                type="button"
                 onClick={onSend}
                 className="flex items-center justify-center shrink-0  rounded-full transition-colors  bg-blue-100 p-1"
                 disabled={disabled || !message.trim()}

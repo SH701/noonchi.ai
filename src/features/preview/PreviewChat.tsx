@@ -66,7 +66,7 @@ export default function PreviewChat() {
   },[data, aiResponses, removePreview, setShowPreviewModal])
   
   const handleSend = () => {
-    if (!data?.session_id || !message.trim()) return;
+    if (!data?.session_id || !message.trim() || messageLoading) return;
     setUserMessages((prev) => [...prev, message]);
     setAiResponses((prev) => [
       ...prev,
