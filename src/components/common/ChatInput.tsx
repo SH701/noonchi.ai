@@ -108,7 +108,7 @@ export default function ChatInput({
               >
                 <MicIcon className="size-6 text-white animate-pulse" />
               </button>
-            ) : isFocused || micState === "recorded" || isHintActive ? (
+            ) : isFocused || micState === "recorded" || isHintActive || message.trim() ? (
               <button
                 type="button"
                 onClick={onSend}
