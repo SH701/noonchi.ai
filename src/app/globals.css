@@ -5,38 +5,91 @@
 
 @plugin "tailwindcss-animate";
 
-@layer base {
-  .font-pretendard {
-    font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
-  }
-}
-* {
-  font-family:
-    "Pretendard",
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    Roboto,
-    "Helvetica Neue",
-    "Segoe UI",
-    "Apple SD Gothic Neo",
-    "Noto Sans KR",
-    "Malgun Gothic",
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
+@theme inline {
+  /* Font */
+  --font-sans:
+    "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto,
     sans-serif;
-}
-html {
-  font-family: Pretendard, sans-serif;
-  overflow-x: hidden;
+
+  /* Gradient Palette */
+  --color-grad-1: #acbcff;
+  --color-grad-2: #e3edf4;
+  --color-grad-3: #e2ddf6;
+  --color-grad-4: #e5d2ff;
+  --color-grad-line-1: #7091f9;
+  --color-grad-line-2: #b0dff7;
+  --color-grad-line-3: #dc8cd8;
+  --color-grad-text-1: #527bff;
+  --color-grad-text-2: #db64d5;
+
+  /* Background & Surface */
+  --color-bg-base: #ffffff;
+  --color-bg-surface: #f9fafb; /* gray-50 */
+  --color-bg-surface-70: color-mix(
+    in srgb,
+    #f9fafb,
+    transparent 30%
+  ); /* gray-100 base */
+  --color-bg-surface-50: color-mix(in srgb, #f9fafb, transparent 50%);
+  --color-bg-surface-30: color-mix(in srgb, #f9fafb, transparent 70%);
+  --color-bg-inverse: #1f2937; /* gray-800 */
+
+  /* Action - Primary (Indigo) */
+  --color-primary-default: #6366f1; /* indigo-500 */
+  --color-primary-hover: #4f46e5; /* indigo-600 */
+  --color-primary-active: #4338ca; /* indigo-700 */
+  --color-primary-disabled: #d1d5db; /* gray-300 */
+
+  /* Action - Secondary */
+  --color-secondary-default: #ffffff;
+  --color-secondary-hover: #f3f4f6; /* gray-100 */
+  --color-secondary-active: #e5e7eb; /* gray-200 */
+  --color-secondary-disabled: #f9fafb; /* gray-50 */
+
+  /* Action - Ghost */
+  --color-ghost-default: transparent;
+  --color-ghost-hover: #f3f4f6;
+  --color-ghost-active: #e5e7eb;
+  --color-ghost-disabled: #ffffff;
+
+  /* Text & Content */
+  --color-text-primary: #1f2937; /* gray-800 */
+  --color-text-secondary: #4b5563; /* gray-600 */
+  --color-text-tertiary: #6b7280; /* gray-500 */
+  --color-text-disabled: #9ca3af; /* gray-400 */
+  --color-text-inverse: #ffffff;
+  --color-text-accent: #527bff;
+
+  /* Border & Divider */
+  --color-border-default: #d1d5db; /* gray-300 */
+  --color-border-divider: #f3f4f6;
+  --color-border-focused: #527bff;
+  --color-border-error: #ef4444; /* red-500 */
+
+  /* Icon */
+  --color-icon-primary: #111827; /* gray-900 */
+  --color-icon-secondary: #6b7280; /* gray-500 */
+  --color-icon-inverse: #ffffff;
+
+  /* Status */
+  --color-status-error: #ef4444; /* red-500 */
+  --color-status-warning: #f59e0b; /* amber-500 */
+  --color-status-success: #10b981; /* emerald-500 */
+  --color-status-info: #3b82f6; /* blue-500 */
+
+  --color-brand-primary: #527bff --color-brand-secondary: #6b8eff
+    --color-brand-tertiary: #eef2ff /* Breakpoints */ --breakpoint-sm: 375px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1280px;
 }
 
+/* Base Styles */
 body {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
 
+/* Slick Carousel 커스텀 */
 .slick-slide > div {
   display: flex !important;
   flex-direction: column;
@@ -45,19 +98,7 @@ body {
   min-height: 60vh;
 }
 
-.slick-dots {
-  display: none !important;
-}
-
-.slick-dots li button:before {
-  color: #d1d5db !important;
-  opacity: 1 !important;
-}
-
-.slick-dots li.slick-active button:before {
-  color: black !important;
-  opacity: 1 !important;
-}
+.slick-dots,
 .dots-hidden .slick-dots {
   display: none !important;
 }
@@ -68,23 +109,14 @@ body {
   bottom: auto;
 }
 
-@theme inline {
-  --color-gradient-1: #acbcff;
-  --color-gradient-2: #e3edf4;
-  --color-gradient-3: #e2ddf6;
-  --color-gradient-4: #e5d2ff;
-  --breakpoint-sm: 375px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1280px;
-}
-
+/* 유틸리티 클래스 (변수 활용으로 최적화) */
 .bg-gradient-primary {
   background: linear-gradient(
     180deg,
-    #acbcff 0%,
-    #e3edf4 33%,
-    #e2ddf6 66%,
-    #e5d2ff 100%
+    var(--color-grad-1) 0%,
+    var(--color-grad-2) 33%,
+    var(--color-grad-3) 66%,
+    var(--color-grad-4) 100%
   );
 }
 
@@ -92,12 +124,23 @@ body {
   border: 1px solid transparent;
   background:
     linear-gradient(white, white) padding-box,
-    linear-gradient(90deg, #7091f9 0%, #b0dff7 50%, #dc8cd8 100%) border-box;
+    linear-gradient(
+        90deg,
+        var(--color-grad-line-1) 0%,
+        var(--color-grad-line-2) 50%,
+        var(--color-grad-line-3) 100%
+      )
+      border-box;
 }
 
 .text-gradient-primary {
-  background: linear-gradient(90deg, #7091f9 0%, #b0dff7 50%, #dc8cd8 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-grad-line-1) 0%,
+    var(--color-grad-line-2) 50%,
+    var(--color-grad-line-3) 100%
+  );
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: transparent;
 }
