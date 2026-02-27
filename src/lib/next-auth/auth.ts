@@ -31,8 +31,7 @@ async function refreshAccessToken(refreshToken: string) {
   }
 }
 
-
-const ACCESS_TOKEN_EXPIRES = 60 * 1000 * 60; 
+const ACCESS_TOKEN_EXPIRES = 60 * 1000 * 60;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -100,7 +99,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (Date.now() < (token.accessTokenExpires as number)) {
         return token;
       }
-
       // 토큰 만료 시 갱신 시도
       if (token.refreshToken && typeof token.refreshToken === "string") {
         const refreshed = await refreshAccessToken(token.refreshToken);

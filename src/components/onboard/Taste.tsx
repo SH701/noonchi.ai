@@ -9,13 +9,9 @@ export default function Taste() {
 
   return (
     <div className="pt-4 h-full flex flex-col">
-      <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+      <h1 className="text-2xl font-semibold text-gray-900 mb-11">
         Please select your <br /> interests
       </h1>
-      <p className="text-gray-400 mb-8">
-        Choose topics you’d like to chat about!
-      </p>
-
       <div className="flex flex-wrap gap-3">
         {INTEREST_OPTIONS.map((opt) => (
           <button

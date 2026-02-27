@@ -32,12 +32,7 @@ export default function Result({ params }: { params: Promise<{ id: number }> }) 
       <div className="flex-1 flex justify-center overflow-y-auto">
         <div>
           <div className="w-full max-w-125">
-            <div className="flex items-center gap-3 mb-3">
-              <h2 className="text-gray-900 text-xl font-semibold font-pretendard leading-[130%]">
-                Noonchi coach
-              </h2>
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-4">
+            <div className="bg-white rounded-2xl p-4 mb-4">
               <p className="text-gray-900 text-base font-medium font-pretendard leading-[130%] mb-4">
                 {feedback.overallEvaluation ||
                   "You responded appropriately to the situation, but the tone could be more polite."}

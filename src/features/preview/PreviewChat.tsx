@@ -11,9 +11,9 @@ import { useRouter } from "next/navigation";
 import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
 import { PreviewModal } from "@/components/modal";
 import { HamburgerIcon, InfoIcon, NoticeIcon } from "@/assets/svgr";
-import {useVoiceChat} from "@/hooks/useVoiceChat";
+import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { motion } from "framer-motion";
-import { HintMessage,MessageItem } from "@/components/chatroom";
+import { HintMessage, MessageItem } from "@/components/chatroom";
 
 interface AiMessage {
   content: string;
@@ -22,9 +22,8 @@ interface AiMessage {
   translatedContent: string;
 }
 
-
 export default function PreviewChat() {
-  const { data, mutate:startChat, isPending } = usePreviewStart();
+  const { data, mutate: startChat, isPending } = usePreviewStart();
   const { data: hintData } = usePreviewHint(data?.session_id);
   const [message, setMessage] = useState("");
   const [userMessages, setUserMessages] = useState<string[]>([]);
@@ -45,11 +44,11 @@ export default function PreviewChat() {
     });
   }, []);
 
-  const { mutate: sendMessage,isPending:messageLoading } = usePreviewSend(handleChunk);
+  const { mutate: sendMessage, isPending: messageLoading } =
+    usePreviewSend(handleChunk);
   const { mutate: removePreview } = usePreviewRemove();
-  const { micState, sttText, handleMicClick, handleSendAudio } = useVoiceChat(
-  3000 
-);
+  const { micState, sttText, handleMicClick, handleSendAudio } =
+    useVoiceChat(3000);
   const started = useRef(false);
 
   useEffect(() => {
@@ -57,20 +56,29 @@ export default function PreviewChat() {
     started.current = true;
     startChat();
   }, [startChat]);
-  
-  useEffect(()=>{
-    if(data && aiResponses.length > 0 && data.max_turns === aiResponses.length){
-      removePreview(data.session_id)
+
+  useEffect(() => {
+    if (
+      data &&
+      aiResponses.length > 0 &&
+      data.max_turns === aiResponses.length
+    ) {
+      removePreview(data.session_id);
       setShowPreviewModal(true);
     }
-  },[data, aiResponses, removePreview, setShowPreviewModal])
-  
+  }, [data, aiResponses, removePreview, setShowPreviewModal]);
+
   const handleSend = () => {
     if (!data?.session_id || !message.trim() || messageLoading) return;
     setUserMessages((prev) => [...prev, message]);
     setAiResponses((prev) => [
       ...prev,
-      { content: "", hiddenMeaning: "", isRevealed: false, translatedContent: "" },
+      {
+        content: "",
+        hiddenMeaning: "",
+        isRevealed: false,
+        translatedContent: "",
+      },
     ]);
     sendMessage(
       { sessionId: data.session_id, userMessage: message },
@@ -78,8 +86,10 @@ export default function PreviewChat() {
         onSuccess: (res) => {
           setAiResponses((prev) => {
             const newResponses = [...prev];
-            newResponses[newResponses.length - 1].hiddenMeaning = res.ai_hidden_meaning;
-            newResponses[newResponses.length - 1].translatedContent = res.ai_message_en;
+            newResponses[newResponses.length - 1].hiddenMeaning =
+              res.ai_hidden_meaning;
+            newResponses[newResponses.length - 1].translatedContent =
+              res.ai_message_en;
             return newResponses;
           });
         },
@@ -155,24 +165,26 @@ export default function PreviewChat() {
                   userName={data?.my_name}
                   isPreview={true}
                 />
-                {messageLoading ? (<ChatLoading/>) : (
+                {messageLoading ? (
+                  <ChatLoading />
+                ) : (
                   aiResponses[idx] && (
-                  <MessageItem
-                    messages={{
-                      content: aiResponses[idx].content || "...",
-                      visualAction: data?.visual_action,
-                    }}
-                    isMine={false}
-                    aiName={data?.ai_name}
-                    isPreview={true}
-                    hiddenMeaning={aiResponses[idx].hiddenMeaning}
-                    isRevealed={aiResponses[idx].isRevealed}
-                    onToggleReveal={() => toggleReveal(idx)}
-                    showsituation={showSituation}
-                    translatedContent={aiResponses[idx].translatedContent}
-                  />
-                ))}
-             
+                    <MessageItem
+                      messages={{
+                        content: aiResponses[idx].content || "...",
+                        visualAction: data?.visual_action,
+                      }}
+                      isMine={false}
+                      aiName={data?.ai_name}
+                      isPreview={true}
+                      hiddenMeaning={aiResponses[idx].hiddenMeaning}
+                      isRevealed={aiResponses[idx].isRevealed}
+                      onToggleReveal={() => toggleReveal(idx)}
+                      showsituation={showSituation}
+                      translatedContent={aiResponses[idx].translatedContent}
+                    />
+                  )
+                )}
               </div>
             ))}
           </>
@@ -191,16 +203,25 @@ export default function PreviewChat() {
             transition={{ duration: 3 }}
           >
             <InfoIcon />
-            <span className="text-sm">
-              They`re waiting for your reply! ({aiResponses.length}/2)
-            </span>
+            {aiResponses.length >= 1 ? (
+              <span className="text-sm">
+                They`re waiting for your reply! ({aiResponses.length}/2)
+              </span>
+            ) : (
+              <span>
+                One shot left! Finish strong! ({aiResponses.length}/2)
+              </span>
+            )}
           </motion.div>
         )}
         {showHintPanel && hintData && (
-          <HintMessage hintData={hintData.hints} onSelect={(h)=>{
-            setMessage(h) 
-            setShowHintPanel(false)
-          }}/>
+          <HintMessage
+            hintData={hintData.hints}
+            onSelect={(h) => {
+              setMessage(h);
+              setShowHintPanel(false);
+            }}
+          />
         )}
         <ChatInput
           message={micState === "recorded" ? sttText : message}
