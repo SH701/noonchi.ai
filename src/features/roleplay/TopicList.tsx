@@ -54,7 +54,9 @@ export default function TopicList({ category, setCategory }: TopicListProps) {
         <TopicListSkeleton />
       ) : isLove && topics.length === 0 ? (
         <div className="flex flex-col items-center justify-center w-full py-20 gap-2 ">
-          <span className="text-2xl font-medium">Your Favrites is empty</span>
+          <span className="text-2xl font-medium">
+            YYour Favorites are empty
+          </span>
           <span className="text-sm text-gray-600">
             Tap the heart on roles you like
           </span>

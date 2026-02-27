@@ -84,7 +84,7 @@ export default function Onboarding() {
                   {!isFormSlide && (
                     <>
                       <div className="w-full mx-auto max-w-76 flex flex-col items-center justify-center text-center mt-10">
-                        <h2 className="text-center text-2xl font-semibold leading-tight text-[#111827]">
+                        <h2 className="text-center text-2xl font-semibold leading-tight text-icon-primary">
                           {slide?.title}
                         </h2>
                       </div>
@@ -101,7 +101,7 @@ export default function Onboarding() {
           </Slider>
         </div>
 
-        <div className="px-4 pb-14">
+        <div className="px-4 pb-10">
           {currentSlide !== 3 && (
             <Button variant="primary" size="lg" onClick={handleNext}>
               Next

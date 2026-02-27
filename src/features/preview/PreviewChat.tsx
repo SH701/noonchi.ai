@@ -10,10 +10,11 @@ import { ChatInput, ChatLoading, Header } from "@/components/common";
 import { useRouter } from "next/navigation";
 import { usePreviewHint } from "@/hooks/queries/usePreviewHint";
 import { PreviewModal } from "@/components/modal";
-import { HamburgerIcon, InfoIcon, NoticeIcon } from "@/assets/svgr";
+import { HamburgerIcon, InfoIcon, NoticeIcon, QuoteIcon } from "@/assets/svgr";
 import { useVoiceChat } from "@/hooks/useVoiceChat";
 import { motion } from "framer-motion";
 import { HintMessage, MessageItem } from "@/components/chatroom";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface AiMessage {
   content: string;
@@ -32,6 +33,7 @@ export default function PreviewChat() {
   const [showHintPanel, setShowHintPanel] = useState(false);
   const [showSituation, setShowSituation] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [openNotice, setOpenNotice] = useState(true);
   const router = useRouter();
 
   const handleChunk = useCallback((chunk: string) => {
@@ -117,7 +119,9 @@ export default function PreviewChat() {
   const handleSituation = () => {
     setShowSituation((prev) => !prev);
   };
-
+  const handleNotice = () => {
+    setOpenNotice((prev) => !prev);
+  };
   return (
     <div className="h-screen flex flex-col">
       {/* 스크롤 영역 */}
@@ -136,11 +140,22 @@ export default function PreviewChat() {
         ) : (
           <>
             <div className="border-y border-white px-5 py-3 flex gap-4 bg-white/50 -mx-5 mb-4">
-              <NoticeIcon className="text-gray-600 shrink-0" />
-              <span className="text-sm font-medium text-gray-600">
-                {data?.scenario.description}
-              </span>
+              {openNotice ? (
+                <div className="flex justify-between w-full">
+                  <NoticeIcon className="text-gray-600 shrink-0" />
+                  <span className="text-sm font-medium text-gray-600">
+                    {data?.scenario.description}
+                  </span>
+                  <ChevronUp className="shrink-0" onClick={handleNotice} />
+                </div>
+              ) : (
+                <div className="flex items-center justify-between w-full">
+                  <QuoteIcon />
+                  <ChevronDown onClick={handleNotice} />
+                </div>
+              )}
             </div>
+
             {/* 첫 AI 메세지 */}
             <MessageItem
               messages={{
@@ -200,10 +215,10 @@ export default function PreviewChat() {
             className="absolute -top-12 left-5 right-5 text-white px-5 py-2.5 flex gap-2.5 items-center justify-center bg-gray-800/50 rounded-xl"
             initial={{ opacity: 1 }}
             animate={{ opacity: 0 }}
-            transition={{ duration: 3 }}
+            transition={{ duration: 4 }}
           >
             <InfoIcon />
-            {aiResponses.length >= 1 ? (
+            {aiResponses.length <= 1 ? (
               <span className="text-sm">
                 They`re waiting for your reply! ({aiResponses.length}/2)
               </span>

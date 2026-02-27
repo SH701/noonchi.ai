@@ -13,12 +13,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "noonchi-bucket2.s3.ap-northeast-2.amazonaws.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
         hostname: "storage.googleapis.com",
         port: "",
         pathname: "/**",
